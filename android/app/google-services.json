@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "781868708787",
+    "project_id": "gmadrid-natacion-f5fcd",
+    "storage_bucket": "gmadrid-natacion-f5fcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781868708787:android:8eb3bbfd5c1e930b5f11c6",
+        "android_client_info": {
+          "package_name": "net.bertamini.gmadrid.natacion.gmadrid_natacion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781868708787-r040ev0vo5u4eiodloumfch2ua3one5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASeSSpV31yRNKGq2Tdv2CY2_1z8jCkFgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781868708787-r040ev0vo5u4eiodloumfch2ua3one5n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "781868708787-j1u5b9ivrqvco884aob1p2dh9lqiu34h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "net.bertamini.gmadrid.natacion.gmadridNatacion"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
