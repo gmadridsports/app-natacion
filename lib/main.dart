@@ -38,5 +38,5 @@ void main() async {
     exit(1);
   }
 
-  runAppWithOptions(envFileName: 'assets/.dev.env');
+  runAppWithOptions(envFileName: 'assets/.staging.env');
 }
