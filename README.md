@@ -1,4 +1,4 @@
-# gmadrid_natacion
+# Gmadrid Natación App
 
 GMadrid Natación
 
