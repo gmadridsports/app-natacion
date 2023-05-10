@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'app.dart';
 import 'firebase_options.dart';
 
-void main() async {
+void main({
+  String envFileName = 'assets/.staging.env',
+}) async {
   await WidgetsFlutterBinding.ensureInitialized();
   int initAttempt = 0;
 
@@ -19,8 +21,8 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
+      // FlutterError.onError =
+      //     FirebaseCrashlytics.instance.recordFlutterFatalError;
 
       PlatformDispatcher.instance.onError = (error, stack) {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -38,5 +40,5 @@ void main() async {
     exit(1);
   }
 
-  runAppWithOptions(envFileName: 'assets/.staging.env');
+  runAppWithOptions(envFileName: envFileName);
 }
