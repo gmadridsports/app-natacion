@@ -1,0 +1,27 @@
+name: Integrstion tests
+on:
+  push:
+    branches:
+      - screeenshot-test
+  pull_request:
+    branches: [ main ]
+jobs:
+  integration-tests:
+    runs-on: macos-latest
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - name: Run Flutter Pub Get
+        run: flutter pub get
+      - name: Google Cloud Auth
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-glouc@master
+      - name: Run iOS Integration tests
+        run: './integration_ios/sh'

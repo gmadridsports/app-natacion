@@ -1,24 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
+import 'package:gmadrid_natacion/main.dart' as app_main;
 
 void main() {
   patrolTest(
-    'counter state is the same after going to home and switching apps',
+    'Happy path show training of the week',
     nativeAutomation: true,
-    ($) async {
-      // Replace later with your app's main widget
-      await $.pumpWidgetAndSettle(
-        MaterialApp(
-          home: Scaffold(
-            appBar: AppBar(title: const Text('app')),
-            backgroundColor: Colors.blue,
-          ),
-        ),
-      );
+    (PatrolTester $) async {
+      app_main.main(envFileName: 'assets/.test.env');
 
-      expect($('app'), findsOneWidget);
-      await $.native.pressHome();
+      if (await $.native
+          .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
+        await $.native.grantPermissionWhenInUse();
+      }
+
+      await $.pumpAndSettle();
+
+      await $('GMadrid Natación').waitUntilVisible();
+
+      // todo enable as soon as https://github.com/leancodepl/patrol/issues/788
+      // var bytes = await binding.takeScreenshot('screen1');
+      // print(bytes);
     },
   );
 }
