@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'app.dart';
 import 'firebase_options.dart';
 
-void main({
+Future<bool> main({
   String envFileName = 'assets/.staging.env',
 }) async {
   await WidgetsFlutterBinding.ensureInitialized();
@@ -40,5 +40,6 @@ void main({
     exit(1);
   }
 
-  runAppWithOptions(envFileName: envFileName);
+  await runAppWithOptions(envFileName: envFileName);
+  return true;
 }

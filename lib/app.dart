@@ -11,7 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 
-Future<void> runAppWithOptions({
+Future<bool> runAppWithOptions({
   String envFileName = 'assets/.prod.env',
 }) async {
   await dotenv.load(fileName: envFileName, mergeWith: {});
@@ -50,6 +50,7 @@ Future<void> runAppWithOptions({
   });
 
   runApp(App());
+  return true;
 }
 
 class AppError extends StatelessWidget {
