@@ -24,4 +24,4 @@ jobs:
       - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1.1.1
       - name: Run iOS Integration tests
-        run: './integration_ios/sh'
+        run: './integration_ios.sh'
