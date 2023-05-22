@@ -14,7 +14,8 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          channel: "stable"
+          channel: 'stable'
+          architecture: x64
       - name: Run Flutter Pub Get
         run: flutter pub get
       - name: Google Cloud Auth
