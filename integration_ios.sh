@@ -5,7 +5,7 @@ dev_target="15.7"
 patrol build ios --target integration_test/example_test.dart --release --verbose
 
 pushd $product
-mv "Runner_iphoneos16.4-arm64.xctestrun" "Runner_iphoneos$dev_target-arm64.xctestrun"
+mv Runner_iphoneos*-arm64.xctestrun "Runner_iphoneos$dev_target-arm64.xctestrun"
 zip -r "ios_tests.zip" "Release-iphoneos" "Runner_iphoneos$dev_target-arm64.xctestrun"
 popd
 
