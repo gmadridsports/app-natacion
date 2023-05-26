@@ -3,7 +3,7 @@ output="../build/ios_integ"
 product="build/ios_integ/Build/Products"
 dev_target="15.7"
 
-patrol build ios --target integration_test/example_test.dart --release
+patrol build ios --target integration_test/main_test.dart --release
 
 pushd $product
 mv Runner_iphoneos*-arm64.xctestrun "Runner_iphoneos$dev_target-arm64.xctestrun"

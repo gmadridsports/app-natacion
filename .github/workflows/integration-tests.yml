@@ -2,7 +2,7 @@ name: Integration tests
 on:
   push:
     branches:
-      - screenshot-test
+      - main
   pull_request:
     branches: [ main ]
 jobs:
