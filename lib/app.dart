@@ -4,22 +4,27 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gmadrid_natacion/infrastructure/SupabaseBucketsTrainingURLRepository.dart';
+import 'package:gmadrid_natacion/models/TrainingDate.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:http/http.dart';
+import 'app_config.dart';
 import 'firebase_options.dart';
 
-Future<bool> runAppWithOptions({
-  String envFileName = 'assets/.prod.env',
-}) async {
+Future<bool> runAppWithOptions(
+    {String envFileName = 'assets/.prod.env',
+    Client? httpClient,
+    AppConfig Function(Widget child)? appConfig}) async {
   await dotenv.load(fileName: envFileName, mergeWith: {});
 
   await Supabase.initialize(
       url: dotenv.get('SUPABASE_URL'),
       anonKey: dotenv.get('SUPABASE_ANON_KEY', fallback: ''),
-      debug: false);
+      debug: false,
+      httpClient: httpClient);
 
   // final fcmToken = await FirebaseMessaging.instance.getToken();
   // print(fcmToken);
@@ -49,7 +54,14 @@ Future<bool> runAppWithOptions({
     throw (err);
   });
 
-  runApp(App());
+  // todo improve this
+  final configToRun = appConfig ??
+      (Widget child) => AppConfig(
+            SupabaseBucketsTrainingURLRepository(),
+            child: child,
+          );
+
+  runApp(configToRun(const App()));
   return true;
 }
 
@@ -115,17 +127,16 @@ class _MyHomePageState extends State<MyHomePage> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   String? _trainingURL = null;
 
-  _MyHomePageState() {
-    _init();
-  }
-
-  void _init() async {
-    final firstTraining = await Supabase.instance.client.storage
-        .from('general')
-        .getPublicUrl('trainings/2023-04-24.pdf');
-    print('------');
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_trainingURL != null) {
+      return;
+    }
+    final firstTraining = await AppConfig.of(context)!
+        .trainingRepository
+        .getTrainingURL(TrainingDate.from(2023, 4, 24));
     print(firstTraining);
-
     setState(() {
       _trainingURL = firstTraining;
     });
@@ -140,15 +151,18 @@ class _MyHomePageState extends State<MyHomePage> {
     downloadedTrainings.forEach((element) {
       print(element.name);
     });
-    final downloadedTraining = await Supabase.instance.client.storage
-        .from('general')
-        .getPublicUrl('trainings/2023-04-17.pdf');
+    // final downloadedTraining = await Supabase.instance.client.storage
+    //     .from('general')
+    //     .getPublicUrl('trainings/2023-04-17.pdf');
+    //
+    // print(downloadedTraining);
+
+    final downloadedTraining = await AppConfig.of(context)!
+        .trainingRepository
+        .getTrainingURL(TrainingDate.from(2023, 4, 17));
+    print('-------->>>>>');
     print(downloadedTraining);
-    // throw Exception('Test to see it in crashlytics');
-    final dt = await Supabase.instance.client.storage
-        .from('general')
-        .download('/trainings/2023-04-17.pdf');
-    print(dt);
+    // print(dt);
 
     setState(() {
       // This call to setState tells the Flutter framework that something has

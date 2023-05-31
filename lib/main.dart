@@ -6,12 +6,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:http/http.dart';
 import 'app.dart';
+import 'app_config.dart';
 import 'firebase_options.dart';
 
-Future<bool> main({
-  String envFileName = 'assets/.staging.env',
-}) async {
+Future<bool> main(
+    {String envFileName = 'assets/.staging.env',
+    Client? httpClient,
+    AppConfig Function(Widget child)? configToRun}) async {
   await WidgetsFlutterBinding.ensureInitialized();
   int initAttempt = 0;
 
@@ -40,6 +43,7 @@ Future<bool> main({
     exit(1);
   }
 
-  await runAppWithOptions(envFileName: envFileName);
+  await runAppWithOptions(
+      envFileName: envFileName, httpClient: httpClient, appConfig: configToRun);
   return true;
 }

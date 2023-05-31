@@ -42,6 +42,7 @@ dependencies:
   firebase_core: ^2.10.0
   firebase_messaging: ^14.4.1
   firebase_crashlytics: ^3.1.2
+  mocktail: ^0.3.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
     - assets/.test.env
     - assets/.staging.env
     - assets/images/logo.png
+    - assets/test.pdf
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
