@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:gmadrid_natacion/models/TrainingURL.dart';
 import 'package:gmadrid_natacion/models/TrainingRepository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,5 +14,11 @@ class SupabaseBucketsTrainingURLRepository implements TrainingRepository {
   Future<TrainingURL> getTrainingURL(TrainingDate date) async =>
       Supabase.instance.client.storage
           .from(_trainingsBucket)
-          .getPublicUrl('${_trainingsFolder}/2023-04-24.pdf');
+          .getPublicUrl('${_trainingsFolder}/${date.toString()}.pdf');
+
+  @override
+  Future<Uint8List> getTrainingPDF(TrainingDate date) async =>
+      Supabase.instance.client.storage
+          .from(_trainingsBucket)
+          .download('${_trainingsFolder}/${date.toString()}.pdf');
 }

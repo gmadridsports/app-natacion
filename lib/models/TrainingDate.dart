@@ -8,6 +8,6 @@ class TrainingDate {
 
   @override
   String toString() {
-    return "${_dateTime.year}-${_dateTime.month}-${_dateTime.day}";
+    return "${_dateTime.year}-${_dateTime.month.toString().padLeft(2, '0')}-${_dateTime.day.toString().padLeft(2, '0')}";
   }
 }

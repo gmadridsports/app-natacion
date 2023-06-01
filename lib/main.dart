@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:clock/clock.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,13 +9,14 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart';
 import 'app.dart';
-import 'app_config.dart';
+import 'dependency_injection.dart';
 import 'firebase_options.dart';
 
 Future<bool> main(
     {String envFileName = 'assets/.staging.env',
     Client? httpClient,
-    AppConfig Function(Widget child)? configToRun}) async {
+    DependencyInjection Function(Widget child)? configToRun,
+    DateTime? withExplicitClock}) async {
   await WidgetsFlutterBinding.ensureInitialized();
   int initAttempt = 0;
 
@@ -44,6 +46,10 @@ Future<bool> main(
   }
 
   await runAppWithOptions(
-      envFileName: envFileName, httpClient: httpClient, appConfig: configToRun);
+      envFileName: envFileName,
+      httpClient: httpClient,
+      year: clock.now().year,
+      appConfig: configToRun);
+
   return true;
 }
