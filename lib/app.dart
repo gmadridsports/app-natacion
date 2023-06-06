@@ -4,22 +4,31 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gmadrid_natacion/infrastructure/SupabaseBucketsTrainingURLRepository.dart';
+import 'package:gmadrid_natacion/infrastructure/SystemDateTimeRepository.dart';
+import 'package:gmadrid_natacion/models/DateTimeRepository.dart';
+import 'package:gmadrid_natacion/models/TrainingDate.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:http/http.dart';
+import 'dependency_injection.dart';
 import 'firebase_options.dart';
+import 'package:clock/clock.dart';
 
-Future<void> runAppWithOptions({
-  String envFileName = 'assets/.prod.env',
-}) async {
+Future<bool> runAppWithOptions(
+    {String envFileName = 'assets/.prod.env',
+    Client? httpClient,
+    DependencyInjection Function(Widget child)? appConfig,
+    required int year}) async {
   await dotenv.load(fileName: envFileName, mergeWith: {});
 
   await Supabase.initialize(
       url: dotenv.get('SUPABASE_URL'),
       anonKey: dotenv.get('SUPABASE_ANON_KEY', fallback: ''),
-      debug: false);
+      debug: false,
+      httpClient: httpClient);
 
   // final fcmToken = await FirebaseMessaging.instance.getToken();
   // print(fcmToken);
@@ -49,7 +58,17 @@ Future<void> runAppWithOptions({
     throw (err);
   });
 
-  runApp(App());
+  // todo improve this
+  final configToRun = appConfig ??
+      (Widget child) => DependencyInjection.hydrateWithInstances(
+            SupabaseBucketsTrainingURLRepository(),
+            SystemDateTimeRepository(),
+            child: child,
+          );
+
+  runApp(configToRun(App(clock.now().year)));
+
+  return true;
 }
 
 class AppError extends StatelessWidget {
@@ -62,36 +81,49 @@ class AppError extends StatelessWidget {
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final int year;
+  late final int my_year;
+  MyHomePage hp = MyHomePage(
+    title: 'GMadrid Natación ',
+  );
+
+  App(this.year, {super.key}) {
+    this.my_year = clock.now().year;
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // final year = clock.now().year;
     return MaterialApp(
-      title: 'GMadrid Natación',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'GMadrid Natación'),
-    );
+        title:
+            'GMadrid Natación ${DependencyInjection.of(context)!.dateTimeRepository.now().year} ${year}',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.blue,
+        ),
+        home: hp);
+    // home: Padding(
+    //   padding: const EdgeInsets.all(48.0),
+    //   child: Text('${this.my_year} ${this.year}'),
+    // ));
   }
 }
 
-final kToday = DateTime.now();
-final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
-final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
-
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  late final int my_year;
+
+  MyHomePage({super.key, required this.title}) {
+    this.my_year = clock.now().year;
+  }
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -109,24 +141,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.week;
   String? _trainingURL = null;
+  Uint8List? _trainingPDF = null;
+  final kToday = clock.now();
+  late final kFirstDay;
+  // DateTime(clock.now().year, clock.now().month - 3, clock.now().day);
+  late final kLastDay;
+  // DateTime(clock.now().year, clock.now().month + 3, clock.now().day);
 
-  _MyHomePageState() {
-    _init();
-  }
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_trainingURL != null) {
+      return;
+    }
 
-  void _init() async {
-    final firstTraining = await Supabase.instance.client.storage
-        .from('general')
-        .getPublicUrl('trainings/2023-04-24.pdf');
+    final now = DependencyInjection.of(context)!.dateTimeRepository.now();
+    _focusedDay = now;
+    kFirstDay = DateTime(now.year, now.month - 3, now.day);
+    kLastDay = DateTime(now.year, now.month + 3, now.day);
+
     print('------');
-    print(firstTraining);
+    print(_focusedDay);
+    final firstTraining = await DependencyInjection.of(context)!
+        .trainingRepository
+        .getTrainingURL(TrainingDate.from(2023, 4, 24));
+    //
+    // // throw Exception('Test to see it in crashlytics');
+    final downloadedPdf = await DependencyInjection.of(context)!
+        .trainingRepository
+        .getTrainingPDF(TrainingDate.from(2023, 4, 24));
 
     setState(() {
       _trainingURL = firstTraining;
+      _trainingPDF = downloadedPdf;
     });
   }
 
@@ -134,20 +184,21 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _trainingURL = null;
     });
+
     final downloadedTrainings =
         await Supabase.instance.client.storage.listBuckets();
+
     downloadedTrainings.forEach((element) {
       print(element.name);
     });
-    final downloadedTraining = await Supabase.instance.client.storage
-        .from('general')
-        .getPublicUrl('trainings/2023-04-17.pdf');
-    print(downloadedTraining);
-    // throw Exception('Test to see it in crashlytics');
-    final dt = await Supabase.instance.client.storage
-        .from('general')
-        .download('/trainings/2023-04-17.pdf');
-    print(dt);
+
+    final trainingURLToShow = await DependencyInjection.of(context)!
+        .trainingRepository
+        .getTrainingURL(TrainingDate.from(2023, 4, 17));
+
+    final trainingPDFToShow = await DependencyInjection.of(context)!
+        .trainingRepository
+        .getTrainingPDF(TrainingDate.from(2023, 4, 17));
 
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -156,8 +207,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       // _file = downloadedTraining;
-      _trainingURL = downloadedTraining;
-      _counter++;
+      _trainingURL = trainingURLToShow;
+      _trainingPDF = trainingPDFToShow;
     });
   }
 
@@ -169,11 +220,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('GMadrid Natación'),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -199,6 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
               firstDay: kFirstDay,
               lastDay: kLastDay,
               focusedDay: _focusedDay,
+              currentDay: _focusedDay,
               calendarFormat: _calendarFormat,
               // selectedDayPredicate: (day) {
               //   // Use `selectedDayPredicate` to determine which day is currently selected.
@@ -209,10 +262,9 @@ class _MyHomePageState extends State<MyHomePage> {
               //   return isSameDay(_selectedDay, day);
               // }
             ),
-
             Expanded(
               child: _trainingURL != null
-                  ? SfPdfViewer.network(_trainingURL!)
+                  ? SfPdfViewer.memory(_trainingPDF!)
                   : Center(child: CircularProgressIndicator()),
             ),
             // const Text(

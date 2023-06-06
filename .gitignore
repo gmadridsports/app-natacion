@@ -30,7 +30,8 @@ migrate_working_dir/
 .packages
 .pub-cache/
 .pub/
-/build/
+/build/**/*
+!/build/ios_integ/Build/Products/ios_tests.zip
 
 # Symbolication related
 app.*.symbols
@@ -42,3 +43,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/integration_test/failures/
