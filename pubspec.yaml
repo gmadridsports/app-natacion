@@ -43,6 +43,7 @@ dependencies:
   firebase_messaging: ^14.4.1
   firebase_crashlytics: ^3.1.2
   mocktail: ^0.3.0
+  week_of_year: ^2.0.0
 
 dev_dependencies:
   flutter_test:
