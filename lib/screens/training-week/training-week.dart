@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gmadrid_natacion/screens/NamedRouteScreen.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -39,16 +40,38 @@ class _TrainingWeekState extends State<TrainingWeek> {
   late DateTime _calendarSelectionUpperBound;
   late DateTime _calendarSelectorSelectedDay;
   late bool _isCalendarSelectorWeekAvailable;
+
+  bool _isTrainingLoading = true;
+  TrainingDate? _trainingDateShowed;
+  late Uint8List _pdfRaw;
   // late int _calendarSelectorWeekOfYearDisplayed;
 
   _Loading _loading = _Loading.pdfLoading;
 
-  Future<Uint8List> _testDownload() async {
-    // // throw Exception('Test to see it in crashlytics');
+  void _loadTrainingPDF() async {
+    final trainingDatePdfShowing =
+        TrainingDate.fromDateTime(_calendarSelectorSelectedDay)
+            .firstTrainingDateWithinTheWeek();
+
+    if (trainingDatePdfShowing == _trainingDateShowed) {
+      return;
+    }
+
+    setState(() {
+      _trainingDateShowed = trainingDatePdfShowing;
+      _isTrainingLoading = true;
+    });
+    // todo handle error
+
     final downloadedPdf = await DependencyInjection.of(context)!
         .trainingRepository
-        .getTrainingPDF(TrainingDate.from(2023, 4, 24));
-    return downloadedPdf;
+        .getTrainingPDF(TrainingDate.fromDateTime(_calendarSelectorSelectedDay)
+            .firstTrainingDateWithinTheWeek());
+
+    setState(() {
+      _pdfRaw = downloadedPdf;
+      _isTrainingLoading = false;
+    });
   }
 
   void _loadFirstCalendarProps() async {
@@ -81,6 +104,8 @@ class _TrainingWeekState extends State<TrainingWeek> {
 
       _isCalendarSelectorLoading = false;
     });
+
+    _loadTrainingPDF();
   }
 
   @override
@@ -141,8 +166,10 @@ class _TrainingWeekState extends State<TrainingWeek> {
                       );
                     },
                   )),
-            const Expanded(
-              child: const Center(child: const CircularProgressIndicator()),
+            Expanded(
+              child: _isTrainingLoading == true
+                  ? const Center(child: CircularProgressIndicator())
+                  : SfPdfViewer.memory(_pdfRaw!),
             ),
           ],
         ),
@@ -154,6 +181,7 @@ class _TrainingWeekState extends State<TrainingWeek> {
     setState(() {
       _calendarSelectorSelectedDay = date;
     });
+    _loadTrainingPDF();
   }
 
   void _onCalendarSelectorChangeWeek(DateTime date) async {
@@ -178,5 +206,6 @@ class _TrainingWeekState extends State<TrainingWeek> {
       _isCalendarSelectorLoading = false;
       _isCalendarSelectorWeekAvailable = true;
     });
+    _loadTrainingPDF();
   }
 }

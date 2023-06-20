@@ -44,18 +44,33 @@ void main() {
     'Happy path show training of the week',
     nativeAutomation: true,
     (PatrolTester $) async {
-      final givenCurrentDateTime = DateTime(2018, 03, 03);
+      final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
+      final givenLastTrainingDateTime = DateTime.utc(2023, 04, 04);
+      final givenCurrentDateTime = DateTime.utc(2023, 04, 04);
 
       const givenIp = String.fromEnvironment('HOST_IP');
       final givenTrainingURL =
           'http://${givenIp}:54321/storage/v1/object/public/general/trainings/test.pdf';
+      final givenFirstTrainingDate =
+          TrainingDate.fromDateTime(givenFirstTrainingDateTime);
+      final givenLastTrainingDate =
+          TrainingDate.fromDateTime(givenLastTrainingDateTime);
 
       // todo another pdf for test purposes
       Response response =
           await get(Uri.parse('https://www.bertamini.net/api/cv'));
 
+      when(() => mockedTrainingRepository.getFirstTrainingDate())
+          .thenAnswer((_) => Future.value(givenFirstTrainingDate));
+
+      when(() => mockedTrainingRepository.getLastTrainingDate())
+          .thenAnswer((_) => Future.value(givenLastTrainingDate));
+
       when(() => mockedTrainingRepository.getTrainingURL(any()))
           .thenAnswer((_) => Future.value(givenTrainingURL));
+
+      when(() => mockedTrainingRepository.trainingExistsForWeek(any()))
+          .thenAnswer((_) => Future.value(true));
 
       when(() => mockedTrainingRepository.getTrainingPDF(any()))
           .thenAnswer((_) => Future.value(response.bodyBytes));

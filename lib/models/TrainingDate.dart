@@ -37,6 +37,16 @@ class TrainingDate {
   }
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TrainingDate &&
+          runtimeType == other.runtimeType &&
+          toString() == other.toString();
+
+  @override
+  int get hashCode => _dateTime.hashCode;
+
+  @override
   String toString() {
     return "${_dateTime.year}-${_dateTime.month.toString().padLeft(2, '0')}-${_dateTime.day.toString().padLeft(2, '0')}";
   }
