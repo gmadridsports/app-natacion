@@ -1,7 +1,8 @@
 # Gmadrid Natación App
 
-GMadrid Natación. 
-A Flutter application. Currently main focues on the iOS version.
+A Flutter application. Currently focused on the iOS version.
+
+![demo](./demo.png)
 
 ## Setup
 Needed:
