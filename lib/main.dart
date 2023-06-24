@@ -13,7 +13,7 @@ import 'dependency_injection.dart';
 import 'firebase_options.dart';
 
 Future<bool> main(
-    {String envFileName = 'assets/.staging.env',
+    {String envFileName = 'assets/.local.env',
     Client? httpClient,
     DependencyInjection Function(Widget child)? configToRun,
     DateTime? withExplicitClock}) async {

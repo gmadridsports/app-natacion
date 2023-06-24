@@ -122,8 +122,6 @@ class _TrainingWeekState extends State<TrainingWeek> {
 
   @override
   Widget build(BuildContext context) {
-    print(_calendarSelectorSelectedDay);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('GMadrid Natación'),
@@ -144,9 +142,6 @@ class _TrainingWeekState extends State<TrainingWeek> {
                   lastDay: _calendarSelectionUpperBound,
                   focusedDay: _calendarSelectorSelectedDay,
                   selectedDayPredicate: (day) {
-                    // print(day);
-                    // print(_calendarSelectorSelectedDay);
-                    // print('--');
                     return (!_isCalendarSelectorLoading &&
                         _isCalendarSelectorWeekAvailable &&
                         day == _calendarSelectorSelectedDay);

@@ -64,11 +64,7 @@ class SupabaseBucketsTrainingURLRepository implements TrainingRepository {
   @override
   Future<bool> trainingExistsForWeek(TrainingDate date) async {
     final dateSearch = date.toString();
-    return ((await Supabase.instance.client
-                .from('objects')
-                .select('name', new FetchOptions(count: CountOption.exact))
-                .eq('name', '${_trainingsFolder}/${dateSearch}.pdf'))
-            .count ==
-        1);
+    return (await Supabase.instance.client.rpc('training_available_for_date',
+        params: {'training_path': '${_trainingsFolder}/${dateSearch}.pdf'}));
   }
 }
