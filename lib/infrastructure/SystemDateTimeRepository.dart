@@ -6,4 +6,6 @@ import 'package:gmadrid_natacion/models/DateTimeRepository.dart';
 class SystemDateTimeRepository implements DateTimeRepository {
   @override
   DateTime now() => DateTime.now();
+
+  const SystemDateTimeRepository();
 }

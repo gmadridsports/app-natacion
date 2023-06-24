@@ -1,7 +1,7 @@
 -- begin the transaction, this will allow you to rollback any changes made during the test
 BEGIN;
 
-select plan(12);
+select plan(14);
 
 TRUNCATE TABLE storage.objects CASCADE ;
 TRUNCATE TABLE storage.buckets CASCADE;
@@ -74,6 +74,19 @@ SELECT
             $$ delete from storage.buckets returning 1 $$,
             'Anon cannot delete buckets'
         );
+
+select results_eq(
+               'select training_available_for_date(''trainings/2023-04-24.pdf'');',
+               $$VALUES (true)$$,
+               'training_available_for_date should return true for a file which is available'
+           );
+
+
+select results_eq(
+               'select training_available_for_date(''trainings/2023-04-31.pdf'');',
+               $$VALUES (false)$$,
+               'training_available_for_date should return false for a file which is not available'
+           );
 
 select * from finish();
 
