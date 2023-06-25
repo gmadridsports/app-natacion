@@ -73,6 +73,7 @@ flutter:
   assets:
     - assets/.local.env
     - assets/.test.env
+    - assets/.prod.env
     - assets/.staging.env
     - assets/images/logo.png
     - assets/test.pdf
