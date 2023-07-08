@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gmadrid_natacion/infrastructure/SupabaseBucketsTrainingURLRepository.dart';
@@ -33,6 +34,12 @@ Future<bool> runAppWithOptions(
     provisional: false,
     sound: true,
   );
+
+  String? token = await messaging.getToken();
+
+  if (kDebugMode) {
+    print('Registration Token=$token');
+  }
 
   const dateTimeRepository = SystemDateTimeRepository();
 

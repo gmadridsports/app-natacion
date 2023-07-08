@@ -44,3 +44,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /integration_test/failures/
+
+# patrol
+integration_test/test_bundle.dart

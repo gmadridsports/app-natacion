@@ -12,8 +12,7 @@ import 'dependency_injection.dart';
 import 'firebase_options.dart';
 
 Future<bool> main(
-    {String envFileName = 'assets/.prod.env',
-    Client? httpClient,
+    {Client? httpClient,
     DependencyInjection Function(Widget child)? configToRun,
     DateTime? withExplicitClock}) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +46,8 @@ Future<bool> main(
   initializeDateFormatting();
 
   await runAppWithOptions(
-      envFileName: envFileName,
+      envFileName:
+          const String.fromEnvironment('ENV', defaultValue: 'assets/.prod.env'),
       httpClient: httpClient,
       year: clock.now().year,
       appConfig: configToRun);

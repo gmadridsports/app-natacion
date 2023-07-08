@@ -79,7 +79,6 @@ void main() {
           .thenReturn(givenCurrentDateTime);
 
       app_main.main(
-        envFileName: 'assets/.test.env',
         configToRun: configToRun,
       );
 
