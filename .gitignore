@@ -32,7 +32,7 @@ migrate_working_dir/
 .pub/
 /build/**/*
 !/build/ios_integ/Build/Products/ios_tests.zip
-!/build/app/outputs/apk/release/app-release.apk
+!/build/app/outputs/apk/debug/app-debug.apk
 !/build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 
 # Symbolication related
