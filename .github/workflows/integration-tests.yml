@@ -63,7 +63,7 @@ jobs:
       - name: Install Patrol cli
         run: 'dart pub global activate patrol_cli'
       - name: Run iOS Integration tests
-        run: './integration_ios_run.sh'
+        run: 'make test-flutter-ios'
   integration-tests-android:
     runs-on: ubuntu-latest
     steps:
@@ -85,4 +85,4 @@ jobs:
       - name: Install Patrol cli
         run: 'dart pub global activate patrol_cli'
       - name: Run Android Integration tests
-        run: './integration_android_run.sh'
+        run: 'make test-flutter-android'

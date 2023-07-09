@@ -46,8 +46,7 @@ Future<bool> main(
   initializeDateFormatting();
 
   await runAppWithOptions(
-      envFileName:
-          const String.fromEnvironment('ENV', defaultValue: 'assets/.prod.env'),
+      envName: const String.fromEnvironment('ENV', defaultValue: 'prod'),
       httpClient: httpClient,
       year: clock.now().year,
       appConfig: configToRun);

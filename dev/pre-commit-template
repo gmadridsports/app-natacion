@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ x"${SKIP_TEST_INTEGRATION_GENERATION}" != "x" ]; then
+	echo "Skipping the build of the tests..."
+	exit 0;
+fi
+
+# iOS
+ios_test_build_zip="build/ios_integ/Build/Products"
+
+./dev/tests/integration_ios_build.sh && \
+git update-index --add ${ios_test_build_zip}/ios_tests.zip
+git update-index --add .flutter-plugins-dependencies
+
+# Android
+android_test_build_apk="build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+android_app_apk="build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+./dev/tests/integration_android_build.sh && \
+git update-index --add ${android_test_build_apk} && \
+git update-index --add ${android_app_apk}

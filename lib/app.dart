@@ -10,11 +10,11 @@ import 'package:http/http.dart';
 import 'dependency_injection.dart';
 
 Future<bool> runAppWithOptions(
-    {String envFileName = 'assets/.prod.env',
+    {String envName = 'prod',
     Client? httpClient,
     DependencyInjection Function(Widget child)? appConfig,
     required int year}) async {
-  await dotenv.load(fileName: envFileName, mergeWith: {});
+  await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
   await Supabase.initialize(
     url: dotenv.get('SUPABASE_URL'),
