@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gmadrid_natacion/infrastructure/SupabaseBucketsTrainingURLRepository.dart';
@@ -9,11 +10,11 @@ import 'package:http/http.dart';
 import 'dependency_injection.dart';
 
 Future<bool> runAppWithOptions(
-    {String envFileName = 'assets/.prod.env',
+    {String envName = 'prod',
     Client? httpClient,
     DependencyInjection Function(Widget child)? appConfig,
     required int year}) async {
-  await dotenv.load(fileName: envFileName, mergeWith: {});
+  await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
   await Supabase.initialize(
     url: dotenv.get('SUPABASE_URL'),
@@ -33,6 +34,12 @@ Future<bool> runAppWithOptions(
     provisional: false,
     sound: true,
   );
+
+  String? token = await messaging.getToken();
+
+  if (kDebugMode) {
+    print('Registration Token=$token');
+  }
 
   const dateTimeRepository = SystemDateTimeRepository();
 

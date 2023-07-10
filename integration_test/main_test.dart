@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gmadrid_natacion/dependency_injection.dart';
 import 'package:gmadrid_natacion/models/DateTimeRepository.dart';
@@ -48,17 +49,19 @@ void main() {
       final givenLastTrainingDateTime = DateTime.utc(2023, 04, 04);
       final givenCurrentDateTime = DateTime.utc(2023, 04, 04);
 
-      const givenIp = String.fromEnvironment('HOST_IP');
+      const envName = String.fromEnvironment('ENV');
+      await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
+      final givenIpAddressPort = dotenv.get('SUPABASE_URL');
+
       final givenTrainingURL =
-          'http://${givenIp}:54321/storage/v1/object/public/general/trainings/test.pdf';
+          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf';
       final givenFirstTrainingDate =
           TrainingDate.fromDateTime(givenFirstTrainingDateTime);
       final givenLastTrainingDate =
           TrainingDate.fromDateTime(givenLastTrainingDateTime);
 
-      // todo another pdf for test purposes
-      Response response =
-          await get(Uri.parse('https://www.bertamini.net/api/cv'));
+      Response response = await get(Uri.parse(
+          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf'));
 
       when(() => mockedTrainingRepository.getFirstTrainingDate())
           .thenAnswer((_) => Future.value(givenFirstTrainingDate));
@@ -79,7 +82,6 @@ void main() {
           .thenReturn(givenCurrentDateTime);
 
       app_main.main(
-        envFileName: 'assets/.test.env',
         configToRun: configToRun,
       );
 
@@ -97,25 +99,4 @@ void main() {
       // print(bytes);
     },
   );
-
-  // patrolTest(
-  //   'Happy path show training of the week',
-  //   nativeAutomation: true,
-  //   (PatrolTester $) async {
-  //     app_main.main(envFileName: 'assets/.test.env');
-  //
-  //     if (await $.native
-  //         .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
-  //       await $.native.grantPermissionWhenInUse();
-  //     }
-  //
-  //     await $.pumpAndSettle();
-  //
-  //     await $('GMadrid Natación').waitUntilVisible();
-  //
-  //     // todo enable as soon as https://github.com/leancodepl/patrol/issues/788
-  //     // var bytes = await binding.takeScreenshot('screen1');
-  //     // print(bytes);
-  //   },
-  // );
 }

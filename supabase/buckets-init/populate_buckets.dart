@@ -20,7 +20,7 @@ Future<List<File>> getAllFilesWithExtension(
       .toList();
 }
 
-void upload() async {
+Future<void> upload() async {
   Map<String, String> envVars = Platform.environment;
   final supabase = await SupabaseClient(
       (envVars['SUPABASE_URL'] ?? 'http://localhost:54321'),
@@ -28,9 +28,12 @@ void upload() async {
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU'));
 
   final context = p.Context();
-  final filesToUpload = await getAllFilesWithExtension('trainings', '.pdf');
+  print(Platform.script.path.replaceFirst('populate_buckets.dart', ''));
+  final filesToUpload = await getAllFilesWithExtension(
+      '${Platform.script.path.replaceFirst('/populate_buckets.dart', '')}/trainings',
+      '.pdf');
 
-  await Future.forEach(filesToUpload, (file) async {
+  await Future.forEach(filesToUpload, (File file) async {
     final basename = context.basename(file.path);
 
     final trainingFiles = await supabase.storage.from('general').list(

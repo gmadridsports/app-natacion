@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.bertamini.gmadrid.natacion.gmadrid_natacion">
-   <application
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
         android:label="gmadrid_natacion"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">

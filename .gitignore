@@ -32,6 +32,8 @@ migrate_working_dir/
 .pub/
 /build/**/*
 !/build/ios_integ/Build/Products/ios_tests.zip
+!/build/app/outputs/apk/debug/app-debug.apk
+!/build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 
 # Symbolication related
 app.*.symbols
@@ -44,3 +46,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /integration_test/failures/
+
+# patrol
+integration_test/test_bundle.dart

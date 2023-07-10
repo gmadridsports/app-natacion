@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:clock/clock.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -13,8 +12,7 @@ import 'dependency_injection.dart';
 import 'firebase_options.dart';
 
 Future<bool> main(
-    {String envFileName = 'assets/.local.env',
-    Client? httpClient,
+    {Client? httpClient,
     DependencyInjection Function(Widget child)? configToRun,
     DateTime? withExplicitClock}) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +46,7 @@ Future<bool> main(
   initializeDateFormatting();
 
   await runAppWithOptions(
-      envFileName: envFileName,
+      envName: const String.fromEnvironment('ENV', defaultValue: 'prod'),
       httpClient: httpClient,
       year: clock.now().year,
       appConfig: configToRun);
