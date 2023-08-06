@@ -1,13 +1,7 @@
 #!/usr/bin/env /bin/sh
 
+git diff --word-diff=porcelain HEAD~1 dev/tests/artifact_files_latest_build.info  > /tmp/timestamp-diff.txt
 
-  declare -a artifact_files=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
-   for artifact_filepath in "${artifact_files[@]}"; do
-     echo $artifact_filepath
-    for local_filepath in $(<${artifact_filepath}); do
-      file_name=$(basename "${local_filepath}")
+# check if HEAD~1 has a different timestamp
 
-      echo "Copying ${file_name}"
-#      scp -i "${SSH_PRIVATE_KEY_PATH}" "${SSH_USER_SRC_PATH}/${file_name}" "${local_filepath}"
-    done
-  done
+
