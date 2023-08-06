@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gmadrid_natacion/infrastructure/SupabaseBucketsTrainingURLRepository.dart';
 import 'package:gmadrid_natacion/infrastructure/SystemDateTimeRepository.dart';
+import 'package:gmadrid_natacion/screens/login/login.dart';
 import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart';
 import 'dependency_injection.dart';
+import 'screens/profile/profile.dart';
+import 'screens/splash-screen/splash-screen.dart';
 
 Future<bool> runAppWithOptions(
     {String envName = 'prod',
@@ -65,9 +68,12 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: TrainingWeek.routeName,
+        initialRoute: SplashScreen.routeName,
         routes: {
           TrainingWeek.routeName: (context) => TrainingWeek(),
+          SplashScreen.routeName: (context) => SplashScreen(),
+          Profile.routeName: (context) => Profile(),
+          Login.routeName: (context) => Login(),
         });
     // home: Padding(
     //   padding: const EdgeInsets.all(48.0),

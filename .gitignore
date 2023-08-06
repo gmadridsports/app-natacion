@@ -49,3 +49,6 @@ app.*.map.json
 
 # patrol
 integration_test/test_bundle.dart
+
+/dev/tests/env/**/*
+/dev/tests/**/*.tmp

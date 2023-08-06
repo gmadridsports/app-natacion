@@ -12,6 +12,7 @@ import 'package:week_of_year/date_week_extensions.dart';
 
 import '../../dependency_injection.dart';
 import '../../models/TrainingDate.dart';
+import '../profile/profile.dart';
 
 class TrainingWeek extends StatefulWidget implements NamedRouteScreen {
   @override
@@ -126,6 +127,20 @@ class _TrainingWeekState extends State<TrainingWeek> {
       appBar: AppBar(
         title: Text('GMadrid Natación'),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: 0,
+          onTap: (x) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, Profile.routeName, (_) => false);
+          },
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.event_note), label: 'Entrenos'),
+            BottomNavigationBarItem(icon: Icon(Icons.pool), label: 'Piscinas'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person_2), label: 'Perfil'),
+          ]),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
