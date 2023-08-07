@@ -66,11 +66,11 @@ jobs:
         uses: GuillaumeFalourd/setup-rsync@v1.10
         run: |
           echo ${{ secrets.TEST_ARTIFACTS_SSH_KEY }} > ~/.ssh/id_github_piensasrv
-          chmod 600 ~/.ssh/id_github_piensasrv
-          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
-          echo ${{ secrets.TEST_ARTIFACTS_HOST }} > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
-      - name: Copy latest branch test artifacts from the repository
-        run: 'make test-artifacts-pull'
+#          chmod 600 ~/.ssh/id_github_piensasrv
+#          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
+#          echo ${{ secrets.TEST_ARTIFACTS_HOST }} > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
+#      - name: Copy latest branch test artifacts from the repository
+#        run: 'make test-artifacts-pull'
 #      - name: Copy latest branch test artifacts from the repository
 #        uses: up9cloud/action-rsync@master
 #        env:
