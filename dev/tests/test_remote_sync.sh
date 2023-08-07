@@ -36,10 +36,10 @@ if [ "$1" = "pull" ]; then
 #      echo "Copying ${file_name}"
 #      cp "${LOCAL_RSYNCED_PULL_DIR}/${local_filepath}" "${local_filepath}"
 #    done
-  done
+#  done
 
-  echo "Cleaning up tmp dir..."
-  rm -R ${LOCAL_RSYNCED_BASEDIR_PULL}
+#  echo "Cleaning up tmp dir..."
+#  rm -R ${LOCAL_RSYNCED_BASEDIR_PULL}
 
   echo "Done."
   exit 0
