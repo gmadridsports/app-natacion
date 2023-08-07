@@ -3,7 +3,15 @@
 SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
 #SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
 SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
-BRANCH_NAME=$(git branch --show-current)
+if [ -v GMADRID_TEST_ARTIFACTS_BRANCH_NAME ]; then
+  echo "entro1"
+  BRANCH_NAME=${GMADRID_TEST_ARTIFACTS_BRANCH_NAME}
+else
+  echo "entro2"
+  BRANCH_NAME=$(git branch --show-current)
+fi
+
+echo $BRANCH_NAME
 #SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/auth-login"
 SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
 #SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/auth-login"
