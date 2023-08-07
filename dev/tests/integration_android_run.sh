@@ -9,14 +9,14 @@ echo $artifact_check_result_output;
 if [ $artifact_check_result -eq 1 ]; then
   echo "Building...";
 
-  dev/tests/integration_ios_build.sh
+  dev/tests/integration_android_build.sh
 fi
 
 echo "Checking if test build artifact are here..."
 if [ ! -f "build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk" ]; then
-  echo "Integration test artifact not found. Building...";
+  echo "Integration test artifact not found. Probably the pull did not found any artifact on remote 🤔. Check above. Building...";
 
-  dev/tests/integration_ios_build.sh
+  dev/tests/integration_android_build.sh
 fi
 
 echo "Running the integration tests on firebase..."

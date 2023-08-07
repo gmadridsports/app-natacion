@@ -15,7 +15,7 @@ fi
 
 echo "Checking if test build artifact are here..."
 if [ ! -f "build/ios_integ/Build/Products/ios_tests.zip" ]; then
-  echo "Integration test artifact not found. Building...";
+  echo "Integration test artifact not found. Probably the pull did not found any artifact on remote 🤔. Check above. Building...";
 
   dev/tests/integration_ios_build.sh
 fi

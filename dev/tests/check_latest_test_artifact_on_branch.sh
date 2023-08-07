@@ -1,6 +1,6 @@
 #!/usr/bin/env /bin/sh
 
-git diff --word-diff=porcelain HEAD~1 dev/tests/artifact_files_latest_build.info  > /tmp/timestamp-diff.txt || exit 1;
+git diff --word-diff=porcelain HEAD~1 dev/tests/artifact_build_timestamp.info  > /tmp/timestamp-diff.txt || exit 1;
 new_timestamp=$(grep --extended-regexp "^\+[0-9]{19}" < /tmp/timestamp-diff.txt)
 old_timestamp=$(grep --extended-regexp "^-[0-9]{19}" < /tmp/timestamp-diff.txt)
 new_timestamp="${new_timestamp:1}"

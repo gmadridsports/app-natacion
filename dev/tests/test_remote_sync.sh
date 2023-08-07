@@ -2,31 +2,29 @@
 SSH_USER_SRC_PATH=$(cat dev/tests/env/ssh-user-src-path)
 SSH_PRIVATE_KEY_PATH=$(cat dev/tests/env/ssh-private-key-path)
 BRANCH_NAME=${GITHUB_HEAD_REF:-$(git branch --show-current)}
-SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
 LOCAL_RSYNCED_BASEDIR_PULL="/tmp/gmadrid-natacion-test-artifacts-pull"
 LOCAL_RSYNCED_PUSH_BASEDIR="/tmp/gmadrid-natacion-test-artifacts-push"
-LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}"
-LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${BRANCH_NAME}"
+REMOTE_ARTIFACT_BUILD_TIMESTAMP="$(cat dev/tests/artifact_build_timestamp.info)"
+REMOTE_ARTIFACT_BUILD_UUID="$(cat dev/tests/artifact_build_uuid.info)"
+REMOTE_ARTIFACT_BUILD_DIR="${REMOTE_ARTIFACT_BUILD_TIMESTAMP}-${REMOTE_ARTIFACT_BUILD_UUID}"
+REMOTE_ARTIFACT_FULL_PATH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}/${REMOTE_ARTIFACT_BUILD_DIR}"
+LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}/${REMOTE_ARTIFACT_BUILD_DIR}"
+LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${REMOTE_ARTIFACT_BUILD_DIR}"
 
 if [ "$1" = "pull" ]; then
   echo "Pulling the latest test artifact info from the server..."
-
-  rsync -ahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH}/artifact_files_latest_build.info dev/tests/artifact_files_latest_build.info.tmp || exit 1
-
-  if [ $(<dev/tests/artifact_files_latest_build.info) -gt $(<dev/tests/artifact_files_latest_build.info.tmp) ]; then
-    echo "The local test artifacts are newer than the remote ones. Skipping..."
-    exit 0
-    else
-      echo "The remote test artifacts are newer than the local ones. Proceeding..."
-      mv dev/tests/artifact_files_latest_build.info.tmp dev/tests/artifact_files_latest_build.info
-  fi
-
   echo "Copying the integration tests from the server... 🚀"
 
-  rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH} ${LOCAL_RSYNCED_BASEDIR_PULL} || exit 1
+  rm -R ${LOCAL_RSYNCED_BASEDIR_PULL}
+  mkdir -p ${LOCAL_RSYNCED_BASEDIR_PULL}
 
-  declare -a artifact_files=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
-  for artifact_filepaths in "${artifact_files[@]}"; do
+  rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${REMOTE_ARTIFACT_FULL_PATH} ${LOCAL_RSYNCED_BASEDIR_PULL} || {
+    echo "No remote artifacts for this commit. Skipping... ⏭️";
+    exit 0;
+  }
+
+  declare -a artifact_files_list=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
+  for artifact_filepaths in "${artifact_files_list[@]}"; do
     for local_filepath in $(<${artifact_filepaths}); do
       file_name=$(basename "${local_filepath}")
       dir_path=$(dirname "${local_filepath}")
@@ -47,22 +45,11 @@ fi
 if [ "$1" = "push" ]; then
   echo "Copying the integration tests to the server... 🚀"
 
-  echo "Pulling the latest test artifact info from the server..."
-  rsync -ahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH}/artifact_files_latest_build.info dev/tests/artifact_files_latest_build.info.tmp || echo "-1" > dev/tests/artifact_files_latest_build.info.tmp
-
-  if [ $(<dev/tests/artifact_files_latest_build.info) -lt $(<dev/tests/artifact_files_latest_build.info.tmp) ]; then
-    echo "The local test artifacts are older than the remote ones. Skipping..."
-    exit 1
-    else
-      echo "The local test artifacts are newer than the remote ones. Proceeding..."
-      rm dev/tests/artifact_files_latest_build.info.tmp
-  fi
-
   rm -R ${LOCAL_RSYNCED_PUSH_BASEDIR}
   mkdir -p ${LOCAL_RSYNCED_PUSH_BASEDIR}
 
-  declare -a artifact_files=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
-   for artifact_filepaths in "${artifact_files[@]}"; do
+  declare -a artifact_files_list=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
+   for artifact_filepaths in "${artifact_files_list[@]}"; do
     for local_filepath in $(<${artifact_filepaths}); do
       file_name=$(basename "${local_filepath}")
       dir_path=$(dirname "${local_filepath}")
@@ -72,10 +59,13 @@ if [ "$1" = "push" ]; then
     done
   done
 
-  rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${LOCAL_RSYNCED_PUSH_BASEDIR}/ ${SSH_USER_SRC_PATH}/ || exit 1
+  mkdir -p "${LOCAL_RSYNCED_PUSH_DIR}/dev/tests"
+  cp dev/tests/artifact_files_latest_build.info "${LOCAL_RSYNCED_PUSH_DIR}/dev/tests/artifact_files_latest_build.info"
+  cp dev/tests/artifact_build_timestamp.info "${LOCAL_RSYNCED_PUSH_DIR}/dev/tests/artifact_build_timestamp.info"
 
-  echo "Syncing the latest generated artifact_files_latest_build.info"
-  rsync -ahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" dev/tests/artifact_files_latest_build.info ${SSH_USER_SRC_PATH_BRANCH}/artifact_files_latest_build.info || exit 1
+  echo "Syncing to the remote..."
+  rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${LOCAL_RSYNCED_PUSH_BASEDIR}/ ${SSH_USER_SRC_PATH}/ || exit 1
+  echo "Synced."
 
   echo "Cleaning up tmp push dir..."
   rm -R ${LOCAL_RSYNCED_PUSH_BASEDIR}
