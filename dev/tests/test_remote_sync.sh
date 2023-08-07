@@ -2,7 +2,6 @@
 
 SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
 SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
-SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
 BRANCH_NAME=${GITHUB_HEAD_REF:-$(git branch --show-current)}
 SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
 #LOCAL_RSYNCED_BASEDIR_PULL="/tmp/gmadrid-natacion-test-artifacts-pull"
@@ -17,7 +16,7 @@ if [ "$1" = "pull" ]; then
 
   if [ $(<dev/tests/artifact_files_latest_build.info) -gt $(<dev/tests/artifact_files_latest_build.info.tmp) ]; then
     echo "The local test artifacts are newer than the remote ones. Skipping..."
-    exit 1
+    exit 0
     else
       echo "The remote test artifacts are newer than the local ones. Proceeding..."
       mv dev/tests/artifact_files_latest_build.info.tmp dev/tests/artifact_files_latest_build.info
