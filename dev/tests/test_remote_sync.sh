@@ -3,7 +3,7 @@
 SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
 #SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
 SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
-if [ -v GMADRID_TEST_ARTIFACTS_BRANCH_NAME ]; then
+if [ -n "${GMADRID_TEST_ARTIFACTS_BRANCH_NAME}" ]; then
   echo "entro1"
   BRANCH_NAME=${GMADRID_TEST_ARTIFACTS_BRANCH_NAME}
 else
