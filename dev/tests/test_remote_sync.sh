@@ -1,7 +1,6 @@
 #!/usr/bin/env /bin/sh
-
-SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
-SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
+SSH_USER_SRC_PATH=$(cat dev/tests/env/ssh-user-src-path)
+SSH_PRIVATE_KEY_PATH=$(cat dev/tests/env/ssh-private-key-path)
 BRANCH_NAME=${GITHUB_HEAD_REF:-$(git branch --show-current)}
 SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
 LOCAL_RSYNCED_BASEDIR_PULL="/tmp/gmadrid-natacion-test-artifacts-pull"
