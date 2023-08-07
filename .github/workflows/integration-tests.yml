@@ -23,8 +23,6 @@ jobs:
         run: ssh-keyscan -H dc991f7.online-server.cloud >> ~/.ssh/known_hosts
         env:
           TEST_ARTIFACTS_HOST: ${{ secrets.TEST_ARTIFACTS_HOST}}
-      - name: test secret
-        run: tail ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
       - name: Copy latest branch test artifacts from the repository
         run: 'make test-artifacts-pull'
       - name: Install the Apple certificate and provisioning profile
