@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/sh
+#!/usr/bin/env /bin/bash
 SSH_USER_SRC_PATH=$(cat dev/tests/env/ssh-user-src-path)
 SSH_PRIVATE_KEY_PATH=$(cat dev/tests/env/ssh-private-key-path)
 BRANCH_NAME=${GITHUB_HEAD_REF:-$(git branch --show-current)}
