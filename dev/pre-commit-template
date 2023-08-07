@@ -13,6 +13,7 @@ echo "Building the test artifacts..."
 echo "Syncing the test artifacts with the remote..."
 ./dev/tests/test_remote_sync.sh push
 
-git update-index --add dev/tests/artifact_files_latest_build.info
+git update-index --add dev/tests/artifact_build_timestamp.info
+git update-index --add dev/tests/artifact_build_uuid.info
 
 echo "Done."
