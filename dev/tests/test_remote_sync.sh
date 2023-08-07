@@ -4,10 +4,7 @@ SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
 SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
 SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
 BRANCH_NAME=${GITHUB_HEAD_REF:-$(git branch --show-current)}
-
-#SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/auth-login"
 SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
-#SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/auth-login"
 #LOCAL_RSYNCED_BASEDIR_PULL="/tmp/gmadrid-natacion-test-artifacts-pull"
 #LOCAL_RSYNCED_PUSH_BASEDIR="/tmp/gmadrid-natacion-test-artifacts-push"
 #LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}"
@@ -18,13 +15,13 @@ if [ "$1" = "pull" ]; then
 
   rsync -ahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH}/artifact_files_latest_build.info dev/tests/artifact_files_latest_build.info.tmp || exit 1
 
-#  if [ $(<dev/tests/artifact_files_latest_build.info) -gt $(<dev/tests/artifact_files_latest_build.info.tmp) ]; then
-#    echo "The local test artifacts are newer than the remote ones. Skipping..."
-#    exit 1
-#    else
-#      echo "The remote test artifacts are newer than the local ones. Proceeding..."
-#      mv dev/tests/artifact_files_latest_build.info.tmp dev/tests/artifact_files_latest_build.info
-#  fi
+  if [ $(<dev/tests/artifact_files_latest_build.info) -gt $(<dev/tests/artifact_files_latest_build.info.tmp) ]; then
+    echo "The local test artifacts are newer than the remote ones. Skipping..."
+    exit 1
+    else
+      echo "The remote test artifacts are newer than the local ones. Proceeding..."
+      mv dev/tests/artifact_files_latest_build.info.tmp dev/tests/artifact_files_latest_build.info
+  fi
 #
 #  echo "Copying the integration tests from the server... 🚀"
 #
