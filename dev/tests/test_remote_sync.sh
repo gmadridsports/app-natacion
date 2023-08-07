@@ -14,6 +14,8 @@ LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${BRANCH_NAME}"
 echo $PWD
 echo $SSH_USER_SRC_PATH
 echo $SSH_PRIVATE_KEY_PATH
+cat dev/tests/env/ssh-private-key-path
+cat ${PWD}/dev/tests/env/ssh-private-key-path
 ## end debugging
 
 if [ "$1" = "pull" ]; then
