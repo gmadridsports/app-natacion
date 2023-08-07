@@ -15,13 +15,10 @@ jobs:
         uses: GuillaumeFalourd/setup-rsync@v1.1
       - name: Setup remote test artifacts
         run: |
-          echo "${TEST_ARTIFACTS_SSH_KEY}" | base64 -d > ~/.ssh/id_github_piensasrv
+          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_piensasrv
           chmod 600 ~/.ssh/id_github_piensasrv
           echo "${{secrets.TEST_ARTIFACTS_HOST}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
 #          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
-        env:
-          TEST_ARTIFACTS_SSH_KEY: ${{secrets.TEST_ARTIFACTS_SSH_KEY}}
-#          TEST_ARTIFACTS_HOST: ${{secrets.TEST_ARTIFACTS_HOST}}
       - name: setup known host for rsync
         run: ssh-keyscan -H dc991f7.online-server.cloud >> ~/.ssh/known_hosts
         env:
@@ -30,8 +27,6 @@ jobs:
         run: tail ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
       - name: Copy latest branch test artifacts from the repository
         run: 'make test-artifacts-pull'
-        env:
-          GMADRID_TEST_ARTIFACTS_BRANCH_NAME: ${{ github.ref }}
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_DIST_BASE64: ${{ secrets.BUILD_CERTIFICATE_DIST_BASE64 }}
