@@ -9,6 +9,12 @@ LOCAL_RSYNCED_PUSH_BASEDIR="/tmp/gmadrid-natacion-test-artifacts-push"
 LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}"
 LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${BRANCH_NAME}"
 
+
+## debugging
+echo $SSH_USER_SRC_PATH
+ECHO $SSH_PRIVATE_KEY_PATH
+## end debugging
+
 if [ "$1" = "pull" ]; then
   echo "Pulling the latest test artifact info from the server..."
 
