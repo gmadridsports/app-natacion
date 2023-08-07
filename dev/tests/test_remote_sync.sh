@@ -21,9 +21,9 @@ if [ "$1" = "pull" ]; then
       echo "The remote test artifacts are newer than the local ones. Proceeding..."
       mv dev/tests/artifact_files_latest_build.info.tmp dev/tests/artifact_files_latest_build.info
   fi
-#
-#  echo "Copying the integration tests from the server... 🚀"
-#
+
+  echo "Copying the integration tests from the server... 🚀"
+
 #  rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH} ${LOCAL_RSYNCED_BASEDIR_PULL} || exit 1
 #
 #
