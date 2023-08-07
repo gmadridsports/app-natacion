@@ -11,6 +11,7 @@ LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${BRANCH_NAME}"
 
 
 ## debugging
+echo $PWD
 echo $SSH_USER_SRC_PATH
 echo $SSH_PRIVATE_KEY_PATH
 ## end debugging
