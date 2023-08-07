@@ -73,7 +73,7 @@ if [ "$1" = "push" ]; then
 
   rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${LOCAL_RSYNCED_PUSH_BASEDIR}/ ${SSH_USER_SRC_PATH}/ || exit 1
 
-  echo "Generating the latest test artifact info and syncing with the remote one..."
+  echo "Pushing the latest test artifact info to the remote one..."
   rsync -ahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" dev/tests/artifact_files_latest_build.info ${SSH_USER_SRC_PATH_BRANCH}/artifact_files_latest_build.info || exit 1
 
   echo "Cleaning up tmp push dir..."
