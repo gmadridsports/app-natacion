@@ -1,6 +1,17 @@
 #!/usr/bin/env /bin/sh
 
 dev_target="15.7"
+echo "Checking if pulled test build artifacts are the latest ones..."
+artifact_check_result_output=$(dev/tests/check_latest_test_artifact_on_branch.sh)
+artifact_check_result="${?}"
+
+echo $artifact_check_result_output;
+
+if [ $artifact_check_result -eq 1 ]; then
+  echo "Building...";
+
+  dev/tests/integration_ios_build.sh
+fi
 
 echo "Checking if test build artifact are here..."
 if [ ! -f "build/ios_integ/Build/Products/ios_tests.zip" ]; then

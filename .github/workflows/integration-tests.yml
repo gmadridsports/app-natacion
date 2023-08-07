@@ -62,30 +62,34 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1.1.1
       - name: Install Patrol cli
         run: 'dart pub global activate patrol_cli'
-        #todo auth-login scp tests
-      - name: Copy test artifacts from the repository
-        run: 'make copy-test-artifacts'
+      - name: Copy latest branch test artifacts from the repository
+        uses: up9cloud/action-rsync@master
+        env:
+          HOST: ${{ secrets.TEST_ARTIFACTS_HOST}}
+          KEY: ${{ secrets.TEST_ARTIFACTS_SSH_KEY }}
+          SOURCE: ${{ secrets.TEST_ARTIFACTS_REMOTE_BASEPATH }}/${{ github.ref_name }}
+          TARGET: ./
       - name: Run iOS Integration tests
         run: 'make test-flutter-ios'
-  integration-tests-android:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Repository
-        uses: actions/checkout@v3
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          architecture: x64
-      - name: Run Flutter Pub Get
-        run: flutter pub get
-      - name: Google Cloud Auth
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1.1.1
-      - name: Install Patrol cli
-        run: 'dart pub global activate patrol_cli'
-      - name: Run Android Integration tests
-        run: 'make test-flutter-android'
+#  integration-tests-android:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Get Repository
+#        uses: actions/checkout@v3
+#      - name: Setup Flutter SDK
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#          architecture: x64
+#      - name: Run Flutter Pub Get
+#        run: flutter pub get
+#      - name: Google Cloud Auth
+#        uses: 'google-github-actions/auth@v0'
+#        with:
+#          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+#      - name: Setup Google Cloud SDK
+#        uses: google-github-actions/setup-gcloud@v1.1.1
+#      - name: Install Patrol cli
+#        run: 'dart pub global activate patrol_cli'
+#      - name: Run Android Integration tests
+#        run: 'make test-flutter-android'

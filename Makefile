@@ -48,7 +48,7 @@ test-artifacts-push: test-build-artifact
 	./dev/tests/test_remote_sync.sh push
 
 test-artifacts-pull:
-	@echo "Pullinf from the remote..."
+	@echo "Pulling from the remote..."
 	./dev/tests/test_remote_sync.sh pull
 
 test-backend: backend-start
