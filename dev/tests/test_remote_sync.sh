@@ -1,15 +1,16 @@
 #!/usr/bin/env /bin/sh
 
-SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
+#SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
+SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts"
 #SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
-SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
-BRANCH_NAME=$(git branch --show-current)
+#SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
+#BRANCH_NAME=$(git branch --show-current)
 #SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
-SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/auth-login"
-LOCAL_RSYNCED_BASEDIR_PULL="/tmp/gmadrid-natacion-test-artifacts-pull"
-LOCAL_RSYNCED_PUSH_BASEDIR="/tmp/gmadrid-natacion-test-artifacts-push"
-LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}"
-LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${BRANCH_NAME}"
+#SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/auth-login"
+#LOCAL_RSYNCED_BASEDIR_PULL="/tmp/gmadrid-natacion-test-artifacts-pull"
+#LOCAL_RSYNCED_PUSH_BASEDIR="/tmp/gmadrid-natacion-test-artifacts-push"
+#LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}"
+#LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${BRANCH_NAME}"
 
 if [ "$1" = "pull" ]; then
   echo "Pulling the latest test artifact info from the server..."
