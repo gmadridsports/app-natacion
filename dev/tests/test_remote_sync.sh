@@ -1,7 +1,7 @@
 #!/usr/bin/env /bin/sh
 
 SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
-#SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
+SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
 SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
 BRANCH_NAME=${GITHUB_HEAD_REF:-$(git branch --show-current)}
 
