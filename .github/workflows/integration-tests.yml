@@ -14,18 +14,16 @@ jobs:
       - name: Setup rsync
         uses: GuillaumeFalourd/setup-rsync@v1.1
       - name: Setup remote test artifacts
-        run: |
-          echo "${TEST_ARTIFACTS_SSH_KEY}" > ~/.ssh/id_github_piensasrv
-          chmod 600 ~/.ssh/id_github_piensasrv
-          echo "ls ${{ github.workspace }}/../"
-          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
-          echo ${{ secrets.TEST_ARTIFACTS_HOST }} > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
+        run: 'echo "${TEST_ARTIFACTS_SSH_KEY}" > ~/.ssh/id_github_piensasrv'
+#          chmod 600 ~/.ssh/id_github_piensasrv
+#          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
+#          echo ${{ secrets.TEST_ARTIFACTS_HOST }} > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
         env:
           TEST_ARTIFACTS_SSH_KEY: ${{secrets.TEST_ARTIFACTS_SSH_KEY}}
       - name: test secret
         run: tail ~/.ssh/id_github_piensasrv
-      - name: Copy latest branch test artifacts from the repository
-        run: 'make test-artifacts-pull'
+#      - name: Copy latest branch test artifacts from the repository
+#        run: 'make test-artifacts-pull'
       #      - name: Copy latest branch test artifacts from the repository
       #        uses: up9cloud/action-rsync@master
       #        env:
