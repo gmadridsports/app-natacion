@@ -30,8 +30,10 @@ if [ "$1" = "pull" ]; then
    for artifact_filepaths in "${artifact_files[@]}"; do
     for local_filepath in $(<${artifact_filepaths}); do
       file_name=$(basename "${local_filepath}")
+      dir_path=$(dirname "${local_filepath}")
 
       echo "Copying ${file_name}"
+      mkdir -p "${dir_path}"
       cp "${LOCAL_RSYNCED_PULL_DIR}/${local_filepath}" "${local_filepath}"
     done
   done
