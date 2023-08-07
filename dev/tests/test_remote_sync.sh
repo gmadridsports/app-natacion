@@ -1,7 +1,8 @@
 #!/usr/bin/env /bin/sh
 
 SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
-SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
+#SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
+SSH_PRIVATE_KEY_PATH="~/.ssh/id_github_piensasrv"
 BRANCH_NAME=$(git branch --show-current)
 #SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
 SSH_USER_SRC_PATH_BRANCH="mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/auth-login"
