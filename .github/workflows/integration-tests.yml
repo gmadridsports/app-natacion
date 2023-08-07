@@ -21,7 +21,7 @@ jobs:
 #          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
         env:
           TEST_ARTIFACTS_SSH_KEY: ${{secrets.TEST_ARTIFACTS_SSH_KEY}}
-          TEST_ARTIFACTS_HOST: $ {{ secrets.TEST_ARTIFACTS_HOST }}
+          TEST_ARTIFACTS_HOST: ${{secrets.TEST_ARTIFACTS_HOST}}
       - name: setup known host for rsync
         run: ssh-keyscan -H dc991f7.online-server.cloud >> ~/.ssh/known_hosts
         env:
