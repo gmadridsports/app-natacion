@@ -3,7 +3,8 @@
 SSH_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
 SSH_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
 BRANCH_NAME=$(git branch --show-current)
-SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
+#SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/${BRANCH_NAME}"
+SSH_USER_SRC_PATH_BRANCH="${SSH_USER_SRC_PATH}/auth-login"
 LOCAL_RSYNCED_BASEDIR_PULL="/tmp/gmadrid-natacion-test-artifacts-pull"
 LOCAL_RSYNCED_PUSH_BASEDIR="/tmp/gmadrid-natacion-test-artifacts-push"
 LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}"
@@ -14,27 +15,27 @@ if [ "$1" = "pull" ]; then
 
   rsync -ahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH}/artifact_files_latest_build.info dev/tests/artifact_files_latest_build.info.tmp || exit 1
 
-  if [ $(<dev/tests/artifact_files_latest_build.info) -gt $(<dev/tests/artifact_files_latest_build.info.tmp) ]; then
-    echo "The local test artifacts are newer than the remote ones. Skipping..."
-    exit 1
-    else
-      echo "The remote test artifacts are newer than the local ones. Proceeding..."
-      mv dev/tests/artifact_files_latest_build.info.tmp dev/tests/artifact_files_latest_build.info
-  fi
-
-  echo "Copying the integration tests from the server... 🚀"
-
-  rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH} ${LOCAL_RSYNCED_BASEDIR_PULL} || exit 1
-
-
-  declare -a artifact_files=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
-   for artifact_filepaths in "${artifact_files[@]}"; do
-    for local_filepath in $(<${artifact_filepaths}); do
-      file_name=$(basename "${local_filepath}")
-
-      echo "Copying ${file_name}"
-      cp "${LOCAL_RSYNCED_PULL_DIR}/${local_filepath}" "${local_filepath}"
-    done
+#  if [ $(<dev/tests/artifact_files_latest_build.info) -gt $(<dev/tests/artifact_files_latest_build.info.tmp) ]; then
+#    echo "The local test artifacts are newer than the remote ones. Skipping..."
+#    exit 1
+#    else
+#      echo "The remote test artifacts are newer than the local ones. Proceeding..."
+#      mv dev/tests/artifact_files_latest_build.info.tmp dev/tests/artifact_files_latest_build.info
+#  fi
+#
+#  echo "Copying the integration tests from the server... 🚀"
+#
+#  rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH} ${LOCAL_RSYNCED_BASEDIR_PULL} || exit 1
+#
+#
+#  declare -a artifact_files=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
+#   for artifact_filepaths in "${artifact_files[@]}"; do
+#    for local_filepath in $(<${artifact_filepaths}); do
+#      file_name=$(basename "${local_filepath}")
+#
+#      echo "Copying ${file_name}"
+#      cp "${LOCAL_RSYNCED_PULL_DIR}/${local_filepath}" "${local_filepath}"
+#    done
   done
 
   echo "Cleaning up tmp dir..."
