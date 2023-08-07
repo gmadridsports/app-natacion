@@ -29,7 +29,7 @@ jobs:
       - name: test secret
         run: tail ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
       - name: Copy latest branch test artifacts from the repository
-        run: 'export GMADRID_TEST_ARTIFACTS_BRANCH_NAME && make test-artifacts-pull'
+        run: 'echo $GMADRID_TEST_ARTIFACTS_BRANCH_NAME && export GMADRID_TEST_ARTIFACTS_BRANCH_NAME && make test-artifacts-pull'
       - name: Install the Apple certificate and provisioning profile
         env:
           GMADRID_TEST_ARTIFACTS_BRANCH_NAME: ${{ github.ref_name }}
