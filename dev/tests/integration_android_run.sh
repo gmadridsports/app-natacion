@@ -1,10 +1,22 @@
 #!/usr/bin/env /bin/sh
 
+echo "Checking if pulled test build artifacts are the latest ones..."
+artifact_check_result_output=$(dev/tests/check_latest_test_artifact_on_branch.sh)
+artifact_check_result="${?}"
+
+echo $artifact_check_result_output;
+
+if [ $artifact_check_result -eq 1 ]; then
+  echo "Building...";
+
+  dev/tests/integration_ios_build.sh
+fi
+
 echo "Checking if test build artifact are here..."
 if [ ! -f "build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk" ]; then
   echo "Integration test artifact not found. Building...";
 
-  dev/tests/integration_android_build.sh
+  dev/tests/integration_ios_build.sh
 fi
 
 echo "Running the integration tests on firebase..."
