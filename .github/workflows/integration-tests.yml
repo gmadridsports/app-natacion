@@ -63,7 +63,7 @@ jobs:
       - name: Install Patrol cli
         run: 'dart pub global activate patrol_cli'
       - name: Setup rsync
-        uses: GuillaumeFalourd/setup-rsync@v1.10
+        uses: GuillaumeFalourd/setup-rsync@v1.1
       - name: Setup remote test artifacts
         run: |
           echo "${{ secrets.TEST_ARTIFACTS_SSH_KEY }}" > ~/.ssh/id_github_piensasrv
