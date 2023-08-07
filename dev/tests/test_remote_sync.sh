@@ -8,15 +8,6 @@ LOCAL_RSYNCED_PUSH_BASEDIR="/tmp/gmadrid-natacion-test-artifacts-push"
 LOCAL_RSYNCED_PUSH_DIR="${LOCAL_RSYNCED_PUSH_BASEDIR}/${BRANCH_NAME}"
 LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${BRANCH_NAME}"
 
-
-## debugging
-echo $PWD
-echo $SSH_USER_SRC_PATH
-echo $SSH_PRIVATE_KEY_PATH
-cat dev/tests/env/ssh-private-key-path
-cat ${PWD}/dev/tests/env/ssh-private-key-path
-## end debugging
-
 if [ "$1" = "pull" ]; then
   echo "Pulling the latest test artifact info from the server..."
 
@@ -34,17 +25,17 @@ if [ "$1" = "pull" ]; then
 
   rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${SSH_USER_SRC_PATH_BRANCH} ${LOCAL_RSYNCED_BASEDIR_PULL} || exit 1
 
-#  declare -a artifact_files=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
-#  for artifact_filepaths in "${artifact_files[@]}"; do
-#    for local_filepath in $(<${artifact_filepaths}); do
-#      file_name=$(basename "${local_filepath}")
-#      dir_path=$(dirname "${local_filepath}")
-#
-#      echo "Copying ${file_name}"
-#      mkdir -p "${dir_path}"
-#      cp "${LOCAL_RSYNCED_PULL_DIR}/${local_filepath}" "${local_filepath}"
-#    done
-#  done
+  declare -a artifact_files=("dev/tests/artifact_files_android.txt" "dev/tests/artifact_files_ios.txt")
+  for artifact_filepaths in "${artifact_files[@]}"; do
+    for local_filepath in $(<${artifact_filepaths}); do
+      file_name=$(basename "${local_filepath}")
+      dir_path=$(dirname "${local_filepath}")
+
+      echo "Copying ${file_name}"
+      mkdir -p "${dir_path}"
+      cp "${LOCAL_RSYNCED_PULL_DIR}/${local_filepath}" "${local_filepath}"
+    done
+  done
 
   echo "Cleaning up tmp dir..."
   rm -R ${LOCAL_RSYNCED_BASEDIR_PULL}
