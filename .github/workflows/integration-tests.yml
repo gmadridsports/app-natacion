@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "${TEST_ARTIFACTS_SSH_KEY}" | base64 -d > ~/.ssh/id_github_piensasrv
           chmod 600 ~/.ssh/id_github_piensasrv
-          echo "${TEST_ARTIFACTS_HOST}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path/${{github.}}
+          echo "${TEST_ARTIFACTS_HOST}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
 #          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
         env:
           TEST_ARTIFACTS_SSH_KEY: ${{secrets.TEST_ARTIFACTS_SSH_KEY}}
