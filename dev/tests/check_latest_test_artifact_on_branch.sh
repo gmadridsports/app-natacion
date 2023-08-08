@@ -23,7 +23,7 @@ if [ $new_timestamp -gt $old_timestamp ]; then
   exit 0
 fi
 
-echo "It looks we don't have the latest test artifact"
+echo "It looks we don't have the latest test artifact: timestamp older than the previous commit"
 exit 1
 
 
