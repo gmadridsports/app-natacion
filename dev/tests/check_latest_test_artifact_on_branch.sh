@@ -19,7 +19,7 @@ if [ -z "$old_timestamp" ] || [ -n "${old_timestamp//[0-9]}" ]; then
 fi
 
 if [ $new_timestamp -gt $old_timestamp ]; then
-  echo "It looks we got the latest artifact"
+  echo "It looks we could have the latest test artifact on remote."
   exit 0
 fi
 
