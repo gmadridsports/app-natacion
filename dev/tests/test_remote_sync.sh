@@ -13,7 +13,7 @@ LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${REMOTE_ARTIFACT_BUILD_DI
 
 if [ "$1" = "pull" ]; then
   echo "Pulling the latest test artifact info from the server..."
-
+dev/tests/check_latest_test_artifact_on_branch.sh
   check_latest_test_artifact_on_branch_output=$(dev/tests/check_latest_test_artifact_on_branch.sh)
   check_latest_test_artifact_on_branch_result="${?}"
 
