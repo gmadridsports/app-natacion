@@ -2,7 +2,7 @@
 
 BRANCH_NAME=${GITHUB_HEAD_REF:-$(git branch --show-current)}
 git pull origin ${BRANCH_NAME} || exit 1;
-git diff --word-diff=porcelain ${BRANCH_NAME} ${BRANCH_NAME}~1 dev/tests/artifact_build_timestamp.info  > /tmp/timestamp-diff.txt || exit 1;
+git diff --word-diff=porcelain ${BRANCH_NAME} ${BRANCH_NAME}~1 -- dev/tests/artifact_build_timestamp.info  > /tmp/timestamp-diff.txt || exit 1;
 cat /tmp/timestamp-diff.txt;
 new_timestamp=$(cat /tmp/timestamp-diff.txt | grep --extended-regexp "^\+[0-9]{19}")
 old_timestamp=$(cat /tmp/timestamp-diff.txt | grep --extended-regexp "^-[0-9]{19}")
