@@ -17,14 +17,12 @@ jobs:
         uses: GuillaumeFalourd/setup-rsync@v1.1
       - name: Setup remote test artifacts
         run: |
-          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_piensasrv
-          chmod 600 ~/.ssh/id_github_piensasrv
+          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_artifactssrv
+          chmod 600 ~/.ssh/id_github_artifactssrv
           echo "${{secrets.SSH_USER_SRC_PATH}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
-          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
+          echo "~/.ssh/id_github_artifactssrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
       - name: setup known host for rsync
-        run: ssh-keyscan -H dc991f7.online-server.cloud >> ~/.ssh/known_hosts
-        env:
-          TEST_ARTIFACTS_HOST: ${{ secrets.TEST_ARTIFACTS_HOST}}
+        run: ssh-keyscan -H $ {{ secrets.TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
       - name: Copy latest branch test artifacts from the repository
         run: 'make test-artifacts-pull'
       - name: Install the Apple certificate and provisioning profile
@@ -92,15 +90,13 @@ jobs:
       - name: Setup remote test artifacts
         run: |
           mkdir -p ~/.ssh
-          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_piensasrv
-          echo ~/.ssh/id_github_piensasrv
-          chmod 600 ~/.ssh/id_github_piensasrv
+          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_artifactssrv
+          echo ~/.ssh/id_github_artifactssrv
+          chmod 600 ~/.ssh/id_github_artifactssrv
           echo "${{secrets.SSH_USER_SRC_PATH}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
-          echo "~/.ssh/id_github_piensasrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
+          echo "~/.ssh/id_github_artifactssrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
       - name: setup known host for rsync
-        run: ssh-keyscan -H dc991f7.online-server.cloud >> ~/.ssh/known_hosts
-        env:
-          TEST_ARTIFACTS_HOST: ${{ secrets.TEST_ARTIFACTS_HOST}}
+        run: ssh-keyscan -H ${{ TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
       - name: Copy latest branch test artifacts from the repository
         run: 'make test-artifacts-pull'
       - name: Setup Flutter SDK
