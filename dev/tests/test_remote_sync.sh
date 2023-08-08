@@ -28,7 +28,7 @@ if [ "$1" = "pull" ]; then
   mkdir -p ${LOCAL_RSYNCED_BASEDIR_PULL}
 
   rsync -rahP -e "ssh -i '${SSH_PRIVATE_KEY_PATH}'" ${REMOTE_ARTIFACT_FULL_PATH} ${LOCAL_RSYNCED_BASEDIR_PULL} || {
-    echo "No remote artifacts for this commit. Skipping... 🫥️";
+    echo "No remote artifacts found for this commit. Skipping... 🫥️";
     exit 0;
   }
 
