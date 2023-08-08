@@ -22,6 +22,12 @@ dev/tests/check_latest_test_artifact_on_branch.sh
     exit 0
   fi
 
+
+  if [[ $check_latest_test_artifact_on_branch_result -eq 2 ]]; then
+    echo "${check_latest_test_artifact_on_branch_output}. Aborting."
+    exit 1
+  fi
+
   echo "Copying the integration tests from the server... 🚀"
 
   rm -R ${LOCAL_RSYNCED_BASEDIR_PULL}
