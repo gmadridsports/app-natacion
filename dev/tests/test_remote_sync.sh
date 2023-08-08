@@ -13,6 +13,15 @@ LOCAL_RSYNCED_PULL_DIR="${LOCAL_RSYNCED_BASEDIR_PULL}/${REMOTE_ARTIFACT_BUILD_DI
 
 if [ "$1" = "pull" ]; then
   echo "Pulling the latest test artifact info from the server..."
+
+  check_latest_test_artifact_on_branch_output=$(dev/tests/check_latest_test_artifact_on_branch.sh)
+  check_latest_test_artifact_on_branch_result="${?}"
+
+  if [[ $check_latest_test_artifact_on_branch_result -eq 1 ]]; then
+    echo "${check_latest_test_artifact_on_branch_output}. Skipping... 🫥"
+    exit 0
+  fi
+
   echo "Copying the integration tests from the server... 🚀"
 
   rm -R ${LOCAL_RSYNCED_BASEDIR_PULL}
