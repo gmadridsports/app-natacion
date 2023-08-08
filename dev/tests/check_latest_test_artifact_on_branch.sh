@@ -10,7 +10,7 @@ new_timestamp="${new_timestamp:1}"
 old_timestamp="${old_timestamp:1}"
 
 if [ -z "$new_timestamp" ] || [ -n "${new_timestamp//[0-9]}" ]; then
-  echo "It looks we don't have the latest test artifact prebuilt"
+  echo "It looks we don't have the latest test artifact prebuilt: timestamp unchanged since the last commit"
   exit 1
 fi
 
