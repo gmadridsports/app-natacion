@@ -99,17 +99,29 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
       - name: Copy latest branch test artifacts from the repository
         run: 'make test-artifacts-pull'
+
+
       - uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
-          java-version: '18.0.2'
-      - name: Install xmllint
-        run: sudo apt-get install -y lib32stdc++6
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
+          distribution: 'zulu'
+          java-version: '11'
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           architecture: x64
+#
+#
+#      - uses: actions/setup-java@v2
+#        with:
+#          distribution: 'temurin'
+#          java-version: '18.0.2'
+#      - name: Install xmllint
+#        run: sudo apt-get install -y lib32stdc++6
+#      - name: Setup Flutter SDK
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#          architecture: x64
       - name: Run Flutter Pub Get
         run: flutter pub get
       - name: Google Cloud Auth
