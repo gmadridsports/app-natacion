@@ -99,6 +99,10 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
       - name: Copy latest branch test artifacts from the repository
         run: 'make test-artifacts-pull'
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '18.0.2'
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
@@ -114,9 +118,5 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1.1.1
       - name: Install Patrol cli
         run: 'dart pub global activate patrol_cli'
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '18.0.2'
       - name: Run Android Integration tests
         run: 'make test-flutter-android'
