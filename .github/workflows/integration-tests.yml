@@ -114,5 +114,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1.1.1
       - name: Install Patrol cli
         run: 'dart pub global activate patrol_cli'
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '18.0.2.1'
       - name: Run Android Integration tests
         run: 'make test-flutter-android'
