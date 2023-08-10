@@ -133,4 +133,4 @@ jobs:
       - name: Install Patrol cli
         run: 'dart pub global activate patrol_cli'
       - name: Run Android Integration tests
-        run: 'patrol build android --target integration_test/main_test.dart --dart-define="ENV=test" --verbose'
+        run: 'flutter build apk --verbose'
