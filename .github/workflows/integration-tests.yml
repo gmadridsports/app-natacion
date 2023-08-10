@@ -131,6 +131,6 @@ jobs:
       - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1.1.1
       - name: Install Patrol cli
-        run: 'dart pub global activate patrol_cli'
+        run: 'flutter pub add patrol --dev && dart pub global activate patrol_cli'
       - name: Run Android Integration tests
-        run: 'flutter build apk --verbose'
+        run: 'patrol test --target integration_test/main_test.dart --dart-define="ENV=test" --verbose'
