@@ -42,44 +42,11 @@ void main() {
       );
 
   patrolTest(
-    'Happy path show training of the week',
+    'Unauthenticated user should see login screen',
     nativeAutomation: true,
     (PatrolTester $) async {
-      final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
-      final givenLastTrainingDateTime = DateTime.utc(2023, 04, 04);
-      final givenCurrentDateTime = DateTime.utc(2023, 04, 04);
-
       const envName = String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
-      final givenIpAddressPort = dotenv.get('SUPABASE_URL');
-
-      final givenTrainingURL =
-          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf';
-      final givenFirstTrainingDate =
-          TrainingDate.fromDateTime(givenFirstTrainingDateTime);
-      final givenLastTrainingDate =
-          TrainingDate.fromDateTime(givenLastTrainingDateTime);
-
-      Response response = await get(Uri.parse(
-          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf'));
-
-      when(() => mockedTrainingRepository.getFirstTrainingDate())
-          .thenAnswer((_) => Future.value(givenFirstTrainingDate));
-
-      when(() => mockedTrainingRepository.getLastTrainingDate())
-          .thenAnswer((_) => Future.value(givenLastTrainingDate));
-
-      when(() => mockedTrainingRepository.getTrainingURL(any()))
-          .thenAnswer((_) => Future.value(givenTrainingURL));
-
-      when(() => mockedTrainingRepository.trainingExistsForWeek(any()))
-          .thenAnswer((_) => Future.value(true));
-
-      when(() => mockedTrainingRepository.getTrainingPDF(any()))
-          .thenAnswer((_) => Future.value(response.bodyBytes));
-
-      when(() => mockedDateTimeRepository.now())
-          .thenReturn(givenCurrentDateTime);
 
       app_main.main(
         configToRun: configToRun,
@@ -93,12 +60,68 @@ void main() {
       await $.pumpAndSettle();
 
       await $('Acceso').waitUntilVisible();
-      // todo complete the login path
-      // await $('GMadrid Natación').waitUntilVisible();
-
-      // todo enable as soon as https://github.com/leancodepl/patrol/issues/788
-      // var bytes = await binding.takeScreenshot('screen1');
-      // print(bytes);
     },
   );
+
+  // todo do the login test with auth/unauth and the logout
+  // patrolTest(
+  //   'Happy path show training of the week',
+  //   nativeAutomation: true,
+  //   (PatrolTester $) async {
+  //     final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
+  //     final givenLastTrainingDateTime = DateTime.utc(2023, 04, 04);
+  //     final givenCurrentDateTime = DateTime.utc(2023, 04, 04);
+  //
+  //     const envName = String.fromEnvironment('ENV', defaultValue: 'test');
+  //     await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
+  //     final givenIpAddressPort = dotenv.get('SUPABASE_URL');
+  //
+  //     final givenTrainingURL =
+  //         '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf';
+  //     final givenFirstTrainingDate =
+  //         TrainingDate.fromDateTime(givenFirstTrainingDateTime);
+  //     final givenLastTrainingDate =
+  //         TrainingDate.fromDateTime(givenLastTrainingDateTime);
+  //
+  //     Response response = await get(Uri.parse(
+  //         '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf'));
+  //
+  //     when(() => mockedTrainingRepository.getFirstTrainingDate())
+  //         .thenAnswer((_) => Future.value(givenFirstTrainingDate));
+  //
+  //     when(() => mockedTrainingRepository.getLastTrainingDate())
+  //         .thenAnswer((_) => Future.value(givenLastTrainingDate));
+  //
+  //     when(() => mockedTrainingRepository.getTrainingURL(any()))
+  //         .thenAnswer((_) => Future.value(givenTrainingURL));
+  //
+  //     when(() => mockedTrainingRepository.trainingExistsForWeek(any()))
+  //         .thenAnswer((_) => Future.value(true));
+  //
+  //     when(() => mockedTrainingRepository.getTrainingPDF(any()))
+  //         .thenAnswer((_) => Future.value(response.bodyBytes));
+  //
+  //     when(() => mockedDateTimeRepository.now())
+  //         .thenReturn(givenCurrentDateTime);
+  //
+  //     app_main.main(
+  //       configToRun: configToRun,
+  //     );
+  //
+  //     if (await $.native
+  //         .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
+  //       await $.native.grantPermissionWhenInUse();
+  //     }
+  //
+  //     await $.pumpAndSettle();
+  //
+  //     await $('Acceso').waitUntilVisible();
+  //     // todo complete the login path
+  //     // await $('GMadrid Natación').waitUntilVisible();
+  //
+  //     // todo enable as soon as https://github.com/leancodepl/patrol/issues/788
+  //     // var bytes = await binding.takeScreenshot('screen1');
+  //     // print(bytes);
+  //   },
+  // );
 }

@@ -1,16 +1,13 @@
-#!/usr/bin/env /bin/sh
+#!/usr/bin/env /bin/bash
 
-# todo auth-login continue here
-# prompt the user for the path of the file and store into the file located into dev/tests/env/ssh-user-src-path
 echo "Remote scp test artifacts path:"
-echo "i.e. mbertamini@dc991f7.online-server.cloud:/home/mbertamini/gmadrid-natacion/test-artifacts/"
 echo ""
-echo "Remote scp path: \c"
-read -r SSH_USER_SRC_PATH
-echo "${SSH_USER_SRC_PATH}" > dev/tests/env/ssh-user-src-path
+DEFAULT_USER_SRC_PATH=$(<dev/tests/env/ssh-user-src-path)
+read -p "Enter the remote scp test artifacts path [${DEFAULT_USER_SRC_PATH}]: " -r SSH_USER_SRC_PATH_INPUT
+echo "${SSH_USER_SRC_PATH_INPUT:-$DEFAULT_USER_SRC_PATH}" > dev/tests/env/ssh-user-src-path
 
-echo "Private ssh key path: \c"
-read -r SSH_PRIVATE_KEY_PATH
-echo "${SSH_PRIVATE_KEY_PATH}" > dev/tests/env/ssh-private-key-path
+DEFAULT_PRIVATE_KEY_PATH=$(<dev/tests/env/ssh-private-key-path)
+read -p "Enter the private ssh key path [${DEFAULT_PRIVATE_KEY_PATH}]: " -r SSH_PRIVATE_KEY_PATH_INPUT
+echo "${SSH_PRIVATE_KEY_PATH_INPUT:-${DEFAULT_PRIVATE_KEY_PATH}}" > dev/tests/env/ssh-private-key-path
 
 echo "Done."
