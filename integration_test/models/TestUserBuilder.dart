@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:supabase/supabase.dart';
 
+// todo auth-login move to infrastructure
 class TestUserBuilder {
   String email =
       '${generateRandomString(10)}+${DateTime.now().millisecondsSinceEpoch}@gmadridnatacion.bertamini.net';
@@ -14,7 +15,9 @@ class TestUserBuilder {
   static const String supabaseCreationFunctionName = 'generate_user';
 
   Future<TestUser> build() async {
-    const envName = const String.fromEnvironment('ENV', defaultValue: 'test');
+    const adminPassword = const String.fromEnvironment(
+        'SUPABASE_ADMIN_TEST_PASSWORD',
+        defaultValue: 'test');
     //todo remove ../
     // final dotEnv = DotEnv(filePath: 'assets/.${envName}.env');
     // dotEnv.getDotEnv();
@@ -28,8 +31,9 @@ class TestUserBuilder {
         dotenv.get('SUPABASE_URL', fallback: ''),
         dotenv.get('SUPABASE_ANON_KEY', fallback: ''));
 
+    // todo auth-login must work with env var
     await supabase.auth.signInWithPassword(
-        email: TestUser.forbiddenCreationEmail, password: 'password');
+        email: TestUser.forbiddenCreationEmail, password: adminPassword);
 
     await supabase.from('test_users').insert({
       'email': this.email,
