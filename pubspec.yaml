@@ -45,6 +45,7 @@ dependencies:
   mocktail: ^0.3.0
   week_of_year: ^2.0.0
   supabase_auth_ui: ^0.2.1
+  dart_dotenv: ^1.0.1
 
 dev_dependencies:
   flutter_test:

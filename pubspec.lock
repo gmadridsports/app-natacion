@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  dart_dotenv:
+    dependency: "direct main"
+    description:
+      name: dart_dotenv
+      sha256: "299c2b0358e4d1d50f0468c00f17ab206c770eb6380d1e3c1b9098b6d2ba7dbf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   device_info_plus:
     dependency: transitive
     description:

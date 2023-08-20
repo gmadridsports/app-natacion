@@ -30,8 +30,9 @@ class _LoginState extends State<Login> {
       });
 
       if (!RunningMode.fromEnvironment().isTestingMode()) {
+        // todo auth-login password with the field in case of test
         final response = await Supabase.instance.client.auth.signInWithPassword(
-            email: _emailController.text.trim(), password: 'test');
+            email: _emailController.text.trim(), password: 'password');
       } else {
         await Supabase.instance.client.auth.signInWithOtp(
           email: _emailController.text.trim(),

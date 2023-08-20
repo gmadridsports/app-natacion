@@ -35,7 +35,7 @@ test-flutter-ios:
 
 test-flutter-local: backend-start
 	@echo "Running tests locally"
-	patrol test --target integration_test/main_test.dart --dart-define="ENV=test" --verbose
+	patrol test --target integration_test/main_test.dart --dart-define="ENV=local" --verbose
 
 test-build-artifact:
 	@echo "Building artifact"
