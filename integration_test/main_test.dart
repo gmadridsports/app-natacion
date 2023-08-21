@@ -134,6 +134,10 @@ void main() {
         Selector(text: 'Email'),
         text: givenUser.email,
       );
+      await $.native.enterText(
+        Selector(text: 'Password'),
+        text: givenUser.password,
+      );
 
       await $.native.tap(Selector(text: 'Envíame el enlace de acceso'));
 

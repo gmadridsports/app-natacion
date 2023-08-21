@@ -1,7 +1,6 @@
 import 'TestUser.dart';
 import 'dart:math';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import 'package:dart_dotenv/dart_dotenv.dart';
 import 'package:supabase/supabase.dart';
 
 // todo auth-login move to infrastructure
@@ -18,20 +17,14 @@ class TestUserBuilder {
     const adminPassword = const String.fromEnvironment(
         'SUPABASE_ADMIN_TEST_PASSWORD',
         defaultValue: 'test');
-    //todo remove ../
-    // final dotEnv = DotEnv(filePath: 'assets/.${envName}.env');
-    // dotEnv.getDotEnv();
 
     final newTestUser =
         new TestUser(email, password, useCaseDescription, isMember);
 
-    // final supabase = await SupabaseClient('http://localhost:54321',
-    //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0');
     final supabase = await SupabaseClient(
         dotenv.get('SUPABASE_URL', fallback: ''),
         dotenv.get('SUPABASE_ANON_KEY', fallback: ''));
 
-    // todo auth-login must work with env var
     await supabase.auth.signInWithPassword(
         email: TestUser.forbiddenCreationEmail, password: adminPassword);
 

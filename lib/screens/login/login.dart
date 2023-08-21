@@ -21,6 +21,8 @@ class _LoginState extends State<Login> {
   bool _isLoading = false;
   bool _redirecting = false;
   late final TextEditingController _emailController = TextEditingController();
+  late final TextEditingController _passwordController =
+      TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
 
   Future<void> _signIn() async {
@@ -30,9 +32,9 @@ class _LoginState extends State<Login> {
       });
 
       if (!RunningMode.fromEnvironment().isTestingMode()) {
-        // todo auth-login password with the field in case of test
         final response = await Supabase.instance.client.auth.signInWithPassword(
-            email: _emailController.text.trim(), password: 'password');
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
       } else {
         await Supabase.instance.client.auth.signInWithOtp(
           email: _emailController.text.trim(),
@@ -89,24 +91,39 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final testPasswordField = TextFormField(
+      controller: _passwordController,
+      decoration: const InputDecoration(labelText: 'Password'),
+      obscureText: true,
+    );
+
+    final scaffoldElements = [
+      const Text('Accede a la aplicación con tu email'),
+      const SizedBox(height: 18),
+      TextFormField(
+        controller: _emailController,
+        decoration: const InputDecoration(labelText: 'Email'),
+      ),
+      TextFormField(
+        controller: _passwordController,
+        decoration: const InputDecoration(labelText: 'Password'),
+        obscureText: true,
+      ),
+      const SizedBox(height: 18),
+      ElevatedButton(
+          onPressed: _isLoading ? null : _signIn,
+          child: Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso')),
+    ];
+
+    if (RunningMode.fromEnvironment().isTestingMode()) {
+      scaffoldElements.remove(testPasswordField);
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Acceso')),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          const Text('Accede a la aplicación con tu email'),
-          const SizedBox(height: 18),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-          ),
-          const SizedBox(height: 18),
-          ElevatedButton(
-              onPressed: _isLoading ? null : _signIn,
-              child:
-                  Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso')),
-        ],
-      ),
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+          children: scaffoldElements),
     );
   }
 }
