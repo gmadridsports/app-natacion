@@ -72,7 +72,7 @@ void main() {
   );
 
   patrolTest(
-    'Can authenticate with the right credentials',
+    'Can log in and log out',
     nativeAutomation: true,
     (PatrolTester $) async {
       const envName = String.fromEnvironment('ENV', defaultValue: 'test');
@@ -143,6 +143,13 @@ void main() {
 
       await $.pumpAndSettle();
       await $('GMadrid Natación').waitUntilVisible();
+
+      // and when
+      await $.native.tap(Selector(text: 'Salir'));
+      await $.pumpAndSettle();
+
+      // then
+      await $('Acceso').waitUntilVisible();
     },
   );
 

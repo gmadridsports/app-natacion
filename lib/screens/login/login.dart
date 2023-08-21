@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
         _isLoading = true;
       });
 
-      if (!RunningMode.fromEnvironment().isTestingMode()) {
+      if (RunningMode.fromEnvironment().isTestingMode()) {
         final response = await Supabase.instance.client.auth.signInWithPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
@@ -45,7 +45,8 @@ class _LoginState extends State<Login> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Check your email for a login link!')),
+          const SnackBar(
+              content: Text('Controla tu buzón y pincha el enlace de acceso!')),
         );
         _emailController.clear();
       }
@@ -104,18 +105,14 @@ class _LoginState extends State<Login> {
         controller: _emailController,
         decoration: const InputDecoration(labelText: 'Email'),
       ),
-      TextFormField(
-        controller: _passwordController,
-        decoration: const InputDecoration(labelText: 'Password'),
-        obscureText: true,
-      ),
+      testPasswordField,
       const SizedBox(height: 18),
       ElevatedButton(
           onPressed: _isLoading ? null : _signIn,
           child: Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso')),
     ];
 
-    if (RunningMode.fromEnvironment().isTestingMode()) {
+    if (!RunningMode.fromEnvironment().isTestingMode()) {
       scaffoldElements.remove(testPasswordField);
     }
 
