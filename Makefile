@@ -33,7 +33,7 @@ test-flutter-ios:
 	@echo "Running iOS tests"
 	./dev/tests/integration_ios_run.sh
 
-SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test-password)
+SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-local-test-password)
 test-flutter-local: backend-start
 	@echo "Running tests locally"
 	patrol test --target integration_test/main_test.dart --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD)" --verbose
