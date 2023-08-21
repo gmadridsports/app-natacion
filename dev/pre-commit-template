@@ -7,7 +7,7 @@ fi
 
 echo "Building the test artifacts..."
 ./dev/tests/integration_ios_build.sh
-./dev/tests/integration_android_build.sh
+java --version && ./dev/tests/integration_android_build.sh
 ./dev/tests/integration_update_artifact_latest_build.sh
 
 echo "Syncing the test artifacts with the remote..."
