@@ -5,7 +5,6 @@ for select
                to public
                using ((name = 'general'::text));
 
-
 create policy "Everybody can access PDFs"
 on "storage"."objects"
 as permissive

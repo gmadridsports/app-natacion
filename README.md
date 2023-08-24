@@ -74,6 +74,21 @@ The app uses its own environment defined by `assets/.test.env` when compiling an
 
 On the other hand this gives us the chance of fully testing the app, without having to mock anything.
 
+#### Test users
+The need: we want to execute tests with a real backend and users representing the use-case scenario we need (membership level etc).
+
+The problem: 
+- user and password would be hardcoded in the artifacts running on external devices (firebase etc), which is not a good practice. Even worse test artifact could be published publicly;
+- we don't want to generate users while compiling the test artifacts: we should generate the artifacts each time we want to run them otherwise. We want them re-runnable/reusable (more about it [ test on CI](#tests-on-ci)).
+- 
+The solution:
+- A `TestUserBuilder` called by patrol's test interacts with the supabase's backend to create/delete users when needed. This is done at runtime, so the credentials are not hardcoded in the artifacts;
+- Supabase test env is set up with a RPC function that `TestUserBuilder` can call along with a specific user/pass used only to generate users. no more actions are allowed for the user;
+- When compiling the test artifacts, the only one user/pass credentials compiled are the ones used to call the testing users' generation. Not fully safe, but relatively;
+- Users are created with a uuid as a username: collision is highly improbable.
+
+The user testing framework needed on the supabase's testing environment can be manually set up by using [this sql script](./dev/tests/env/test-framework.sql).
+
 #### Tests on local
 Check if the `assets/.test.env` contains the correct values for you: backend url, supabase project id, test accounts path etc.
 
@@ -97,7 +112,7 @@ make test-build-artifact
 
 ---
 **‼️ Heads up!**
-The artifacts will contain test credentials for the backend. This means that you should not share them publicly nor committing them in this repo.
+The artifacts will contain test credentials for the user used to call the function which generates new users. This means that you should not share them publicly nor committing them in this repo.
 --- 
  
 #### Tests on CI
