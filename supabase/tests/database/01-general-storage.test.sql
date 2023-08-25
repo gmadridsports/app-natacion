@@ -12,13 +12,13 @@ INSERT INTO storage.objects (id, bucket_id, name, owner, created_at, updated_at,
 select policies_are(
                'storage',
                'buckets',
-               ARRAY['Enable listing general bucket only for authenticated users']
+               ARRAY['listing general bucket for authenticated']
            );
 
 select policies_are(
                'storage',
                'objects',
-               ARRAY['Any authenticated user can access PDFs']
+               ARRAY['trainings bucket only for authenticated', 'Only authenticated users can access PDFs']
            );
 
 select tests.clear_authentication();
