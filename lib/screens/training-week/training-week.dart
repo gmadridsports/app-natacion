@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gmadrid_natacion/screens/NamedRouteScreen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,6 +13,8 @@ import 'package:week_of_year/date_week_extensions.dart';
 
 import '../../dependency_injection.dart';
 import '../../models/TrainingDate.dart';
+import '../profile/profile.dart';
+import '../splash-screen/splash-screen.dart';
 
 class TrainingWeek extends StatefulWidget implements NamedRouteScreen {
   @override
@@ -126,6 +129,31 @@ class _TrainingWeekState extends State<TrainingWeek> {
       appBar: AppBar(
         title: Text('GMadrid Natación'),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: 0,
+          onTap: (element) async {
+            switch (element) {
+              case 0:
+                break;
+              case 1:
+                break;
+              default:
+                await Supabase.instance.client.auth.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    SplashScreen.routeName, (route) => false);
+                break;
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.event_note), label: 'Entrenos'),
+            BottomNavigationBarItem(icon: Icon(Icons.pool), label: 'Piscinas'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.exit_to_app), label: 'Salir'),
+            // BottomNavigationBarItem(
+            //     icon: Icon(Icons.person_2), label: 'Perfil'),
+          ]),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
