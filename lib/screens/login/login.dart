@@ -38,8 +38,9 @@ class _LoginState extends State<Login> {
       } else {
         await Supabase.instance.client.auth.signInWithOtp(
           email: _emailController.text.trim(),
-          emailRedirectTo:
-              kIsWeb ? null : 'net.bertamini.gmadridnatacion://login-callback/',
+          emailRedirectTo: kIsWeb
+              ? null
+              : 'https://authgmadridnatacion.bertamini.net/login-callback',
         );
       }
 
@@ -73,6 +74,7 @@ class _LoginState extends State<Login> {
   void initState() {
     _authStateSubscription =
         Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      print('here!!!!!<<<<<<<<<<');
       if (_redirecting) return;
       final session = data.session;
       if (session != null) {

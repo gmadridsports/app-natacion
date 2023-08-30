@@ -46,6 +46,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /integration_test/failures/
+android/key.properties
 
 # patrol
 integration_test/test_bundle.dart

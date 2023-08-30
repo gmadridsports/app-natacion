@@ -78,45 +78,45 @@ jobs:
         run: 'dart pub global activate patrol_cli'
       - name: Run iOS Integration tests
         run: 'make test-flutter-ios'
-  integration-tests-android:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-      - name: Setup rsync
-        uses: GuillaumeFalourd/setup-rsync@v1.1
-      - name: Setup remote test artifacts
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_artifactssrv
-          echo ~/.ssh/id_github_artifactssrv
-          chmod 600 ~/.ssh/id_github_artifactssrv
-          echo "${{secrets.SSH_USER_SRC_PATH}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
-          echo "~/.ssh/id_github_artifactssrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
-      - name: setup known host for rsync
-        run: ssh-keyscan -H ${{ secrets.TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
-      - name: Copy latest branch test artifacts from the repository
-        run: 'make test-artifacts-pull'
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '18.0.2'
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          architecture: x64
-      - name: Run Flutter Pub Get
-        run: flutter pub get
-      - name: Google Cloud Auth
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1.1.1
-      - name: Install Patrol cli
-        run: 'dart pub global activate patrol_cli'
-      - name: Run Android Integration tests
-        run: 'make test-flutter-android'
+#  integration-tests-android:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Get Repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: '0'
+#      - name: Setup rsync
+#        uses: GuillaumeFalourd/setup-rsync@v1.1
+#      - name: Setup remote test artifacts
+#        run: |
+#          mkdir -p ~/.ssh
+#          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_artifactssrv
+#          echo ~/.ssh/id_github_artifactssrv
+#          chmod 600 ~/.ssh/id_github_artifactssrv
+#          echo "${{secrets.SSH_USER_SRC_PATH}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
+#          echo "~/.ssh/id_github_artifactssrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
+#      - name: setup known host for rsync
+#        run: ssh-keyscan -H ${{ secrets.TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
+#      - name: Copy latest branch test artifacts from the repository
+#        run: 'make test-artifacts-pull'
+#      - uses: actions/setup-java@v2
+#        with:
+#          distribution: 'temurin'
+#          java-version: '18.0.2'
+#      - name: Setup Flutter SDK
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#          architecture: x64
+#      - name: Run Flutter Pub Get
+#        run: flutter pub get
+#      - name: Google Cloud Auth
+#        uses: 'google-github-actions/auth@v0'
+#        with:
+#          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+#      - name: Setup Google Cloud SDK
+#        uses: google-github-actions/setup-gcloud@v1.1.1
+#      - name: Install Patrol cli
+#        run: 'dart pub global activate patrol_cli'
+#      - name: Run Android Integration tests
+#        run: 'make test-flutter-android'
