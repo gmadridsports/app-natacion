@@ -51,23 +51,23 @@ void main() {
       const envName = String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
-      //   // given
-      //   final givenUser = await testUserBuilder.build();
-      //
-      //   // when
-      //   app_main.main(
-      //     configToRun: configToRun,
-      //   );
-      //
-      //   if (await $.native
-      //       .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
-      //     await $.native.grantPermissionWhenInUse();
-      //   }
-      //
-      //   await $.pumpAndSettle();
-      //
-      //   // then
-      //   await $('Acceso').waitUntilVisible();
+      // given
+      final givenUser = await testUserBuilder.build();
+
+      // when
+      app_main.main(
+        configToRun: configToRun,
+      );
+
+      if (await $.native
+          .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
+        await $.native.grantPermissionWhenInUse();
+      }
+
+      await $.pumpAndSettle();
+
+      // then
+      await $('Acceso').waitUntilVisible();
     },
   );
 
