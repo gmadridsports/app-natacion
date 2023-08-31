@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
- integration-tests-ios:
+  integration-tests-ios:
     runs-on: macos-latest
     steps:
       - name: Get Repository
