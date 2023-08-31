@@ -71,87 +71,87 @@ void main() {
     },
   );
 
-  // patrolTest(
-  //   'Can log in and log out',
-  //   nativeAutomation: true,
-  //   (PatrolTester $) async {
-  //     const envName = String.fromEnvironment('ENV', defaultValue: 'test');
-  //     await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
-  //
-  //     // given
-  //     final givenUser = await testUserBuilder.build();
-  //
-  //     final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
-  //     final givenLastTrainingDateTime = DateTime.utc(2023, 04, 04);
-  //     final givenCurrentDateTime = DateTime.utc(2023, 04, 04);
-  //     final givenIpAddressPort = dotenv.get('SUPABASE_URL');
-  //
-  //     final givenTrainingURL =
-  //         '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf';
-  //     final givenFirstTrainingDate =
-  //         TrainingDate.fromDateTime(givenFirstTrainingDateTime);
-  //     final givenLastTrainingDate =
-  //         TrainingDate.fromDateTime(givenLastTrainingDateTime);
-  //
-  //     Response response = await get(Uri.parse(
-  //         '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf'));
-  //
-  //     when(() => mockedTrainingRepository.getFirstTrainingDate())
-  //         .thenAnswer((_) => Future.value(givenFirstTrainingDate));
-  //
-  //     when(() => mockedTrainingRepository.getLastTrainingDate())
-  //         .thenAnswer((_) => Future.value(givenLastTrainingDate));
-  //
-  //     when(() => mockedTrainingRepository.getTrainingURL(any()))
-  //         .thenAnswer((_) => Future.value(givenTrainingURL));
-  //
-  //     when(() => mockedTrainingRepository.trainingExistsForWeek(any()))
-  //         .thenAnswer((_) => Future.value(true));
-  //
-  //     when(() => mockedTrainingRepository.getTrainingPDF(any()))
-  //         .thenAnswer((_) => Future.value(response.bodyBytes));
-  //
-  //     when(() => mockedDateTimeRepository.now())
-  //         .thenReturn(givenCurrentDateTime);
-  //
-  //     // when
-  //     app_main.main(
-  //       configToRun: configToRun,
-  //     );
-  //
-  //     if (await $.native
-  //         .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
-  //       await $.native.grantPermissionWhenInUse();
-  //     }
-  //
-  //     await $.pumpAndSettle();
-  //
-  //     // then
-  //     await $('Acceso').waitUntilVisible();
-  //
-  //     // and when
-  //     await $.native.enterText(
-  //       Selector(text: 'Email'),
-  //       text: givenUser.email,
-  //     );
-  //     await $.native.enterText(
-  //       Selector(text: 'Password'),
-  //       text: givenUser.password,
-  //     );
-  //
-  //     await $.native.tap(Selector(text: 'Envíame el enlace de acceso'));
-  //
-  //     await $.pumpAndSettle();
-  //     await $('GMadrid Natación').waitUntilVisible();
-  //
-  //     // and when
-  //     await $.native.tap(Selector(text: 'Salir'));
-  //     await $.pumpAndSettle();
-  //
-  //     // then
-  //     await $('Acceso').waitUntilVisible();
-  //   },
-  // );
+  patrolTest(
+    'Can log in and log out',
+    nativeAutomation: true,
+    (PatrolTester $) async {
+      const envName = String.fromEnvironment('ENV', defaultValue: 'test');
+      await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
+
+      // given
+      final givenUser = await testUserBuilder.build();
+
+      final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
+      final givenLastTrainingDateTime = DateTime.utc(2023, 04, 04);
+      final givenCurrentDateTime = DateTime.utc(2023, 04, 04);
+      final givenIpAddressPort = dotenv.get('SUPABASE_URL');
+
+      final givenTrainingURL =
+          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf';
+      final givenFirstTrainingDate =
+          TrainingDate.fromDateTime(givenFirstTrainingDateTime);
+      final givenLastTrainingDate =
+          TrainingDate.fromDateTime(givenLastTrainingDateTime);
+
+      Response response = await get(Uri.parse(
+          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf'));
+
+      when(() => mockedTrainingRepository.getFirstTrainingDate())
+          .thenAnswer((_) => Future.value(givenFirstTrainingDate));
+
+      when(() => mockedTrainingRepository.getLastTrainingDate())
+          .thenAnswer((_) => Future.value(givenLastTrainingDate));
+
+      when(() => mockedTrainingRepository.getTrainingURL(any()))
+          .thenAnswer((_) => Future.value(givenTrainingURL));
+
+      when(() => mockedTrainingRepository.trainingExistsForWeek(any()))
+          .thenAnswer((_) => Future.value(true));
+
+      when(() => mockedTrainingRepository.getTrainingPDF(any()))
+          .thenAnswer((_) => Future.value(response.bodyBytes));
+
+      when(() => mockedDateTimeRepository.now())
+          .thenReturn(givenCurrentDateTime);
+
+      // when
+      app_main.main(
+        configToRun: configToRun,
+      );
+
+      if (await $.native
+          .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
+        await $.native.grantPermissionWhenInUse();
+      }
+
+      await $.pumpAndSettle();
+
+      // then
+      await $('Acceso').waitUntilVisible();
+
+      // and when
+      await $.native.enterText(
+        Selector(text: 'Email'),
+        text: givenUser.email,
+      );
+      await $.native.enterText(
+        Selector(text: 'Password'),
+        text: givenUser.password,
+      );
+
+      await $.native.tap(Selector(text: 'Envíame el enlace de acceso'));
+
+      await $.pumpAndSettle();
+      await $('GMadrid Natación').waitUntilVisible();
+
+      // and when
+      await $.native.tap(Selector(text: 'Salir'));
+      await $.pumpAndSettle();
+
+      // then
+      await $('Acceso').waitUntilVisible();
+    },
+  );
 
   // todo do the login test with auth/unauth and the logout
   // patrolTest(
