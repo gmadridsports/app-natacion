@@ -51,8 +51,8 @@ void main() {
       const envName = String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
-      // // given
-      // final givenUser = await testUserBuilder.build();
+      // given
+      final givenUser = await testUserBuilder.build();
 
       // when
       app_main.main(
