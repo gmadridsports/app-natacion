@@ -6,81 +6,81 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-#  integration-tests-ios:
-#    runs-on: macos-latest
-#    steps:
-#      - name: Get Repository
-#        uses: actions/checkout@v3
-#        with:
-#          fetch-depth: '0'
-#      - name: Setup rsync
-#        uses: GuillaumeFalourd/setup-rsync@v1.1
-#      - name: Setup remote test artifacts
-#        run: |
-#          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_artifactssrv
-#          chmod 600 ~/.ssh/id_github_artifactssrv
-#          echo "${{secrets.SSH_USER_SRC_PATH}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
-#          echo "~/.ssh/id_github_artifactssrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
-#      - name: setup known host for rsync
-#        run: ssh-keyscan -H ${{ secrets.TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
-#      - name: Copy latest branch test artifacts from the repository
-#        run: 'make test-artifacts-pull'
-#      - name: Install the Apple certificate and provisioning profile
-#        env:
-#          BUILD_CERTIFICATE_DIST_BASE64: ${{ secrets.BUILD_CERTIFICATE_DIST_BASE64 }}
-#          BUILD_CERTIFICATE_DEV_BASE64: ${{ secrets.BUILD_CERTIFICATE_DEV_BASE64 }}
-#          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-#          BUILD_PROVISION_PROFILE_DIST_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_DIST_BASE64 }}
-#          BUILD_PROVISION_PROFILE_DEV_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_DEV_BASE64 }}
-#          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-#        run: |
-#          # create variables
-#          CERTIFICATE_PATH_DIST=$RUNNER_TEMP/build_certificate_dist.p12
-#          CERTIFICATE_PATH_DEV=$RUNNER_TEMP/build_certificate_dev.p12
-#          PP_PATH_DIST=$RUNNER_TEMP/build_pp_dist.mobileprovision
-#          PP_PATH_DEV=$RUNNER_TEMP/build_pp_dev.mobileprovision
-#          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-#
-#          # import certificate and provisioning profile from secrets
-#          echo -n "$BUILD_CERTIFICATE_DIST_BASE64" | base64 --decode -o $CERTIFICATE_PATH_DIST
-#          echo -n "$BUILD_CERTIFICATE_DEV_BASE64" | base64 --decode -o $CERTIFICATE_PATH_DEV
-#          echo -n "$BUILD_PROVISION_PROFILE_DIST_BASE64" | base64 --decode -o $PP_PATH_DIST
-#          echo -n "$BUILD_PROVISION_PROFILE_DEV_BASE64" | base64 --decode -o $PP_PATH_DEV
-#
-#          # create temporary keychain
-#          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-#          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-#          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-#
-#          # import certificate to keychain
-#          security import $CERTIFICATE_PATH_DIST -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-#          security import $CERTIFICATE_PATH_DEV -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-#          security list-keychain -d user -s $KEYCHAIN_PATH
-#
-#          # apply provisioning profile
-#          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-#          cp $PP_PATH_DIST ~/Library/MobileDevice/Provisioning\ Profiles
-#          cp $PP_PATH_DEV ~/Library/MobileDevice/Provisioning\ Profiles
-#      - name: Setup Flutter SDK
-#        uses: subosito/flutter-action@v2
-#        with:
-#          channel: 'stable'
-#          architecture: x64
-#      - name: Run Flutter Pub Get
-#        run: flutter pub get
-#      - name: Google Cloud Auth
-#        uses: 'google-github-actions/auth@v0'
-#        with:
-#          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-#      - name: Setup Google Cloud SDK
-#        uses: google-github-actions/setup-gcloud@v1.1.1
-#      - name: Install Patrol cli
-#        run: 'dart pub global activate patrol_cli'
-#      - name: Setup test environment admin password
-#        run: |
-#          echo "${{secrets.SUPABASE_ADMIN_TEST_PASSWORD}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/supabase-admin-test-test-password
-#      - name: Run iOS Integration tests
-#        run: 'make test-flutter-ios'
+ integration-tests-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Setup rsync
+        uses: GuillaumeFalourd/setup-rsync@v1.1
+      - name: Setup remote test artifacts
+        run: |
+          echo "${{secrets.TEST_ARTIFACTS_SSH_KEY}}" | base64 -d > ~/.ssh/id_github_artifactssrv
+          chmod 600 ~/.ssh/id_github_artifactssrv
+          echo "${{secrets.SSH_USER_SRC_PATH}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/ssh-user-src-path
+          echo "~/.ssh/id_github_artifactssrv" > ${{ github.workspace }}/dev/tests/env/ssh-private-key-path
+      - name: setup known host for rsync
+        run: ssh-keyscan -H ${{ secrets.TEST_ARTIFACTS_HOST }} >> ~/.ssh/known_hosts
+      - name: Copy latest branch test artifacts from the repository
+        run: 'make test-artifacts-pull'
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          BUILD_CERTIFICATE_DIST_BASE64: ${{ secrets.BUILD_CERTIFICATE_DIST_BASE64 }}
+          BUILD_CERTIFICATE_DEV_BASE64: ${{ secrets.BUILD_CERTIFICATE_DEV_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          BUILD_PROVISION_PROFILE_DIST_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_DIST_BASE64 }}
+          BUILD_PROVISION_PROFILE_DEV_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_DEV_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH_DIST=$RUNNER_TEMP/build_certificate_dist.p12
+          CERTIFICATE_PATH_DEV=$RUNNER_TEMP/build_certificate_dev.p12
+          PP_PATH_DIST=$RUNNER_TEMP/build_pp_dist.mobileprovision
+          PP_PATH_DEV=$RUNNER_TEMP/build_pp_dev.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_DIST_BASE64" | base64 --decode -o $CERTIFICATE_PATH_DIST
+          echo -n "$BUILD_CERTIFICATE_DEV_BASE64" | base64 --decode -o $CERTIFICATE_PATH_DEV
+          echo -n "$BUILD_PROVISION_PROFILE_DIST_BASE64" | base64 --decode -o $PP_PATH_DIST
+          echo -n "$BUILD_PROVISION_PROFILE_DEV_BASE64" | base64 --decode -o $PP_PATH_DEV
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH_DIST -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security import $CERTIFICATE_PATH_DEV -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH_DIST ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH_DEV ~/Library/MobileDevice/Provisioning\ Profiles
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: x64
+      - name: Run Flutter Pub Get
+        run: flutter pub get
+      - name: Google Cloud Auth
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1.1.1
+      - name: Install Patrol cli
+        run: 'dart pub global activate patrol_cli'
+      - name: Setup test environment admin password
+        run: |
+          echo "${{secrets.SUPABASE_ADMIN_TEST_PASSWORD}}" | base64 -d > ${{ github.workspace }}/dev/tests/env/supabase-admin-test-test-password
+      - name: Run iOS Integration tests
+        run: 'make test-flutter-ios'
   integration-tests-android:
     runs-on: ubuntu-latest
     steps:
