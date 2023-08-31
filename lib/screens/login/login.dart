@@ -74,7 +74,6 @@ class _LoginState extends State<Login> {
   void initState() {
     _authStateSubscription =
         Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-      print('here!!!!!<<<<<<<<<<');
       if (_redirecting) return;
       final session = data.session;
       if (session != null) {
@@ -92,6 +91,38 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
+  String? validateEmail(String? value) {
+    print('validateEmail');
+    const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
+        r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
+        r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
+        r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
+        r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
+        r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
+        r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+    final regex = RegExp(pattern);
+
+    return value!.isNotEmpty && !regex.hasMatch(value)
+        ? 'Usa un email válido'
+        : null;
+  }
+
+  String? get _errorText {
+    final text = _emailController.value.text;
+    const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
+        r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
+        r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
+        r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
+        r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
+        r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
+        r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+    final regex = RegExp(pattern);
+
+    return text!.isNotEmpty && !regex.hasMatch(text)
+        ? 'Usa un email válido'
+        : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final testPasswordField = TextFormField(
@@ -101,17 +132,35 @@ class _LoginState extends State<Login> {
     );
 
     final scaffoldElements = [
-      const Text('Accede a la aplicación con tu email'),
+      const Image(
+          image: AssetImage('assets/images/logo-mascota.png'), height: 300),
+      // const Text(
+      //   'Accede a la aplicación con tu email',
+      //   style: TextStyle(fontSize: 20),
+      //   textAlign: TextAlign.center,
+      // ),
       const SizedBox(height: 18),
-      TextFormField(
+      TextField(
+        keyboardType: TextInputType.emailAddress,
         controller: _emailController,
-        decoration: const InputDecoration(labelText: 'Email'),
+        onSubmitted: (_) => _signIn(),
+        style: const TextStyle(fontSize: 20),
+        decoration: InputDecoration(
+          labelStyle: const TextStyle(fontSize: 22),
+          labelText: 'Email',
+          errorText: _errorText,
+          errorStyle: const TextStyle(fontSize: 16),
+        ),
       ),
       testPasswordField,
       const SizedBox(height: 18),
       ElevatedButton(
           onPressed: _isLoading ? null : _signIn,
-          child: Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso')),
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50),
+          ),
+          child: Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso',
+              style: TextStyle(fontSize: 18))),
     ];
 
     if (!RunningMode.fromEnvironment().isTestingMode()) {

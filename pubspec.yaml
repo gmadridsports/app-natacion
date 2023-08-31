@@ -78,6 +78,7 @@ flutter:
     - assets/.prod.env
     - assets/.staging.env
     - assets/images/logo.png
+    - assets/images/logo-mascota.png
   # - assets/test.pdf
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

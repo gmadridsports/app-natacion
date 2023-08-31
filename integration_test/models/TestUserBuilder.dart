@@ -14,10 +14,8 @@ class TestUserBuilder {
   static const String supabaseCreationFunctionName = 'generate_user';
 
   Future<TestUser> build() async {
-    const adminPassword = const String.fromEnvironment(
-        'SUPABASE_ADMIN_TEST_PASSWORD',
-        defaultValue: 'test');
-
+    const adminPassword = String.fromEnvironment('SUPABASE_ADMIN_TEST_PASSWORD',
+        defaultValue: 'fy3y\$Hny*nPJXT5');
     final newTestUser =
         new TestUser(email, password, useCaseDescription, isMember);
 

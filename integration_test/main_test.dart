@@ -21,14 +21,6 @@ class MockySupabaseBucketsTrainingURLRepository extends Mock
 
 class MockyDateTimeRepository extends Mock implements DateTimeRepository {}
 
-// Uint8List fixture(String name) {
-//   var dir = Directory.current.path;
-//   if (dir.endsWith('/integration_test')) {
-//     dir = dir.replaceAll('/integration_test', '');
-//   }
-//   return File('$dir/integration_test/$name').readAsBytesSync();
-// }
-
 void main() {
   final testUserBuilder = new TestUserBuilder();
   final TrainingRepository mockedTrainingRepository =
