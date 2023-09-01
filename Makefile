@@ -29,11 +29,11 @@ SUPABASE_ADMIN_TEST_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test
 SUPABASE_ADMIN_LOCAL_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-local-test-password)
 test-flutter-android:
 	@echo "Running Android tests"
-	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_android_run.sh
+	@SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_android_run.sh
 
 test-flutter-ios:
 	@echo "Running iOS tests"
-	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_ios_run.sh
+	@SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_ios_run.sh
 
 test-flutter-local: backend-start
 	@echo "Running tests locally"
