@@ -25,20 +25,19 @@ setup-frontend:
 	@echo "Setting up the app"
 	flutter pub get
 
-SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test-test-password)
+SUPABASE_ADMIN_TEST_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test-test-password)
+SUPABASE_ADMIN_LOCAL_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-local-test-password)
 test-flutter-android:
 	@echo "Running Android tests"
-	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD) ./dev/tests/integration_android_run.sh
+	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_android_run.sh
 
-SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test-test-password)
 test-flutter-ios:
 	@echo "Running iOS tests"
-	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD) ./dev/tests/integration_ios_run.sh
+	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_ios_run.sh
 
-SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-local-test-password)
 test-flutter-local: backend-start
 	@echo "Running tests locally"
-	patrol test --target integration_test/main_test.dart --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD)" --verbose -d BE900A80-B408-4944-A41A-7896E75FA9E7
+	patrol test --target integration_test/main_test.dart --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_LOCAL_TEST_PASSWORD)" --verbose -d BE900A80-B408-4944-A41A-7896E75FA9E7
 
 test-build-artifact:
 	@echo "Building artifact"
