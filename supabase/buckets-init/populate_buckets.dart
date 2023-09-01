@@ -36,20 +36,21 @@ Future<void> upload() async {
   await Future.forEach(filesToUpload, (File file) async {
     final basename = context.basename(file.path);
 
-    final trainingFiles = await supabase.storage.from('general').list(
-        path: 'trainings', searchOptions: SearchOptions(search: basename));
+    final trainingFiles = await supabase.storage.from('trainings').list(
+        path: 'weekly_trainings',
+        searchOptions: SearchOptions(search: basename));
 
     if (trainingFiles.any((element) => element.name == basename)) {
       print('Updating ${basename}');
       await supabase.storage
-          .from('general')
-          .update("trainings/${basename}", file);
+          .from('trainings')
+          .update("weekly_trainings/${basename}", file);
       print('Updated ${basename}');
     } else {
       print('Uploading ${basename}');
       await supabase.storage
-          .from('general')
-          .upload("trainings/${basename}", file);
+          .from('trainings')
+          .upload("weekly_trainings/${basename}", file);
       print('Uploaded.');
     }
   });
