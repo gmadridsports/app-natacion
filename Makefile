@@ -30,6 +30,7 @@ test-flutter-android:
 	@echo "Running Android tests"
 	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD) ./dev/tests/integration_android_run.sh
 
+SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test-test-password)
 test-flutter-ios:
 	@echo "Running iOS tests"
 	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD) ./dev/tests/integration_ios_run.sh

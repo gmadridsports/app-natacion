@@ -29,7 +29,7 @@ if [ -z "${must_build}" ]; then
 fi
 
 if [ -n "${must_build}" ]; then
-    dev/tests/integration_ios_build.sh
+    SUPABASE_ADMIN_TEST_PASSWORD=${SUPABASE_ADMIN_TEST_PASSWORD} dev/tests/integration_ios_build.sh
 fi
 
 

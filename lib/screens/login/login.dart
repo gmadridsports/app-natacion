@@ -133,7 +133,7 @@ class _LoginState extends State<Login> {
 
     final scaffoldElements = [
       const Image(
-          image: AssetImage('assets/images/logo-mascota.png'), height: 300),
+          image: AssetImage('assets/images/logo-mascota.png'), height: 250),
       // const Text(
       //   'Accede a la aplicación con tu email',
       //   style: TextStyle(fontSize: 20),
