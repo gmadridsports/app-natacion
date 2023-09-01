@@ -25,13 +25,14 @@ setup-frontend:
 	@echo "Setting up the app"
 	flutter pub get
 
+SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test-test-password)
 test-flutter-android:
 	@echo "Running Android tests"
-	./dev/tests/integration_android_run.sh
+	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD) ./dev/tests/integration_android_run.sh
 
 test-flutter-ios:
 	@echo "Running iOS tests"
-	./dev/tests/integration_ios_run.sh
+	SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_PASSWORD) ./dev/tests/integration_ios_run.sh
 
 SUPABASE_ADMIN_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-local-test-password)
 test-flutter-local: backend-start
