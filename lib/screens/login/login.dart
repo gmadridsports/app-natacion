@@ -102,7 +102,7 @@ class _LoginState extends State<Login> {
     if (_emailController.value.text.isEmpty) return null;
 
     try {
-      Email email = Email.fromString(_emailController.value.text);
+      Email.fromString(_emailController.value.text);
     } catch (error) {
       return error.toString();
     }
