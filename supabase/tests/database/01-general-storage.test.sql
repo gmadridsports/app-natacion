@@ -92,7 +92,6 @@ select results_eq(
                'training_available_for_date should return false for a file which is not available'
            );
 
--- todo auth-login continue here
 SELECT tests.create_supabase_user('authenticated_non_member_user', 'authenticated@gmadridnatacion.bertamini.net');
 select tests.clear_authentication();
 select tests.authenticate_as('authenticated_non_member_user');

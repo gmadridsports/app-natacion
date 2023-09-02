@@ -80,7 +80,7 @@ The need: we want to execute tests with a real backend and users representing th
 The problem: 
 - user and password would be hardcoded in the artifacts running on external devices (firebase etc), which is not a good practice. Even worse test artifact could be published publicly;
 - we don't want to generate users while compiling the test artifacts: we should generate the artifacts each time we want to run them otherwise. We want them re-runnable/reusable (more about it [ test on CI](#tests-on-ci)).
-- 
+ 
 The solution:
 - A `TestUserBuilder` called by patrol's test interacts with the supabase's backend to create/delete users when needed. This is done at runtime, so the credentials are not hardcoded in the artifacts;
 - Supabase test env is set up with a RPC function that `TestUserBuilder` can call along with a specific user/pass used only to generate users. no more actions are allowed for the user;
@@ -113,6 +113,7 @@ make test-build-artifact
 ---
 **‼️ Heads up!**
 The artifacts will contain test credentials for the user used to call the function which generates new users. This means that you should not share them publicly nor committing them in this repo.
+
 --- 
  
 #### Tests on CI

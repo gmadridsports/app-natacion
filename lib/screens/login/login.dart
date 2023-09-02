@@ -6,6 +6,7 @@ import 'package:gmadrid_natacion/models/RunningMode.dart';
 import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../models/Email.dart';
 import '../NamedRouteScreen.dart';
 
 class Login extends StatefulWidget implements NamedRouteScreen {
@@ -31,15 +32,21 @@ class _LoginState extends State<Login> {
         _isLoading = true;
       });
 
+      if (_emailController.text.isEmpty) {
+        return;
+      }
+
+      final email = Email.fromString(_emailController.text);
+
       if (RunningMode.fromEnvironment().isTestingMode()) {
         final response = await Supabase.instance.client.auth.signInWithPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim());
+            email: email.toString(), password: _passwordController.text.trim());
       } else {
         await Supabase.instance.client.auth.signInWithOtp(
-          email: _emailController.text.trim(),
-          emailRedirectTo:
-              kIsWeb ? null : 'net.bertamini.gmadridnatacion://login-callback/',
+          email: email.toString(),
+          emailRedirectTo: kIsWeb
+              ? null
+              : 'https://authgmadridnatacion.bertamini.net/login-callback',
         );
       }
 
@@ -57,7 +64,7 @@ class _LoginState extends State<Login> {
       );
     } catch (error) {
       SnackBar(
-        content: const Text('Unexpected error occurred'),
+        content: const Text('Ha ocurrido un error inesperado'),
         backgroundColor: Theme.of(context).colorScheme.error,
       );
     } finally {
@@ -86,8 +93,21 @@ class _LoginState extends State<Login> {
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     _authStateSubscription.cancel();
     super.dispose();
+  }
+
+  String? get _errorText {
+    if (_emailController.value.text.isEmpty) return null;
+
+    try {
+      Email.fromString(_emailController.value.text);
+    } catch (error) {
+      return error.toString();
+    }
+
+    return null;
   }
 
   @override
@@ -99,17 +119,31 @@ class _LoginState extends State<Login> {
     );
 
     final scaffoldElements = [
-      const Text('Accede a la aplicación con tu email'),
+      const Image(
+          image: AssetImage('assets/images/logo-mascota.png'), height: 250),
       const SizedBox(height: 18),
-      TextFormField(
+      TextField(
+        keyboardType: TextInputType.emailAddress,
         controller: _emailController,
-        decoration: const InputDecoration(labelText: 'Email'),
+        enabled: !_isLoading,
+        onSubmitted: (_) => _signIn(),
+        style: const TextStyle(fontSize: 20),
+        decoration: InputDecoration(
+          labelStyle: const TextStyle(fontSize: 22),
+          labelText: 'Email',
+          errorText: _errorText,
+          errorStyle: const TextStyle(fontSize: 16),
+        ),
       ),
       testPasswordField,
       const SizedBox(height: 18),
       ElevatedButton(
           onPressed: _isLoading ? null : _signIn,
-          child: Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso')),
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50),
+          ),
+          child: Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso',
+              style: TextStyle(fontSize: 18))),
     ];
 
     if (!RunningMode.fromEnvironment().isTestingMode()) {

@@ -29,7 +29,6 @@ if [ -z "${must_build}" ]; then
 fi
 
 if [ -n "${must_build}" ]; then
-    echo "entro?"
     echo "${must_build}"
     dev/tests/integration_android_build.sh
 fi

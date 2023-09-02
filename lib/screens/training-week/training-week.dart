@@ -137,6 +137,9 @@ class _TrainingWeekState extends State<TrainingWeek> {
               case 0:
                 break;
               case 1:
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Todavía no disponible.')),
+                );
                 break;
               default:
                 await Supabase.instance.client.auth.signOut();

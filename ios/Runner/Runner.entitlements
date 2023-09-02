@@ -4,5 +4,11 @@
 <dict>
 	<key>aps-environment</key>
 	<string>development</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>https://gmadridnatacion.bertamini.net</string>
+		<string>applinks:gmadridnatacion.bertamini.net</string>
+		<string>https://authgmadridnatacion.bertamini.net</string>
+	</array>
 </dict>
 </plist>
