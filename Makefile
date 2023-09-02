@@ -41,8 +41,8 @@ test-flutter-local: backend-start
 
 test-build-artifact:
 	@echo "Building artifact"
-	./dev/tests/integration_ios_build.sh
-	./dev/tests/integration_android_build.sh
+	@SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_ios_build.sh
+	@SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_android_build.sh
 	./dev/tests/integration_update_artifact_latest_build.sh
 
 test-artifacts-push: test-build-artifact
