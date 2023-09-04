@@ -1,8 +1,16 @@
+import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
+
 class TrainingDate {
   final DateTime _dateTime;
 
-  TrainingDate._internal(int year, int month, int day)
-      : _dateTime = DateTime.utc(year, month, day);
+  TrainingDate._internal(int year, int month, int day,
+      {int hour = 0,
+      int minute = 0,
+      int second = 0,
+      int millisecond = 0,
+      int microsecond = 0})
+      : _dateTime = DateTime.utc(
+            year, month, day, hour, minute, second, millisecond, microsecond);
 
   TrainingDate._internalDateTime(this._dateTime);
 
@@ -28,12 +36,14 @@ class TrainingDate {
   }
 
   TrainingDate lastTrainingDateWithinTheWeek() {
+    print('called?');
     DateTime newTrainingDateTime = _dateTime
         .copyWith()
         .add(Duration(days: DateTime.friday - _dateTime.weekday));
 
-    return TrainingDate._internal(newTrainingDateTime.year,
-        newTrainingDateTime.month, newTrainingDateTime.day);
+    final newe = TrainingDate._internalDateTime(newTrainingDateTime);
+    print(newe.toDateTime());
+    return newe;
   }
 
   @override

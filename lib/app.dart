@@ -6,6 +6,7 @@ import 'package:gmadrid_natacion/infrastructure/SupabaseBucketsTrainingURLReposi
 import 'package:gmadrid_natacion/infrastructure/SystemDateTimeRepository.dart';
 import 'package:gmadrid_natacion/screens/login/login.dart';
 import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
+import 'package:gmadrid_natacion/screens/waiting-membership/waiting-membership.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart';
 import 'dependency_injection.dart';
@@ -74,6 +75,7 @@ class App extends StatelessWidget {
           SplashScreen.routeName: (context) => SplashScreen(),
           Profile.routeName: (context) => Profile(),
           Login.routeName: (context) => Login(),
+          WaitingMembership.routeName: (context) => WaitingMembership(),
         });
     // home: Padding(
     //   padding: const EdgeInsets.all(48.0),

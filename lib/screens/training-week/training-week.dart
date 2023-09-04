@@ -34,22 +34,19 @@ extension ToPrimitiveTrainingDate on TrainingDate {
 
 enum _TrainingShowError { loading, noErrors, noTrainingsFound }
 
-enum _Loading { initialLoading, pdfLoading, loaded, error }
-
 class _TrainingWeekState extends State<TrainingWeek> {
   late DateTime _now;
   bool _isCalendarSelectorLoading = true;
+  bool _isTrainingLoading = true;
+  bool _isInInitialLoading = true;
   late DateTime _calendarSelectionLowerBound;
   late DateTime _calendarSelectionUpperBound;
   late DateTime _calendarSelectorSelectedDay;
   late bool _isCalendarSelectorWeekAvailable;
 
-  bool _isTrainingLoading = true;
   TrainingDate? _trainingDateShowed;
   late Uint8List _pdfRaw;
   // late int _calendarSelectorWeekOfYearDisplayed;
-
-  _Loading _loading = _Loading.pdfLoading;
 
   void _loadTrainingPDF() async {
     final trainingDatePdfShowing =
@@ -106,6 +103,7 @@ class _TrainingWeekState extends State<TrainingWeek> {
       _calendarSelectorSelectedDay = lastTrainingDate.toDateTime();
 
       _isCalendarSelectorLoading = false;
+      _isInInitialLoading = false;
     });
 
     _loadTrainingPDF();
@@ -161,7 +159,7 @@ class _TrainingWeekState extends State<TrainingWeek> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            if (_loading != _Loading.initialLoading)
+            if (!_isInInitialLoading)
               TableCalendar(
                   locale: 'es_ES',
                   calendarFormat: CalendarFormat.week,

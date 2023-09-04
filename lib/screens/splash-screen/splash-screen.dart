@@ -23,16 +23,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _redirect() async {
     await Future.delayed(Duration.zero);
+
     if (!mounted) {
       return;
     }
 
     final session = Supabase.instance.client.auth.currentSession;
+
     if (session != null) {
       Navigator.of(context).pushReplacementNamed(TrainingWeek.routeName);
-    } else {
-      Navigator.of(context).pushReplacementNamed(Login.routeName);
     }
+
+    Navigator.of(context).pushReplacementNamed(Login.routeName);
   }
 
   @override

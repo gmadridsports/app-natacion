@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:gmadrid_natacion/models/TrainingURL.dart';
 import 'package:gmadrid_natacion/models/TrainingRepository.dart';
-import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/DateTimeRepository.dart';

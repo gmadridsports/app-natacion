@@ -142,7 +142,8 @@ class _LoginState extends State<Login> {
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 50),
           ),
-          child: Text(_isLoading ? 'Loading' : 'Envíame el enlace de acceso',
+          child: Text(
+              _isLoading ? 'Enviando...' : 'Envíame el enlace de acceso',
               style: TextStyle(fontSize: 18))),
     ];
 
