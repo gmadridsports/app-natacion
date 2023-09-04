@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,10 +40,14 @@ Future<bool> runAppWithOptions(
     sound: true,
   );
 
-  String? token = await messaging.getToken();
-
-  if (kDebugMode) {
-    print('Registration Token=$token');
+  try {
+    String? token = await messaging.getToken();
+    if (kDebugMode) {
+      print('Registration Token=$token');
+    }
+  } catch (e) {
+    print('Error getting token');
+    FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
   }
 
   const dateTimeRepository = SystemDateTimeRepository();
