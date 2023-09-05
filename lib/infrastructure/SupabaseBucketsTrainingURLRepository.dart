@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:gmadrid_natacion/models/TrainingURL.dart';
-import 'package:gmadrid_natacion/models/TrainingRepository.dart';
+import 'package:gmadrid_natacion/domain/TrainingURL.dart';
+import 'package:gmadrid_natacion/domain/TrainingRepository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/DateTimeRepository.dart';
-import '../models/TrainingDate.dart';
+import '../domain/DateTimeRepository.dart';
+import '../domain/TrainingDate.dart';
 
 class SupabaseBucketsTrainingURLRepository implements TrainingRepository {
   final DateTimeRepository _dateTimeRepository;

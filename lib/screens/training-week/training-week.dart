@@ -12,7 +12,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:week_of_year/date_week_extensions.dart';
 
 import '../../dependency_injection.dart';
-import '../../models/TrainingDate.dart';
+import '../../domain/TrainingDate.dart';
 import '../profile/profile.dart';
 import '../splash-screen/splash-screen.dart';
 

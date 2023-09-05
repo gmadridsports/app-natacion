@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:gmadrid_natacion/models/DateTimeRepository.dart';
+import 'package:gmadrid_natacion/domain/DateTimeRepository.dart';
+import 'package:gmadrid_natacion/domain/user/UserRepository.dart';
 
-import 'models/TrainingRepository.dart';
+import 'domain/TrainingRepository.dart';
 
 class DependencyInjection extends InheritedWidget {
   final TrainingRepository trainingRepository;
   final DateTimeRepository dateTimeRepository;
+  final UserRepository userRepository;
 
   const DependencyInjection.hydrateWithInstances(
-      this.trainingRepository, this.dateTimeRepository,
+      this.trainingRepository, this.dateTimeRepository, this.userRepository,
       {super.key, required super.child});
 
   @override

@@ -1,4 +1,4 @@
-import 'package:gmadrid_natacion/models/DateTimeRepository.dart';
+import 'package:gmadrid_natacion/domain/DateTimeRepository.dart';
 
 // this is needed because clock.withDate does not work well when called on
 // build methods. it makes mocking things quite difficult, the code should

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
+import 'package:gmadrid_natacion/screens/waiting-approval/waiting-approval.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../dependency_injection.dart';
 import '../NamedRouteScreen.dart';
 import '../login/login.dart';
 
@@ -23,18 +25,29 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _redirect() async {
     await Future.delayed(Duration.zero);
-
     if (!mounted) {
       return;
     }
 
-    final session = Supabase.instance.client.auth.currentSession;
+    final user = await DependencyInjection.of(context)!
+        .userRepository
+        .getCurrentSessionUser();
 
-    if (session != null) {
-      Navigator.of(context).pushReplacementNamed(TrainingWeek.routeName);
+    // if (!context.isDefinedAndNotNull) {
+    //   // todo manage better
+    //   return;
+    // }
+
+    if (user == null) {
+      Navigator.of(context).pushReplacementNamed(Login.routeName);
     }
 
-    Navigator.of(context).pushReplacementNamed(Login.routeName);
+    if (!(user?.canUseApp() ?? false)) {
+      Navigator.of(context).pushReplacementNamed(WaitingApproval.routeName);
+      return;
+    }
+
+    Navigator.of(context).pushReplacementNamed(TrainingWeek.routeName);
   }
 
   @override

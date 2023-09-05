@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gmadrid_natacion/models/RunningMode.dart';
+import 'package:gmadrid_natacion/domain/RunningMode.dart';
 import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../models/Email.dart';
+import '../../domain/Email.dart';
 import '../NamedRouteScreen.dart';
 
 class Login extends StatefulWidget implements NamedRouteScreen {

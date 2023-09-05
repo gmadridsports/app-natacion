@@ -1,4 +1,4 @@
-import 'package:gmadrid_natacion/models/user/MembershipStatus.dart';
+import 'package:gmadrid_natacion/domain/user/MembershipStatus.dart';
 
 import 'UserId.dart';
 
@@ -10,4 +10,8 @@ class User {
 
   User.from(UserId id, MembershipStatus membership)
       : this._internal(id, membership);
+
+  bool canUseApp() {
+    return _membership.canUseApp();
+  }
 }

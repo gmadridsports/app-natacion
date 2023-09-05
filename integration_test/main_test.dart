@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gmadrid_natacion/dependency_injection.dart';
-import 'package:gmadrid_natacion/models/DateTimeRepository.dart';
-import 'package:gmadrid_natacion/models/TrainingDate.dart';
-import 'package:gmadrid_natacion/models/TrainingRepository.dart';
+import 'package:gmadrid_natacion/domain/DateTimeRepository.dart';
+import 'package:gmadrid_natacion/domain/TrainingDate.dart';
+import 'package:gmadrid_natacion/domain/TrainingRepository.dart';
 import 'package:patrol/patrol.dart';
 import 'package:gmadrid_natacion/main.dart' as app_main;
 import 'package:mocktail/mocktail.dart';
@@ -28,6 +28,7 @@ void main() {
   registerFallbackValue(TrainingDate.from(2019, 03, 03));
   registerFallbackValue(DateTime(2019, 03, 03, 0, 0, 0));
 
+  // todo socio-xx-xx user repository to be mocked?
   configToRun(Widget child) => DependencyInjection.hydrateWithInstances(
         mockedTrainingRepository,
         mockedDateTimeRepository,

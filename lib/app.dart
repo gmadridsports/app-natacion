@@ -4,10 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gmadrid_natacion/infrastructure/SupabaseBucketsTrainingURLRepository.dart';
+import 'package:gmadrid_natacion/infrastructure/SupabaseUserRepository.dart';
 import 'package:gmadrid_natacion/infrastructure/SystemDateTimeRepository.dart';
 import 'package:gmadrid_natacion/screens/login/login.dart';
 import 'package:gmadrid_natacion/screens/training-week/training-week.dart';
-import 'package:gmadrid_natacion/screens/waiting-membership/waiting-membership.dart';
+import 'package:gmadrid_natacion/screens/waiting-approval/waiting-approval.dart';
+// import 'package:gmadrid_natacion/screens/waiting-membership/waiting-membership.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart';
 import 'dependency_injection.dart';
@@ -51,11 +53,13 @@ Future<bool> runAppWithOptions(
   }
 
   const dateTimeRepository = SystemDateTimeRepository();
+  const userRepository = SupabaseUserRepository();
 
   final configToRun = appConfig ??
       (Widget child) => DependencyInjection.hydrateWithInstances(
             SupabaseBucketsTrainingURLRepository(dateTimeRepository),
             dateTimeRepository,
+            userRepository,
             child: child,
           );
 
@@ -76,11 +80,12 @@ class App extends StatelessWidget {
         ),
         initialRoute: SplashScreen.routeName,
         routes: {
+          WaitingApproval.routeName: (context) => WaitingApproval(),
           TrainingWeek.routeName: (context) => TrainingWeek(),
           SplashScreen.routeName: (context) => SplashScreen(),
           Profile.routeName: (context) => Profile(),
           Login.routeName: (context) => Login(),
-          WaitingMembership.routeName: (context) => WaitingMembership(),
+          // WaitingMembership.routeName: (context) => WaitingMembership(),
         });
     // home: Padding(
     //   padding: const EdgeInsets.all(48.0),
