@@ -49,7 +49,6 @@ void main() {
       final givenUser = await testUserBuilder.build();
 
       // when
-      // createApp($, configToRun);
       app_main.main(
         configToRun: configToRun,
       );

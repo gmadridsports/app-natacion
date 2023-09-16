@@ -237,5 +237,44 @@ If you are in a hurry, you can skip the pre-commit hook by using the flag:
 git commit --no-verify 
 ```
 
+## Code structure
+I've tried to adopt the best of DDD: SOLID principles, Hexagonal, Domain Events, Aggregates, Value Objects.
+The code follows a hexagonal architecture, with a clear separation between the domain and the infrastructure.
+Eny piece of information that is being used or modelled is described by the domain. Any action passes through the Bounded Context.
+
+basically, you have two main independent pieces talking to each other:
+- The Bounded Context: managing all the information and the actions related to the domain. It's the core of the app. You read its domain, and you are aware of everything going on in the app;
+- The app itself, which is simply an interface for the Bounded Context. It interacts with the Bounded Context by calling the application services, and the Bounded Context interacts with it by emitting events on a shared infrastructure event bus: the app will listen to them and changes accordingly.
+
+This repository follows the Hexagonal Architecture pattern, and it's monorepo. Also, it's structured using submodules
+```
+.
+├── dev
+│   ├── doc
+│   └── tests
+│       └── env
+├── integration_test
+│   ├── infrastructure
+│   ├── models
+│   └── screenshots
+├── lib
+│   ├── Context
+│   │   ├── Natacion
+│   │   └── Shared
+│   ├── app
+│   │   └── screens
+│   ├── conf
+│   └── shared
+│       ├── domain
+│       └── infrastructure
+├── supabase
+│   ├── buckets-init
+│   │   └── trainings
+│   ├── functions
+│   ├── migrations
+│   └── tests
+│       └── database
+```
+
 ## Author
 Matteo Bertamini [www.bertamini.net](https://www.bertamini.net)
