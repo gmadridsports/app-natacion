@@ -23,6 +23,6 @@ class User extends AggregateRoot {
 
   login() {
     domainEvents
-        .add(UserLoginEvent(_id, DateTime.now(), membership.level.toString()));
+        .add(UserLoginEvent(_id, DateTime.now(), membership.toString()));
   }
 }

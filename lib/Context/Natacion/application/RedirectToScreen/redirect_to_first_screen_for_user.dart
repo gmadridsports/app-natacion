@@ -17,12 +17,10 @@ class RedirectToFirstScreenForUser {
   }
 
   void call() async {
-    print('calling!!');
     final showingScreen = _showingScreenRepository.getScreen();
     final currentUser = await _userRepository.getCurrentSessionUser();
 
     if (showingScreen == null) {
-      print('showing screen null');
       // not running
       return;
     }

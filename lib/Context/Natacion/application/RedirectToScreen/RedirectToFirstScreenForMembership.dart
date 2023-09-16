@@ -18,7 +18,6 @@ class RedirectToFirstScreenForMembership {
     final showingScreen = _showingScreenRepository.getScreen();
 
     if (showingScreen == null) {
-      print('showing screen null');
       // not running
       return;
     }

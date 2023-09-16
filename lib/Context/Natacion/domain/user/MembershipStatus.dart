@@ -1,9 +1,11 @@
-enum MembershipStatus {
+import 'package:gmadrid_natacion/Context/Shared/domain/value_object.dart';
+
+enum MembershipStatus implements ValueObject {
   user(level: 'user'),
   member(level: 'member'),
   exMember(level: 'ex-member');
 
-  const MembershipStatus({required this.level});
+  const MembershipStatus({required String level}) : _level = level;
   factory MembershipStatus.fromString(String level) {
     switch (level.trim()) {
       case 'user':
@@ -17,9 +19,14 @@ enum MembershipStatus {
     }
   }
 
-  final String level;
+  final String _level;
 
   bool canUseApp() {
-    return level == 'member';
+    return _level == 'member';
+  }
+
+  @override
+  String toString() {
+    return _level;
   }
 }

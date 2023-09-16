@@ -50,7 +50,6 @@ Future<bool> runAppWithOptions({
       print('Registration Token=$token');
     }
   } catch (e) {
-    print('Error getting token');
     FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
   }
 

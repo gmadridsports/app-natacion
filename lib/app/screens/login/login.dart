@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../Context/Natacion/application/LoginUser/LoginUser.dart';
 import '../../../Context/Natacion/domain/Email.dart';
-import '../../../Context/Natacion/domain/RunningMode.dart';
+import '../../../shared/domain/RunningMode.dart';
 import '../NamedRouteScreen.dart';
 
 class Login extends StatefulWidget implements NamedRouteScreen {
@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
 
       final email = Email.fromString(_emailController.text);
 
-      if (RunningMode.fromEnvironment().isTestingMode()) {
+      if (RunningMode.fromEnvironment().isTestingMode) {
         final response = await Supabase.instance.client.auth.signInWithPassword(
             email: email.toString(), password: _passwordController.text.trim());
       } else {
@@ -58,15 +58,23 @@ class _LoginState extends State<Login> {
         _emailController.clear();
       }
     } on AuthException catch (error) {
-      SnackBar(
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(error.message),
         backgroundColor: Theme.of(context).colorScheme.error,
-      );
+      ));
     } catch (error) {
-      SnackBar(
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Ha ocurrido un error inesperado'),
         backgroundColor: Theme.of(context).colorScheme.error,
-      );
+      ));
     } finally {
       if (mounted) {
         setState(() {
@@ -152,8 +160,7 @@ class _LoginState extends State<Login> {
               style: TextStyle(fontSize: 18))),
     ];
 
-    // todo socio-xx-xx to shared? not straight to domain?
-    if (!RunningMode.fromEnvironment().isTestingMode()) {
+    if (!RunningMode.fromEnvironment().isTestingMode) {
       scaffoldElements.remove(testPasswordField);
     }
 

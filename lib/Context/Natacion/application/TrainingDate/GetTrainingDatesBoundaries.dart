@@ -1,4 +1,3 @@
-import 'package:gmadrid_natacion/app/screens/training-week/training-week.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 
 import '../../../Shared/application/Query.dart';

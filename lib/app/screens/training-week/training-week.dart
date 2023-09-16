@@ -23,14 +23,6 @@ class TrainingWeek extends StatefulWidget implements NamedRouteScreen {
   State<TrainingWeek> createState() => _TrainingWeekState();
 }
 
-// todo socio-xx-xx move into infra?
-extension ToPrimitiveTrainingDate on TrainingDate {
-  DateTime toDateTime() {
-    final stringToParse = '${this.toString()}T00:00:00Z';
-    return DateTime.parse(stringToParse);
-  }
-}
-
 enum _TrainingShowError { loading, noErrors, noTrainingsFound }
 
 class _TrainingWeekState extends State<TrainingWeek> {
@@ -75,7 +67,6 @@ class _TrainingWeekState extends State<TrainingWeek> {
   }
 
   void _loadFirstCalendarProps() async {
-    // todo socio-xx-xx continue here
     final trainingBoundaries = await GetTrainingDatesBoundaries()();
 
     if (trainingBoundaries is GetTrainingBoundariesNegativeResponse) {

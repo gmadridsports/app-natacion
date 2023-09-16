@@ -37,7 +37,6 @@ Future<bool> main({
   }
 
   if (initAttempt == 10) {
-    print('too many init attempts');
     exit(1);
   }
 

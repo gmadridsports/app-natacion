@@ -11,7 +11,6 @@ class RedirectToLoginOnLogout
 
   @override
   call(UserLogoutEvent domainEvent) {
-    print('redirect!');
     RedirectToLogin()();
   }
 }

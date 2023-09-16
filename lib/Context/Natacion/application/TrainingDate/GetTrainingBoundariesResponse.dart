@@ -1,4 +1,12 @@
 import '../../../Shared/application/QueryResponse.dart';
+import '../../domain/TrainingDate.dart';
+
+extension ToPrimitiveTrainingDate on TrainingDate {
+  DateTime toDateTime() {
+    final stringToParse = '${this.toString()}T00:00:00Z';
+    return DateTime.parse(stringToParse);
+  }
+}
 
 sealed class GetTrainingBoundariesResponse implements QueryResponse {
   final DateTime? lowerBound;

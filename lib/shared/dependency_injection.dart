@@ -7,8 +7,7 @@ class DependencyInjection {
     if (instances[T] == null) {
       throw ArgumentError('Dependency not initialized');
     }
-    print('antes que pete');
-    print(instances[T]);
+
     return instances[T] as T;
   }
 
