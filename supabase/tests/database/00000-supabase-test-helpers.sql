@@ -42,14 +42,25 @@ AS $$
 DECLARE
 user_id uuid;
 BEGIN
-
     -- create the user
     user_id := extensions.uuid_generate_v4();
-INSERT INTO auth.users (id, email, phone, raw_user_meta_data)
-VALUES (user_id, coalesce(email, concat(user_id, '@test.com')), phone, jsonb_build_object('test_identifier', identifier) || coalesce(metadata, '{}'::jsonb))
-    RETURNING id INTO user_id;
-
+    INSERT INTO auth.users (id, email, phone, raw_user_meta_data)
+        VALUES (user_id, coalesce(email, concat(user_id, '@test.com')), phone, jsonb_build_object('test_identifier', identifier) || coalesce(metadata, '{}'::jsonb))
+        RETURNING id INTO user_id;
 RETURN user_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION tests.change_supabase_user_membership(identifier text, user_membership_level text default 'user')
+    RETURNS void
+    SECURITY DEFINER
+    SET search_path = auth, pg_temp, public
+AS $$
+DECLARE
+    user_id uuid;
+BEGIN
+    SELECT id into user_id FROM auth.users WHERE raw_user_meta_data ->> 'test_identifier' = identifier limit 1;
+    UPDATE public.profiles SET membership_level = user_membership_level WHERE id = user_id;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -244,6 +255,13 @@ select is(
     );
 $$ LANGUAGE sql;
 
+drop policy if exists "authenticated member can download from the trainings bucket" on "storage"."objects";
+create policy "authenticated member can download from the trainings bucket"
+    on "storage"."objects"
+    as permissive
+    for select
+    to authenticated
+    using (bucket_id = 'trainings'::text and 'member'::text = (select membership_level from public.profiles where id = auth.uid()));
 -- we have to run some tests to get this to pass as the first test file.
 -- investigating options to make this better.  Maybe a dedicated test harness
 -- but we dont' want these functions to always exist on the database.

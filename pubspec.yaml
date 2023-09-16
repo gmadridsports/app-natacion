@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+34
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: '>=3.1.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -37,15 +37,16 @@ dependencies:
   supabase_flutter: ^1.7.0
   flutter_dotenv: ^5.0.2
   table_calendar: ^3.0.9
-  syncfusion_flutter_pdfviewer: ^21.1.41
+  syncfusion_flutter_pdfviewer: ^22.2.12
   flutter_launcher_icons: ^0.13.1
   firebase_core: ^2.10.0
   firebase_messaging: ^14.4.1
-  firebase_crashlytics: ^3.1.2
-  mocktail: ^0.3.0
+  mocktail: ^1.0.0
   week_of_year: ^2.0.0
   supabase_auth_ui: ^0.2.1
   dart_dotenv: ^1.0.1
+  firebase_crashlytics: ^3.3.5
+  event_bus: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gmadrid_natacion/dependency_injection.dart';
-import 'package:gmadrid_natacion/domain/DateTimeRepository.dart';
-import 'package:gmadrid_natacion/domain/TrainingDate.dart';
-import 'package:gmadrid_natacion/domain/TrainingRepository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingDate.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingRepository.dart';
+import 'package:gmadrid_natacion/conf/dependency_injections.dart';
+import 'package:gmadrid_natacion/shared/dependency_injection.dart';
+import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
 import 'package:patrol/patrol.dart';
 import 'package:gmadrid_natacion/main.dart' as app_main;
 import 'package:mocktail/mocktail.dart';
@@ -20,7 +20,6 @@ class MockySupabaseBucketsTrainingURLRepository extends Mock
 class MockyDateTimeRepository extends Mock implements DateTimeRepository {}
 
 void main() {
-  final testUserBuilder = new SupabaseTestUserBuilder();
   final TrainingRepository mockedTrainingRepository =
       MockySupabaseBucketsTrainingURLRepository();
   final DateTimeRepository mockedDateTimeRepository = MockyDateTimeRepository();
@@ -28,64 +27,45 @@ void main() {
   registerFallbackValue(TrainingDate.from(2019, 03, 03));
   registerFallbackValue(DateTime(2019, 03, 03, 0, 0, 0));
 
-  // todo socio-xx-xx user repository to be mocked?
-  configToRun(Widget child) => DependencyInjection.hydrateWithInstances(
-        mockedTrainingRepository,
-        mockedDateTimeRepository,
-        child: child,
-      );
+  configToRun() {
+    final injectionInstances = dependencyInjectionInstances()
+        .where(
+            (el) => el.$1 != DateTimeRepository && el.$1 != TrainingRepository)
+        .toList();
+
+    injectionInstances.add((DateTimeRepository, mockedDateTimeRepository));
+    injectionInstances.add((TrainingRepository, mockedTrainingRepository));
+
+    DependencyInjection(instances: injectionInstances);
+  }
 
   patrolTest(
-    'Unauthenticated user should see login screen',
+    'User with member level can log in, see training weeks, and logout',
     nativeAutomation: true,
     (PatrolTester $) async {
-      const envName = String.fromEnvironment('ENV', defaultValue: 'test');
+      const envName = const String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
       // given
+      final testUserBuilder = new SupabaseTestUserBuilder();
+      testUserBuilder.withMember(true);
       final givenUser = await testUserBuilder.build();
 
-      // when
-      app_main.main(
-        configToRun: configToRun,
-      );
-
-      if (await $.native
-          .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
-        await $.native.grantPermissionWhenInUse();
-      }
-
-      await $.pumpAndSettle();
-
-      // then
-      await $('Acceso').waitUntilVisible();
-    },
-  );
-
-  patrolTest(
-    'Can log in and log out',
-    nativeAutomation: true,
-    (PatrolTester $) async {
-      const envName = String.fromEnvironment('ENV', defaultValue: 'test');
-      await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
-
-      // given
-      final givenUser = await testUserBuilder.build();
-
+      // and
       final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
-      final givenLastTrainingDateTime = DateTime.utc(2023, 04, 04);
-      final givenCurrentDateTime = DateTime.utc(2023, 04, 04);
+      final givenLastTrainingDateTime = DateTime.utc(2023, 04, 17);
+      final givenCurrentDateTime = DateTime.utc(2023, 04, 25);
       final givenIpAddressPort = dotenv.get('SUPABASE_URL');
 
       final givenTrainingURL =
-          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf';
+          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/training-test.pdf';
       final givenFirstTrainingDate =
           TrainingDate.fromDateTime(givenFirstTrainingDateTime);
       final givenLastTrainingDate =
           TrainingDate.fromDateTime(givenLastTrainingDateTime);
 
       Response response = await get(Uri.parse(
-          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/2023-04-17.pdf'));
+          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/training-test.pdf'));
 
       when(() => mockedTrainingRepository.getFirstTrainingDate())
           .thenAnswer((_) => Future.value(givenFirstTrainingDate));
@@ -118,26 +98,27 @@ void main() {
       await $.pumpAndSettle();
 
       // then
-      await $('Acceso').waitUntilVisible();
+      await $('Acceso').waitUntilVisible(timeout: Duration(seconds: 2));
 
       // and when
-      await $.native.enterText(
-        Selector(text: 'Email'),
-        text: givenUser.email.toString(),
-      );
-      await $.native.enterText(
-        Selector(text: 'Password'),
-        text: givenUser.password.toString(),
-      );
+      await $(#Password).scrollTo();
+      await $(#Password).enterText(givenUser.password.toString());
 
-      await $.native.tap(Selector(text: 'Envíame el enlace de acceso'));
+      await $(#Email).scrollTo();
+      await $(#Email).enterText(givenUser.email.toString());
+
+      await $(#access).scrollTo();
+      await $(#access).tap();
+
+      await $.pumpAndSettle();
+      await $('Controla tu buzón y pincha el enlace de acceso!')
+          .waitUntilVisible();
+      await Future.delayed(const Duration(seconds: 5));
 
       await $.pumpAndSettle();
       await $('GMadrid Natación').waitUntilVisible();
 
-      // and when
-      await $.native.tap(Selector(text: 'Salir'));
-      await $.pumpAndSettle();
+      await $(#exit).tap();
 
       // then
       await $('Acceso').waitUntilVisible();

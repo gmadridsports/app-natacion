@@ -1,7 +1,7 @@
 -- begin the transaction, this will allow you to rollback any changes made during the test
 BEGIN;
 
-select plan(9);
+select plan(10);
 
 select tests.clear_authentication();
 
@@ -23,6 +23,12 @@ select results_eq(
                'SELECT count(id) FROM profiles',
                $$VALUES(1::bigint) $$,
                'Authenticated user returns its own profile only'
+           );
+
+select results_eq(
+               'SELECT membership_level FROM profiles',
+               $$VALUES('user'::text) $$,
+               'New user has membership_level = user'
            );
 
 select results_eq(

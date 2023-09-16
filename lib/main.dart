@@ -1,20 +1,18 @@
 import 'dart:io';
 
-import 'package:clock/clock.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:http/http.dart';
-import 'app.dart';
-import 'dependency_injection.dart';
+import 'app/app.dart';
 import 'firebase_options.dart';
 
-Future<bool> main(
-    {Client? httpClient,
-    DependencyInjection Function(Widget child)? configToRun,
-    DateTime? withExplicitClock}) async {
+Future<bool> main({
+  Client? httpClient,
+  Function()? configToRun,
+}) async {
   WidgetsFlutterBinding.ensureInitialized();
   int initAttempt = 0;
 
@@ -48,7 +46,6 @@ Future<bool> main(
   await runAppWithOptions(
       envName: const String.fromEnvironment('ENV', defaultValue: 'prod'),
       httpClient: httpClient,
-      year: clock.now().year,
       appConfig: configToRun);
 
   return true;
