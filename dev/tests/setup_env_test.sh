@@ -18,4 +18,7 @@ DEFAULT_SUPABASE_ADMIN_TEST_PASSWORD=$(cat dev/tests/env/supabase-admin-test-tes
 read -p "Enter the Supabase admin test env test password [${DEFAULT_SUPABASE_ADMIN_TEST_PASSWORD}]: " -r SUPABASE_ADMIN_TEST_PASSWORD_INPUT
 echo "${SUPABASE_ADMIN_TEST_PASSWORD_INPUT:-${DEFAULT_SUPABASE_ADMIN_TEST_PASSWORD}}" > dev/tests/env/supabase-admin-test-test-password
 
+# todo improve-test-framework execute the test framework.sql and add the test user
+# todo improve-test-framework add test resources on the storage automatically
+
 echo "Done."

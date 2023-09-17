@@ -12,5 +12,10 @@ abstract class TestUserBuilder {
 
   static const String supabaseCreationFunctionName = 'generate_user';
 
+  withMember(bool isMember) {
+    this.isMember = isMember;
+    return this;
+  }
+
   Future<TestUser> build();
 }

@@ -37,7 +37,9 @@ echo "Running the integration tests on firebase..."
 gcloud firebase test android run --type instrumentation \
  --app build/app/outputs/apk/debug/app-debug.apk \
  --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
- --timeout 1m \
+ --environment-variables clearPackageData=true \
+ --use-orchestrator \
+ --timeout 4m \
  --device model=panther,version=33,locale=es,orientation=portrait \
  --results-bucket=gs://gmadrid-natacion-f5fcd.appspot.com \
  --results-dir=tests/firebase

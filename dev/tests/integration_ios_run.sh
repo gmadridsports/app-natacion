@@ -38,6 +38,6 @@ dev_target="15.7"
 gcloud firebase test ios run --test "build/ios_integ/Build/Products/ios_tests.zip" \
   --device model=iphone13pro,version=$dev_target,locale=en_US,orientation=portrait \
   --xcode-version=14.3 \
-  --timeout 3m \
+  --timeout 7m \
   --results-bucket=gs://gmadrid-natacion-f5fcd.appspot.com \
   --results-dir=tests/firebase

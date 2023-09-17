@@ -88,7 +88,7 @@ BEGIN
             'f');
 
     IF NEW.is_member THEN
-        UPDATE public.profiles SET membership_level = 'socio-23-24' WHERE id = new_id;
+        UPDATE public.profiles SET membership_level = 'member' WHERE id = new_id;
     END IF;
     RETURN NULL;
 END;
