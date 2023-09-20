@@ -87,7 +87,7 @@ The solution:
 - When compiling the test artifacts, the only one user/pass credentials compiled are the ones used to call the testing users' generation. Not fully safe, but relatively;
 - Users are created with a uuid as a username: collision is highly improbable.
 
-The user testing framework needed on the supabase's testing environment can be manually set up by using [this sql script](./dev/tests/env/test-framework.sql).
+The user testing framework needed on the supabase's testing environment can be manually set up by using [this sql script](supabase/supabase-init/test-framework.sql).
 
 #### Tests on local
 Check if the `assets/.test.env` contains the correct values for you: backend url, supabase project id, test accounts path etc.
