@@ -1,12 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../Context/Natacion/application/LogoutUser/LogoutUser.dart';
-import '../NamedRouteScreen.dart';
-
-class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
-  @override
-  static String get routeName => '/waiting-approval';
+class Pools extends StatelessWidget {
+  const Pools({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +26,7 @@ class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
               height: 10,
             ),
             const Text(
-              'Pendiente de revisión',
+              '¡Ups! 🤓',
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontSize: 30,
@@ -45,7 +40,7 @@ class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
               height: 5,
             ),
             const Text(
-              'En un plazo de 24h revisaremos que tu correo haga parte de la lista de socios, y podrás usar la app.',
+              'Esta funcionalidad no ha sido todavía desarrollada y estará disponible en futuras versiones.',
               textAlign: TextAlign.justify,
               style: TextStyle(
                   fontSize: 15,
@@ -57,17 +52,6 @@ class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
             ),
             const SizedBox(
               height: 20,
-            ),
-            ElevatedButton(
-              key: Key('logout-from-approval'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              onPressed: () {
-                LogoutUser()();
-              },
-              child:
-                  Text('Prefiero desloguearme', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

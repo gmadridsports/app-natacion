@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../domain/Email.dart';
 import '../domain/user/MembershipStatus.dart';
 import '../domain/user/User.dart' as User;
 import '../domain/user/UserRepository.dart';
@@ -23,8 +24,9 @@ class SupabaseUserRepository implements UserRepository {
         .select(_membershipLevelColumn);
     final membershipStatus = MembershipStatus.fromString(
         userProfiles.firstOrNull[_membershipLevelColumn] as String);
+    final userEmail = Email.fromString(supabaseUser.email ?? '');
 
-    final user = User.User.from(supabaseUser.id, membershipStatus);
+    final user = User.User.from(supabaseUser.id, membershipStatus, userEmail);
     return user;
   }
 

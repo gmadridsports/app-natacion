@@ -12,10 +12,9 @@ import '../Context/Natacion/domain/screen/ChangedCurrentScreenDomainEvent.dart';
 import '../Context/Natacion/infrastructure/supabase_user_status_listener.dart';
 import '../Context/Shared/infrastructure/Bus/Event/LibEventBusEventBus.dart';
 import '../conf/dependency_injections.dart';
-import './screens/profile/profile.dart';
 import './screens/splash-screen/splash-screen.dart';
 import 'screens/login/login.dart';
-import 'screens/training-week/training-week.dart';
+import 'screens/member-app/member-app.dart';
 import 'screens/waiting-approval/waiting-approval.dart';
 
 Future<bool> runAppWithOptions({
@@ -94,11 +93,9 @@ class App extends StatelessWidget {
         initialRoute: SplashScreen.routeName,
         routes: {
           WaitingApproval.routeName: (context) => WaitingApproval(),
-          TrainingWeek.routeName: (context) => TrainingWeek(),
+          MemberApp.routeName: (context) => MemberApp(),
           SplashScreen.routeName: (context) => SplashScreen(),
-          Profile.routeName: (context) => Profile(),
           Login.routeName: (context) => Login(),
-          // WaitingMembership.routeName: (context) => WaitingMembership(),
         });
   }
 }
