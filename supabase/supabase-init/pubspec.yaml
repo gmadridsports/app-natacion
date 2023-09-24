@@ -3,4 +3,5 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 dev_dependencies:
   supabase: ^1.6.1
-dependencies: 
+dependencies:
+  postgres: ^2.6.2 

@@ -2,7 +2,7 @@
     package="net.bertamini.gmadrid.natacion.gmadrid_natacion">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="gmadrid_natacion"
+        android:label="GMadrid Nado"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

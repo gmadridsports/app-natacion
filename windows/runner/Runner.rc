@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "net.bertamini.gmadrid.natacion" "\0"
-            VALUE "FileDescription", "gmadrid_natacion" "\0"
+            VALUE "FileDescription", "GMadrid Nado" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "gmadrid_natacion" "\0"
+            VALUE "InternalName", "GMadrid Nado" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 net.bertamini.gmadrid.natacion. All rights reserved." "\0"
             VALUE "OriginalFilename", "gmadrid_natacion.exe" "\0"
-            VALUE "ProductName", "gmadrid_natacion" "\0"
+            VALUE "ProductName", "GMadrid Nado" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

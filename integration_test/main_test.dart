@@ -58,14 +58,14 @@ void main() {
       final givenIpAddressPort = dotenv.get('SUPABASE_URL');
 
       final givenTrainingURL =
-          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/training-test.pdf';
+          '${givenIpAddressPort}/storage/v1/object/public/general/test.pdf';
       final givenFirstTrainingDate =
           TrainingDate.fromDateTime(givenFirstTrainingDateTime);
       final givenLastTrainingDate =
           TrainingDate.fromDateTime(givenLastTrainingDateTime);
 
       Response response = await get(Uri.parse(
-          '${givenIpAddressPort}/storage/v1/object/public/general/trainings/training-test.pdf'));
+          '${givenIpAddressPort}/storage/v1/object/public/general/test.pdf'));
 
       when(() => mockedTrainingRepository.getFirstTrainingDate())
           .thenAnswer((_) => Future.value(givenFirstTrainingDate));

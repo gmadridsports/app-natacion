@@ -2,16 +2,19 @@
 
 current-dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 hostname := $(hostname -f)
+SUPABASE_ADMIN_TEST_TEST_PASSWORD=$(shell cat dev/tests/env/supabase-admin-test-test-password)
+SUPABASE_ADMIN_LOCAL_TEST_PASSWORD=$(shell cat dev/tests/env/supabase-admin-local-test-password)
 
 backend-start:
 	@echo "Starting the app"
 	supabase start
 
-setup-backend: backend-start
+setup-backend: setup-env-test backend-start
 	@echo "Setupping supabase"
 	supabase db reset
-	pushd supabase/buckets-init && dart pub get && popd
-	dart supabase/buckets-init/populate_buckets.dart
+	pushd supabase/supabase-init && dart pub get && popd
+	dart supabase/supabase-init/populate_buckets.dart
+	SUPABASE_ADMIN_LOCAL_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) dart supabase/supabase-init/init_test_framework.dart
 
 backend-stop:
 	@echo "Stopping the backend"
@@ -25,8 +28,6 @@ setup-frontend:
 	@echo "Setting up the app"
 	flutter pub get
 
-SUPABASE_ADMIN_TEST_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-test-test-password)
-SUPABASE_ADMIN_LOCAL_TEST_PASSWORD:=$(shell cat dev/tests/env/supabase-admin-local-test-password)
 test-flutter-android:
 	@echo "Running Android tests"
 	@SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_android_run.sh

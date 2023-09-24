@@ -103,8 +103,6 @@ create trigger on_auth_user_created
     for each row
 EXECUTE PROCEDURE insert_test_user();
 
-
-
 --- empty test users every day
 create or replace function delete_old_test_accounts()
     returns void as
