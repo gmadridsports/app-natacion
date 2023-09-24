@@ -73,6 +73,7 @@ class _TrainingWeekState extends State<TrainingWeek> {
     }
 
     trainingBoundaries as GetTrainingBoundariesPositiveResponse;
+
     setState(() {
       _calendarSelectionUpperBound = trainingBoundaries.upperBound;
       _calendarSelectionLowerBound = trainingBoundaries.lowerBound;

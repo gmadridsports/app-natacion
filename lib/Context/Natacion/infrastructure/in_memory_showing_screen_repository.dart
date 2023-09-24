@@ -21,6 +21,6 @@ class InMemoryShowingScreenRepository implements ShowingScreenRepository {
 
     DependencyInjection()
         .getInstanceOf<LibEventBusEventBus>()
-        .publishApp(showingScreen.pullDomainEvents());
+        .publishApp(showingScreen.domainEvents);
   }
 }

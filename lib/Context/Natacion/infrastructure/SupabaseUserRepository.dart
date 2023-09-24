@@ -1,5 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../shared/dependency_injection.dart';
+import '../../Shared/infrastructure/Bus/Event/LibEventBusEventBus.dart';
 import '../domain/Email.dart';
 import '../domain/user/MembershipStatus.dart';
 import '../domain/user/User.dart' as User;
@@ -32,5 +34,14 @@ class SupabaseUserRepository implements UserRepository {
 
   Future<void> deleteCurrentSessionUser() async {
     await Supabase.instance.client.auth.signOut();
+  }
+
+  @override
+  Future<void> save(User.User user) async {
+    // at this very moment we don't need to update the user. the app does not allow it
+    // we simply publish the events and the app will react to it
+    DependencyInjection()
+        .getInstanceOf<LibEventBusEventBus>()
+        .publishApp(user.domainEvents);
   }
 }

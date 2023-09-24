@@ -1,19 +1,18 @@
 import '../../../Shared/domain/DomainEventSubscriber.dart';
 import '../../domain/user/ListenedEvents/MembershipStatusChangedFromBackoffice.dart';
 import '../../domain/user/MembershipStatus.dart';
-import 'RedirectToFirstScreenForMembership.dart';
+import 'UpdateUserMembership.dart';
 
-class RedirectToProperScreenOnMembershipApproved
+class UpdateUserMembershipOnMembershipChanged
     implements DomainEventSubscriber<MembershipStatusChangedFromBackoffice> {
   @override
   get subscribedTo => MembershipStatusChangedFromBackoffice;
 
-  RedirectToProperScreenOnMembershipApproved();
+  UpdateUserMembershipOnMembershipChanged();
 
   @override
-  call(MembershipStatusChangedFromBackoffice domainEvent) {
-    final membershipLevel =
-        MembershipStatus.fromString(domainEvent.membershipLevel);
-    RedirectToFirstScreenForMembership()(membershipLevel);
+  call(MembershipStatusChangedFromBackoffice domainEvent) async {
+    UpdateUserMembership()(
+        MembershipStatus.fromString(domainEvent.membershipLevel));
   }
 }

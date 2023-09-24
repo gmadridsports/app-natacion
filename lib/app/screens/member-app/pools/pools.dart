@@ -16,7 +16,7 @@ class Pools extends StatelessWidget {
           children: [
             AnimatedRotation(
               duration: const Duration(milliseconds: 10000),
-              turns: 5.0,
+              turns: 4.0,
               child: Image.asset(
                 'assets/images/logo.png',
                 width: 100,

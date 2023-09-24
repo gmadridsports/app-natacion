@@ -42,7 +42,7 @@ void main() {
   patrolTest(
     'User with member level can log in, see training weeks, and logout',
     nativeAutomation: true,
-    (PatrolTester $) async {
+    (PatrolIntegrationTester $) async {
       const envName = const String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
@@ -91,14 +91,14 @@ void main() {
       );
 
       if (await $.native
-          .isPermissionDialogVisible(timeout: Duration(seconds: 10))) {
+          .isPermissionDialogVisible(timeout: const Duration(seconds: 10))) {
         await $.native.grantPermissionWhenInUse();
       }
 
       await $.pumpAndSettle();
 
       // then
-      await $('Acceso').waitUntilVisible(timeout: Duration(seconds: 2));
+      await $('Acceso').waitUntilVisible(timeout: const Duration(seconds: 2));
 
       // and when
       await $(#Password).scrollTo();

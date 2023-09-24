@@ -66,8 +66,8 @@ class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
               onPressed: () {
                 LogoutUser()();
               },
-              child:
-                  Text('Prefiero desloguearme', style: TextStyle(fontSize: 18)),
+              child: Text('Prefiero cerrar sesión',
+                  style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

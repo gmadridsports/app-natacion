@@ -4,7 +4,7 @@ import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../Shared/domain/Bus/Event/EventBus.dart';
-import '../domain/user/ListenedEvents/MembershipStatusChanged.dart';
+import '../domain/user/ListenedEvents/MembershipStatusChangedFromBackoffice.dart';
 
 class SupabaseUserStatusListener {
   late final StreamSubscription _streamSubscription;
@@ -16,7 +16,7 @@ class SupabaseUserStatusListener {
       if (data.isEmpty) return;
 
       DependencyInjection().getInstanceOf<EventBus>().publish([
-        MembershipStatusChanged(
+        MembershipStatusChangedFromBackoffice(
           data.first['id'],
           DateTime.now(),
           data.first['membership_level'],
