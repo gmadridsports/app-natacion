@@ -118,7 +118,10 @@ void main() {
       await $.pumpAndSettle();
       await $('GMadrid Natación').waitUntilVisible();
 
-      await $(#exit).tap();
+      await $(#profile).tap();
+      await $(givenUser.email.toString()).waitUntilVisible();
+
+      await $(#logout).tap();
 
       // then
       await $('Acceso').waitUntilVisible();

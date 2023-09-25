@@ -41,6 +41,7 @@ class _ProfileState extends State<Profile> {
                 title: Text('Mi estado'),
                 subtitle: Text(user.memberStatus)),
             ListTile(
+              key: const Key('logout'),
               leading: Icon(Icons.logout),
               title: const Text('Cierra la sesión'),
               onTap: () async {
@@ -68,8 +69,7 @@ class _ProfileState extends State<Profile> {
                 subtitle: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Matteo Bertamini'),
-                      Text('www.bertamini.net'),
+                      Text('Matteo Bertamini | www.bertamini.net'),
                       Text('Bajo licencia MIT')
                     ]),
                 isThreeLine: false),
