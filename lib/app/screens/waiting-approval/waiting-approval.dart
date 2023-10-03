@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../Context/Natacion/application/LogoutUser/LogoutUser.dart';
+import '../../../Context/Natacion/infrastructure/app_interface/commands/logout_user.dart';
 import '../NamedRouteScreen.dart';
 
 class WaitingApproval extends StatelessWidget implements NamedRouteScreen {

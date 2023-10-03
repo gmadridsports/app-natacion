@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../Context/Natacion/application/LoginUser/LoginUser.dart';
 import '../../../Context/Natacion/domain/Email.dart';
+import '../../../Context/Natacion/infrastructure/app_interface/commands/login_user.dart';
 import '../../../shared/domain/RunningMode.dart';
 import '../NamedRouteScreen.dart';
 
@@ -92,8 +92,6 @@ class _LoginState extends State<Login> {
       final session = data.session;
       if (session != null) {
         _redirecting = true;
-
-        // from command
         LoginUser()();
       }
     });

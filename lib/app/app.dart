@@ -1,15 +1,21 @@
+import 'dart:async';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/user/ListenedEvents/MembershipStatusChanged.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/user/ListenedEvents/UserAppUsagePermissionsChanged.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/user/user_logged_in_event.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 
 import 'package:event_bus/event_bus.dart' as LibEventBus;
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart';
 import '../Context/Natacion/domain/screen/ChangedCurrentScreenDomainEvent.dart';
+import '../Context/Natacion/domain/user/user_login_event.dart';
+import '../Context/Natacion/infrastructure/app_interface/queries/GetSessionUser.dart';
 import '../Context/Natacion/infrastructure/supabase_user_status_listener.dart';
 import '../Context/Shared/infrastructure/Bus/Event/LibEventBusEventBus.dart';
 import '../conf/dependency_injections.dart';
@@ -47,6 +53,7 @@ Future<bool> runAppWithOptions({
 
   try {
     String? token = await messaging.getToken();
+
     if (kDebugMode) {
       print('Registration Token=$token');
     }
@@ -66,11 +73,40 @@ Future<bool> runAppWithOptions({
   return true;
 }
 
-class App extends StatelessWidget {
-  final GlobalKey<NavigatorState> _navigator = GlobalKey<NavigatorState>();
+class App extends StatefulWidget {
+  @override
+  State<App> createState() => _AppState();
+}
 
-  App({Key? key}) : super(key: key) {
+class _AppState extends State<App> with WidgetsBindingObserver {
+  final GlobalKey<NavigatorState> _navigator = GlobalKey<NavigatorState>();
+  late StreamSubscription _subscription;
+  late final SupabaseUserStatusListener _supabaseUserStatusListener;
+
+  _AppState() {
+    _supabaseUserStatusListener = SupabaseUserStatusListener();
     _initializeGlobalAppEventListeners();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      if (state == AppLifecycleState.resumed) {
+        _supabaseUserStatusListener.refresh();
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   void _initializeGlobalAppEventListeners() async {
@@ -79,27 +115,89 @@ class App extends StatelessWidget {
     DependencyInjection()
         .getInstanceOf<LibEventBus.EventBus>()
         .on<AppEventType>()
-        .listen((event) {
+        .listen((event) async {
       switch (event.payload.eventName) {
         case ChangedCurrentScreenDomainEvent.EVENT_NAME:
           _navigator.currentState?.pushReplacementNamed(
               (event.payload as ChangedCurrentScreenDomainEvent).newScreenName);
           break;
-        case MembershipStatusChanged.EVENT_NAME:
-          if (event.payload.eventName != MembershipStatusChanged.EVENT_NAME) {
-            return;
+        case UserAppUsagePermissionsChanged.EVENT_NAME:
+          final userPermissions =
+              event.payload as UserAppUsagePermissionsChanged;
+
+          if (userPermissions.canUseApp) {
+            DependencyInjection()
+                .getInstanceOf<NotificationService>()
+                .sendNotification('Membresía aprobada',
+                    'Te damos la bienvenida a GMadrid! 🏊🏼');
           }
-          if ((event.payload as MembershipStatusChanged).membershipLevel !=
-              'member') {
-            return;
+          break;
+        case UserAlreadyLoggedInEvent.EVENT_NAME:
+          try {
+            final sessionId = JwtDecoder.decode(Supabase
+                    .instance.client.auth.currentSession?.accessToken
+                    .toString() ??
+                '')['session_id'];
+            final fcmToken = await FirebaseMessaging.instance.getToken();
+
+            await Supabase.instance.client.from('notification_tokens').upsert({
+              'user_id': Supabase.instance.client.auth.currentUser?.id,
+              'session_id': sessionId,
+              'token': fcmToken,
+            });
+
+            _subscription = FirebaseMessaging.instance.onTokenRefresh
+                .listen((newToken) async {
+              final user = await GetSessionUser()();
+              if (!user.isLogged) {
+                return;
+              }
+
+              await Supabase.instance.client
+                  .from('notification_tokens')
+                  .upsert({
+                'user_id': Supabase.instance.client.auth.currentUser?.id,
+                'session_id': sessionId,
+                'token': newToken,
+              });
+            });
+          } catch (e) {
+            FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
+          }
+          break;
+        case UserLoginEvent.EVENT_NAME:
+          try {
+            final sessionId = JwtDecoder.decode(Supabase
+                    .instance.client.auth.currentSession?.accessToken
+                    .toString() ??
+                '')['session_id'];
+            final fcmToken = await FirebaseMessaging.instance.getToken();
+
+            await Supabase.instance.client.from('notification_tokens').upsert({
+              'user_id': Supabase.instance.client.auth.currentUser?.id,
+              'session_id': sessionId,
+              'token': fcmToken,
+            });
+
+            _subscription = FirebaseMessaging.instance.onTokenRefresh
+                .listen((newToken) async {
+              final user = await GetSessionUser()();
+              if (!user.isLogged) {
+                return;
+              }
+
+              await Supabase.instance.client
+                  .from('notification_tokens')
+                  .upsert({
+                'user_id': Supabase.instance.client.auth.currentUser?.id,
+                'session_id': sessionId,
+                'token': newToken,
+              });
+            });
+          } catch (e) {
+            FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
           }
 
-          // todo profile-tab continue here
-          DependencyInjection()
-              .getInstanceOf<NotificationService>()
-              .sendNotification('Solicitud aceptada',
-                  'Te damos la bienvenida a GMadrid! 🏊🏼');
-          break;
         default:
           break;
       }

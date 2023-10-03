@@ -5,7 +5,6 @@ import 'GetSessionUserResponse.dart';
 
 class GetSessionUser {
   late final UserRepository _userRepository;
-
   GetSessionUser() {
     DependencyInjection().getInstanceOf<ShowingScreenRepository>();
     _userRepository = DependencyInjection().getInstanceOf<UserRepository>();
@@ -15,10 +14,10 @@ class GetSessionUser {
     final user = await _userRepository.getCurrentSessionUser();
 
     if (user == null) {
-      return GetSessionUserResponse('', '');
+      return GetSessionUserResponse(false, '', false, '');
     }
 
-    return GetSessionUserResponse(
-        user.email.toString(), user.membership.toString());
+    return GetSessionUserResponse(true, user.email.toString(), user.canUseApp(),
+        user.membership.toString());
   }
 }

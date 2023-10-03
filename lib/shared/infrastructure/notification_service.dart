@@ -36,7 +36,7 @@ class NotificationService {
     );
   }
 
-  void sendNotification(String title, String body) async {
+  Future<void> sendNotification(String title, String body) async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails('gmadrid-natación', 'membership',
             channelDescription: 'Membership notifications',

@@ -24,7 +24,6 @@ class UpdateUserMembership {
     user.changeMembership(membershipStatus);
     await _userRepository.save(user);
 
-    _userRepository.save(user);
     _eventBus.publish(user.pullDomainEvents());
   }
 }

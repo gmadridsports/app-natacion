@@ -6,7 +6,7 @@ import 'package:gmadrid_natacion/Context/Natacion/application/GetSessionUser/Get
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../Context/Natacion/application/LogoutUser/LogoutUser.dart';
+import '../../../../Context/Natacion/infrastructure/app_interface/commands/logout_user.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

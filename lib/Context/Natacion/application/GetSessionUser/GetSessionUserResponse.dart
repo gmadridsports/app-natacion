@@ -3,10 +3,13 @@ import 'dart:typed_data';
 import '../../../Shared/application/QueryResponse.dart';
 
 class GetSessionUserResponse implements QueryResponse {
+  final bool isLogged;
   final String email;
   late final String memberStatus;
+  final bool canUseApp;
 
-  GetSessionUserResponse(this.email, String memberStatus) {
+  GetSessionUserResponse(
+      this.isLogged, this.email, this.canUseApp, String memberStatus) {
     switch (memberStatus) {
       case 'user':
         this.memberStatus = 'no miebro';

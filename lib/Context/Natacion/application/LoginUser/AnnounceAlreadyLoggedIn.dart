@@ -2,11 +2,11 @@ import '../../../../shared/dependency_injection.dart';
 import '../../../Shared/domain/Bus/Event/EventBus.dart';
 import '../../domain/user/UserRepository.dart';
 
-class LoginUser {
+class AnnounceAlreadyLoggedIn {
   late final EventBus _eventBus;
   late final UserRepository _userRepository;
 
-  LoginUser() {
+  AnnounceAlreadyLoggedIn() {
     _eventBus = DependencyInjection().getInstanceOf<EventBus>();
     _userRepository = DependencyInjection().getInstanceOf<UserRepository>();
   }
@@ -19,7 +19,7 @@ class LoginUser {
         return;
       }
 
-      value.login();
+      value.declareAlreadyLoggedIn();
       _userRepository.save(value);
       _eventBus.publish(value.pullDomainEvents() ?? []);
     });

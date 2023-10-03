@@ -10,6 +10,7 @@ class BoundedContextDomainEventType {
   BoundedContextDomainEventType(this.payload);
 }
 
+// todo https://trello.com/c/Dvxd0Gx0 make it generic so as to listen <AppeventType<DomainEventType>>
 class AppEventType {
   final DomainEvent payload;
 

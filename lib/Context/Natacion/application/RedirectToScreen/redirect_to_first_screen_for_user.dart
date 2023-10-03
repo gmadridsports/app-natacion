@@ -25,7 +25,8 @@ class RedirectToFirstScreenForUser {
       return;
     }
 
-    showingScreen.changeCurrentScreen(currentUser?.membership);
+    showingScreen
+        .changeCurrentScreenIfCurrentStatusChangesIt(currentUser?.membership);
     _showingScreenRepository.save(showingScreen);
     _eventBus.publish(showingScreen.pullDomainEvents());
   }

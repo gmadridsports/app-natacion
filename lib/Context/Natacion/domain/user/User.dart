@@ -1,6 +1,8 @@
+import 'package:gmadrid_natacion/Context/Natacion/domain/user/user_logged_in_event.dart';
+
 import '../../../Shared/domain/Aggregate/aggregate_root.dart';
 import '../Email.dart';
-import 'ListenedEvents/MembershipStatusChanged.dart';
+import 'ListenedEvents/UserAppUsagePermissionsChanged.dart';
 import 'MembershipStatus.dart';
 import 'UserId.dart';
 import 'user_login_event.dart';
@@ -31,9 +33,15 @@ class User extends AggregateRoot {
         .add(UserLoginEvent(_id, DateTime.now(), _membership.toString()));
   }
 
+  declareAlreadyLoggedIn() {
+    domainEvents.add(
+        UserAlreadyLoggedInEvent(_id, DateTime.now(), _membership.toString()));
+  }
+
   changeMembership(MembershipStatus newMembershipStatus) {
     _membership = newMembershipStatus;
-    domainEvents.add(
-        MembershipStatusChanged(_id, DateTime.now(), _membership.toString()));
+
+    domainEvents.add(UserAppUsagePermissionsChanged(
+        _id, DateTime.now(), _membership.canUseApp()));
   }
 }

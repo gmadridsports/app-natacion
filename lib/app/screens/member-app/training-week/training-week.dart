@@ -2,13 +2,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gmadrid_natacion/Context/Natacion/application/Training/GetTrainingPDF.dart';
-import 'package:gmadrid_natacion/Context/Natacion/application/TrainingDate/GetTrainingDatesBoundaries.dart';
-import 'package:gmadrid_natacion/Context/Natacion/application/TrainingDate/IsATrainingWeek.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../../Context/Natacion/application/TrainingDate/GetTrainingBoundariesResponse.dart';
+import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_training_dates_boundaries.dart';
+import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_training_pdf.dart';
+import '../../../../Context/Natacion/infrastructure/app_interface/queries/is_a_trainining_week.dart';
 import '../../../../shared/domain/DateTimeRepository.dart';
 import '../../../../Context/Natacion/domain/TrainingDate.dart';
 import '../../NamedRouteScreen.dart';
@@ -55,7 +55,7 @@ class _TrainingWeekState extends State<TrainingWeek> {
       _trainingDateShowed = trainingDatePdfShowing;
       _isTrainingLoading = true;
     });
-    // todo handle error
+    // todo handle errors while retrieving
 
     final downloadedPdf =
         (await GetTrainingPDF()(_calendarSelectorSelectedDay)).rawBytes;

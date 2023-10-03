@@ -22,7 +22,7 @@ class RedirectToFirstScreenForMembership {
       return;
     }
 
-    showingScreen.changeCurrentScreen(membershipStatus);
+    showingScreen.changeCurrentScreenIfCurrentStatusChangesIt(membershipStatus);
     _showingScreenRepository.save(showingScreen);
     _eventBus.publish(showingScreen.pullDomainEvents());
   }
