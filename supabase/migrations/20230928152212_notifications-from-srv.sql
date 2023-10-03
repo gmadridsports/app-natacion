@@ -32,6 +32,6 @@ begin
 end;
 $$;
 
-revoke execute on function enable_membership from public;
+REVOKE execute on function enable_membership from public;
 GRANT EXECUTE ON FUNCTION enable_membership(email_updating_user text) TO service_role;
 GRANT EXECUTE ON FUNCTION enable_membership(email_updating_user text) TO dashboard_user;

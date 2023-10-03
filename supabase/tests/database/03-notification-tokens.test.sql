@@ -1,7 +1,7 @@
 -- begin the transaction, this will allow you to rollback any changes made during the test
 BEGIN;
 
-select plan(13);
+select plan(14);
 
 -- first user with a session and notification token associated
 SELECT tests.create_supabase_user('authenticated_non_member_user', 'authenticated@gmadridnatacion.bertamini.net');
@@ -92,4 +92,5 @@ select tests.clear_authentication();
 
 SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'dashboard_user', ARRAY['EXECUTE'], 'enable_membership only for privileged user');
 SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'anon', ARRAY[]::text[], 'non privileged roles cannot execute enable_membership');
+SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'authenticated', ARRAY[]::text[], 'non privileged roles cannot execute enable_membership');
 
