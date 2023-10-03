@@ -10,7 +10,7 @@ select tests.rls_enabled('public');
 select policies_are(
                'public',
                'profiles',
-               ARRAY['authenticated users can only read their own profile']
+               ARRAY['authenticated users can ONLY READ their own profile']
            );
 
 SELECT tests.create_supabase_user('authenticated_non_member_user', 'authenticated@gmadridnatacion.bertamini.net');

@@ -32,6 +32,6 @@ begin
 end;
 $$;
 
-REVOKE EXECUTE ON FUNCTION enable_membership(email_updating_user text) FROM anon, authenticator, authenticated, supabase_auth_admin, supabase_storage_admin, supabase_admin;
+revoke execute on function enable_membership from public;
 GRANT EXECUTE ON FUNCTION enable_membership(email_updating_user text) TO service_role;
 GRANT EXECUTE ON FUNCTION enable_membership(email_updating_user text) TO dashboard_user;
