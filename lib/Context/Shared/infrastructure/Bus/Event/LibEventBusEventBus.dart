@@ -10,6 +10,7 @@ class BoundedContextDomainEventType {
   BoundedContextDomainEventType(this.payload);
 }
 
+// todo https://trello.com/c/Dvxd0Gx0 make it generic so as to listen <AppeventType<DomainEventType>>
 class AppEventType {
   final DomainEvent payload;
 
@@ -31,7 +32,6 @@ class LibEventBusEventBus implements DomainEventBus.EventBus {
 
   _listenToDomainEvents() {
     _eventBus.on<BoundedContextDomainEventType>().listen((event) {
-      print('event');
       Type? type = event.payload?.runtimeType;
       _subscribers[type.toString()]?.forEach((subscriber) {
         subscriber(event.payload);
@@ -56,6 +56,7 @@ class LibEventBusEventBus implements DomainEventBus.EventBus {
     });
   }
 
+  // events that are listened by the UI app istelf, not a bounded context
   publishApp(List<DomainEvent> events) {
     events.forEach((event) {
       AppEventType eventToFire = AppEventType(event);

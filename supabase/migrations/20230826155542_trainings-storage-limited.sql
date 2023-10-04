@@ -31,3 +31,5 @@ from storage.objects
 where bucket_id='trainings' and name = training_path;
 $$
     language sql stable;
+
+alter publication supabase_realtime add table public.profiles;

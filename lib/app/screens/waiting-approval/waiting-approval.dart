@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../Context/Natacion/application/LogoutUser/LogoutUser.dart';
+import '../../../Context/Natacion/infrastructure/app_interface/commands/logout_user.dart';
 import '../NamedRouteScreen.dart';
 
 class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
@@ -21,7 +21,7 @@ class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
           children: [
             AnimatedRotation(
               duration: const Duration(milliseconds: 10000),
-              turns: 3.0,
+              turns: 5.0,
               child: Image.asset(
                 'assets/images/logo.png',
                 width: 100,
@@ -66,8 +66,8 @@ class WaitingApproval extends StatelessWidget implements NamedRouteScreen {
               onPressed: () {
                 LogoutUser()();
               },
-              child:
-                  Text('Prefiero desloguearme', style: TextStyle(fontSize: 18)),
+              child: Text('Prefiero cerrar sesión',
+                  style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

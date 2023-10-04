@@ -1,17 +1,17 @@
 import '../../../Shared/domain/DomainEventSubscriber.dart';
-import '../../domain/user/ListenedEvents/MembershipStatusChanged.dart';
+import '../../domain/user/ListenedEvents/MembershipStatusChangedFromBackoffice.dart';
 import '../../domain/user/MembershipStatus.dart';
 import 'RedirectToFirstScreenForMembership.dart';
 
 class RedirectToProperScreenOnMembershipApproved
-    implements DomainEventSubscriber<MembershipStatusChanged> {
+    implements DomainEventSubscriber<MembershipStatusChangedFromBackoffice> {
   @override
-  get subscribedTo => MembershipStatusChanged;
+  get subscribedTo => MembershipStatusChangedFromBackoffice;
 
   RedirectToProperScreenOnMembershipApproved();
 
   @override
-  call(MembershipStatusChanged domainEvent) {
+  call(MembershipStatusChangedFromBackoffice domainEvent) {
     final membershipLevel =
         MembershipStatus.fromString(domainEvent.membershipLevel);
     RedirectToFirstScreenForMembership()(membershipLevel);

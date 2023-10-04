@@ -33,7 +33,7 @@ create trigger on_auth_user_created
     after insert on auth.users
     for each row execute procedure public.handle_new_user();
 
-create policy "authenticated users can only read their own profile"
+create policy "authenticated users can ONLY READ their own profile"
     on "public"."profiles"
     as permissive
     for select

@@ -13,10 +13,16 @@ class ShowingScreen extends AggregateRoot {
   ShowingScreen.from(ShowingScreenId id, Screen currentScreen)
       : this._internal(id, currentScreen);
 
-  changeCurrentScreen(MembershipStatus? accordingToMembershipStatus) {
-    _currentScreen =
+  changeCurrentScreenIfCurrentStatusChangesIt(
+      MembershipStatus? accordingToMembershipStatus) {
+    final nextCurrentScreen =
         _currentScreen.nextShowingScreen(accordingToMembershipStatus);
 
+    if (nextCurrentScreen == _currentScreen) {
+      return;
+    }
+
+    _currentScreen = nextCurrentScreen;
     record(ChangedCurrentScreenDomainEvent(
         _id, DateTime.now(), _currentScreen.name));
   }
@@ -27,11 +33,4 @@ class ShowingScreen extends AggregateRoot {
     record(ChangedCurrentScreenDomainEvent(
         _id, DateTime.now(), _currentScreen.name));
   }
-
-  // changeCurrentScreen(User? accordingToUser) {
-  //   if(accordingToUser == null) {
-  //
-  //     return;
-  //   }
-  // }
 }

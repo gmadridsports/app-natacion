@@ -4,7 +4,7 @@ import '../user/User.dart';
 enum Screen {
   login(name: '/login'),
   waitingApproval(name: '/waiting-approval'),
-  trainingWeek(name: '/training-week'),
+  memberApp(name: '/member-app'),
   splash(name: '/splash');
 
   const Screen({required this.name});
@@ -15,8 +15,8 @@ enum Screen {
         return Screen.login;
       case '/waiting-approval':
         return Screen.waitingApproval;
-      case '/training-week':
-        return Screen.trainingWeek;
+      case '/member-app':
+        return Screen.memberApp;
       default:
         throw new ArgumentError('Invalid screen : $name');
     }
@@ -29,15 +29,15 @@ enum Screen {
 
     switch (this) {
       case Screen.login:
-      case Screen.trainingWeek:
+      case Screen.memberApp:
         if (!accordingToMembershipStatus.canUseApp()) {
           return Screen.waitingApproval;
         } else {
-          return Screen.trainingWeek;
+          return Screen.memberApp;
         }
       default:
         if (accordingToMembershipStatus.canUseApp()) {
-          return Screen.trainingWeek;
+          return Screen.memberApp;
         } else {
           return Screen.waitingApproval;
         }
