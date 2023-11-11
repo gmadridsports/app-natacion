@@ -151,14 +151,13 @@ void main() {
         'givenRemoteBuildNumber': 4,
         'expectedUpdatedVersionCondition': findsOneWidget
       }),
-      // 'current up to date version is showed': Map.of({
-      //   'givenCurrentBuildNumber': 3,
-      //   'givenRemoteBuildNumber': 3,
-      //   'expectedUpdatedVersionCondition': findsNothing
-      // })
+      'current up to date version is showed': Map.of({
+        'givenCurrentBuildNumber': 3,
+        'givenRemoteBuildNumber': 3,
+        'expectedUpdatedVersionCondition': findsNothing
+      })
     });
 
-    // for cycle for two integers
     for (var testCase in cases.keys) {
       patrolTest(
         testCase,

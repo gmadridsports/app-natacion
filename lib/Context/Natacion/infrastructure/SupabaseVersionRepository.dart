@@ -27,7 +27,7 @@ class SupabaseVersionRepository implements VersionRepository {
         .from(_versionsTable)
         .select("$_versionColumn, $_updateUrl")
         .filter('available', 'eq', true)
-        .order('published_at', ascending: true)
+        .order('published_at', ascending: false)
         .limit(1);
 
     if (returnedVersion.isEmpty) {
