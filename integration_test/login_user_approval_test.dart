@@ -84,19 +84,4 @@ void main() {
       await $('Acceso').waitUntilVisible();
     },
   );
-
-  patrolTest(
-      'update information is shown when there is a new version available',
-      nativeAutomation: true, (PatrolIntegrationTester $) async {
-    // todo complete this with mocks!
-  });
-
-  patrolTest(
-      'no update information is shown when there\'s no new version available',
-      nativeAutomation: true, (PatrolIntegrationTester $) async {
-    // todo complete this with mocks!
-  });
-
-  // todo test the new backend
-  // todo update the staging and testing environments
 }

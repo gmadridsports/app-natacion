@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingDate.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingRepository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
 import 'package:gmadrid_natacion/conf/dependency_injections.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
@@ -13,11 +14,19 @@ import 'package:mocktail/mocktail.dart';
 import 'package:http/http.dart';
 
 import 'infrastructure/SupabaseTestUserBuilder.dart';
+import 'models/TestAppVersionBuilder.dart';
+import 'models/TestVersionBuilder.dart';
 
 class MockySupabaseBucketsTrainingURLRepository extends Mock
     implements TrainingRepository {}
 
 class MockyDateTimeRepository extends Mock implements DateTimeRepository {}
+
+class MockySupabaseVersionRepository extends Mock
+    implements VersionRepository {}
+
+final VersionRepository mockedVersionRepository =
+    MockySupabaseVersionRepository();
 
 void main() {
   final TrainingRepository mockedTrainingRepository =
@@ -35,6 +44,7 @@ void main() {
 
     injectionInstances.add((DateTimeRepository, mockedDateTimeRepository));
     injectionInstances.add((TrainingRepository, mockedTrainingRepository));
+    injectionInstances.add((VersionRepository, mockedVersionRepository));
 
     DependencyInjection(instances: injectionInstances);
   }
@@ -84,6 +94,15 @@ void main() {
 
       when(() => mockedDateTimeRepository.now())
           .thenReturn(givenCurrentDateTime);
+
+      final givenRunningVersion = TestAppVersionBuilder()
+          .withCurrentAppVersion(
+              TestVersionBuilder().build(), TestVersionBuilder().build())
+          .build();
+      when(() => mockedVersionRepository.getRunningVersion())
+          .thenAnswer((_) => Future.value(givenRunningVersion));
+      when(() => mockedVersionRepository.getLatestAvailableVersion())
+          .thenAnswer((_) => Future.value(givenRunningVersion));
 
       // when
       app_main.main(

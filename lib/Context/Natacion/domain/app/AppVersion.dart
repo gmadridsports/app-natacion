@@ -12,7 +12,7 @@ class AppVersion extends AggregateRoot {
       : _version = version,
         shouldUpdate = version.updateAvailable(latestRemoteVersion);
 
-  AppVersion.from(Version appVersion, Version? latestRemoteVersion)
+  AppVersion.from(Version appVersion, Version latestRemoteVersion)
       : this._internal(appVersion, latestRemoteVersion, true, null);
 
   AppVersion.fromRemote(

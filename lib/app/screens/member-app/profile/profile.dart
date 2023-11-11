@@ -61,6 +61,7 @@ class _ProfileState extends State<Profile> {
                   innerWebView: true),
             ),
             ListTile(
+                key: const Key('version'),
                 leading:
                     versionInfo.shouldUpdate ? const Icon(Icons.update) : null,
                 title: Text('Versión ${versionInfo.currentVersion.toString()}'),
@@ -121,4 +122,11 @@ class _ProfileState extends State<Profile> {
       throw 'Could not launch $url';
     }
   }
+
+// @override
+// Widget build(BuildContext context) {
+//   return (const Text('ciao'));
+//   // TODO: implement build
+//   throw UnimplementedError();
+// }
 }

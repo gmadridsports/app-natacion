@@ -14,7 +14,7 @@ alter table "public"."versions"
 alter table "public"."versions"
     enable row level security;
 
-create policy "Enable insert for authenticated users only"
+create policy "Enable select for authenticated users only"
     on "public"."versions"
     as permissive
     for select
