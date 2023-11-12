@@ -15,12 +15,18 @@ import 'package:http/http.dart';
 
 import 'infrastructure/SupabaseTestUserBuilder.dart';
 import 'models/TestAppVersionBuilder.dart';
+import 'models/TestUser.dart';
 import 'models/TestVersionBuilder.dart';
+
+final DateTimeRepository mockedDateTimeRepository = MockyDateTimeRepository();
+
+class MockyDateTimeRepository extends Mock implements DateTimeRepository {}
 
 class MockySupabaseBucketsTrainingURLRepository extends Mock
     implements TrainingRepository {}
 
-class MockyDateTimeRepository extends Mock implements DateTimeRepository {}
+final TrainingRepository mockedTrainingRepository =
+    MockySupabaseBucketsTrainingURLRepository();
 
 class MockySupabaseVersionRepository extends Mock
     implements VersionRepository {}
@@ -28,38 +34,28 @@ class MockySupabaseVersionRepository extends Mock
 final VersionRepository mockedVersionRepository =
     MockySupabaseVersionRepository();
 
-void main() {
-  final TrainingRepository mockedTrainingRepository =
-      MockySupabaseBucketsTrainingURLRepository();
-  final DateTimeRepository mockedDateTimeRepository = MockyDateTimeRepository();
+var setupBeforeAllRun = false;
+var givenAppLoggedInRun = false;
+late TestUser givenUser;
 
+void main() {
   registerFallbackValue(TrainingDate.from(2019, 03, 03));
   registerFallbackValue(DateTime(2019, 03, 03, 0, 0, 0));
 
-  configToRun() {
-    final injectionInstances = dependencyInjectionInstances()
-        .where(
-            (el) => el.$1 != DateTimeRepository && el.$1 != TrainingRepository)
-        .toList();
+  group('version check', () {
+    Future<void> setupBeforeAll() async {
+      if (setupBeforeAllRun) {
+        return;
+      }
+      setupBeforeAllRun = true;
 
-    injectionInstances.add((DateTimeRepository, mockedDateTimeRepository));
-    injectionInstances.add((TrainingRepository, mockedTrainingRepository));
-    injectionInstances.add((VersionRepository, mockedVersionRepository));
-
-    DependencyInjection(instances: injectionInstances);
-  }
-
-  patrolTest(
-    'User with member level can log in, see training weeks, and logout',
-    nativeAutomation: true,
-    (PatrolIntegrationTester $) async {
       const envName = const String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
       // given
-      final testUserBuilder = new SupabaseTestUserBuilder();
+      final testUserBuilder = SupabaseTestUserBuilder();
       testUserBuilder.withMember(true);
-      final givenUser = await testUserBuilder.build();
+      givenUser = await testUserBuilder.build();
 
       // and
       final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
@@ -94,26 +90,31 @@ void main() {
 
       when(() => mockedDateTimeRepository.now())
           .thenReturn(givenCurrentDateTime);
+    }
 
-      final givenRunningVersion = TestAppVersionBuilder()
-          .withCurrentAppVersion(
-              TestVersionBuilder().build(), TestVersionBuilder().build())
-          .build();
-      when(() => mockedVersionRepository.getRunningVersion())
-          .thenAnswer((_) => Future.value(givenRunningVersion));
-      when(() => mockedVersionRepository.getLatestAvailableVersion())
-          .thenAnswer((_) => Future.value(givenRunningVersion));
+    givenConfigToRun() {
+      final injectionInstances = dependencyInjectionInstances()
+          .where((el) =>
+              el.$1 != DateTimeRepository && el.$1 != TrainingRepository)
+          .toList();
 
+      injectionInstances.add((DateTimeRepository, mockedDateTimeRepository));
+      injectionInstances.add((TrainingRepository, mockedTrainingRepository));
+      injectionInstances.add((VersionRepository, mockedVersionRepository));
+
+      DependencyInjection(instances: injectionInstances);
+    }
+
+    Future<void> givenAppLoggedIn(PatrolIntegrationTester $) async {
       // when
       app_main.main(
-        configToRun: configToRun,
+        configToRun: givenConfigToRun,
       );
 
       if (await $.native
           .isPermissionDialogVisible(timeout: const Duration(seconds: 10))) {
         await $.native.grantPermissionWhenInUse();
       }
-
       await $.pumpAndSettle();
 
       // then
@@ -135,15 +136,82 @@ void main() {
       await Future.delayed(const Duration(seconds: 5));
 
       await $.pumpAndSettle();
-      await $('GMadrid Natación').waitUntilVisible();
+    }
 
+    Future<void> setupAfterEach(PatrolIntegrationTester $) async {
       await $(#profile).tap();
       await $(givenUser.email.toString()).waitUntilVisible();
 
       await $(#logout).tap();
+    }
 
-      // then
-      await $('Acceso').waitUntilVisible();
-    },
-  );
+    Map<String, Map<String, dynamic>> cases = Map.of({
+      'user is notified about a new available version': Map.of({
+        'givenCurrentBuildNumber': 3,
+        'givenRemoteBuildNumber': 4,
+        'expectedUpdatedVersionCondition': findsOneWidget
+      }),
+      'current up to date version is showed': Map.of({
+        'givenCurrentBuildNumber': 3,
+        'givenRemoteBuildNumber': 3,
+        'expectedUpdatedVersionCondition': findsNothing
+      })
+    });
+
+    for (var testCase in cases.keys) {
+      patrolTest(
+        testCase,
+        nativeAutomation: true,
+        (PatrolIntegrationTester $) async {
+          await setupBeforeAll();
+
+          final givenCurrentBuildNumber =
+              cases[testCase]!['givenCurrentBuildNumber'];
+          final givenRemoteBuildNumber =
+              cases[testCase]!['givenRemoteBuildNumber'];
+
+          final givenRunningVersion = TestAppVersionBuilder()
+              .withCurrentAppVersion(
+                  TestVersionBuilder()
+                      .withBuildNumber(givenCurrentBuildNumber)
+                      .build(),
+                  TestVersionBuilder()
+                      .withBuildNumber(givenRemoteBuildNumber)
+                      .build())
+              .build();
+          when(() => mockedVersionRepository.getRunningVersion())
+              .thenAnswer((_) => Future.value(givenRunningVersion));
+
+          final givenRemoteVersion = TestAppVersionBuilder()
+              .withLatestRemoteAppVersion(
+                  TestVersionBuilder()
+                      .withBuildNumber(givenRemoteBuildNumber)
+                      .build(),
+                  'https://gmadridnatacion.bertamini.net')
+              .build();
+          when(() => mockedVersionRepository.getLatestAvailableVersion())
+              .thenAnswer((_) => Future.value(givenRemoteVersion));
+          final expectedUpdatedCondition =
+              cases[testCase]!['expectedUpdatedVersionCondition'];
+
+          await givenAppLoggedIn($);
+          await $('GMadrid Natación')
+              .waitUntilVisible(timeout: const Duration(seconds: 2));
+
+          await $(#profile).tap();
+
+          expect($('Versión ${givenRunningVersion.version.toString()}').exists,
+              equals(true));
+
+          expect(
+              find.text(
+                  "Actualización disponible: ${givenRemoteVersion.version.toString()}"),
+              expectedUpdatedCondition);
+
+          // after
+          await setupAfterEach($);
+        },
+      );
+    }
+  });
 }

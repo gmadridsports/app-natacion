@@ -1,3 +1,5 @@
+import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/infrastructure/SupabaseVersionRepository.dart';
 import 'package:gmadrid_natacion/shared/infrastructure/notification_service.dart';
 
 import '../shared/domain/DateTimeRepository.dart';
@@ -38,6 +40,7 @@ List<(Type, Object)> dependencyInjectionInstances() {
       TrainingRepository,
       const SupabaseBucketsTrainingURLRepository(SystemDateTimeRepository())
     ),
+    (VersionRepository, const SupabaseVersionRepository()),
     (NotificationService, NotificationService()),
   ];
 }

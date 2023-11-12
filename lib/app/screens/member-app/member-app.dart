@@ -51,9 +51,9 @@ class _MemberAppState extends State<MemberApp> {
             },
             items: const [
               BottomNavigationBarItem(
-                  icon: Icon(Icons.event_note), label: 'Entrenos'),
+                  icon: Icon(Icons.pool), label: 'Entrenos'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.pool), label: 'Piscinas'),
+                  icon: Icon(Icons.event_note), label: 'Calendario'),
               BottomNavigationBarItem(
                   icon: Icon(
                     key: Key('profile'),

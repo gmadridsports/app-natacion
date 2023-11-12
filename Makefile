@@ -38,7 +38,7 @@ test-flutter-ios:
 
 test-flutter-local: backend-start
 	@echo "Running tests locally"
-	patrol test --target integration_test/ --dart-define="MODE=test" --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_LOCAL_TEST_PASSWORD)" --verbose
+	patrol test --target integration_test/$(test_path) --dart-define="MODE=test" --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_LOCAL_TEST_PASSWORD)" --verbose
 
 test-build-artifact:
 	@echo "Building artifact"

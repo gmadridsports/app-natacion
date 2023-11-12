@@ -1,5 +1,3 @@
-import 'package:gmadrid_natacion/Context/Natacion/domain/user/User.dart';
-
 import '../../../../shared/dependency_injection.dart';
 import '../../../Shared/domain/Bus/Event/EventBus.dart';
 import '../../domain/user/MembershipStatus.dart';
