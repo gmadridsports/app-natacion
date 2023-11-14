@@ -62,8 +62,9 @@ class _ProfileState extends State<Profile> {
             ),
             ListTile(
                 key: const Key('version'),
-                leading:
-                    versionInfo.shouldUpdate ? const Icon(Icons.update) : null,
+                leading: versionInfo.shouldUpdate
+                    ? const Icon(Icons.update)
+                    : const Icon(Icons.check),
                 title: Text('Versión ${versionInfo.currentVersion.toString()}'),
                 onTap: () => _launchURL(
                     versionInfo.shouldUpdate
@@ -94,7 +95,7 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Matteo Bertamini | www.bertamini.net'),
-                      Text('Bajo licencia MIT')
+                      Text('Bajo licencia GNU Affero General Public License')
                     ]),
                 isThreeLine: false),
           ]);
