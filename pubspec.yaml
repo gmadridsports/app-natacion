@@ -52,6 +52,7 @@ dependencies:
   flutter_local_notifications: ^15.1.1
   jwt_decoder: ^2.0.1
   pub_semver: ^2.1.4
+  flutter_markdown: ^0.6.18+2
 
 dev_dependencies:
   flutter_test:

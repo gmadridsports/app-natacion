@@ -54,3 +54,7 @@ integration_test/test_bundle.dart
 
 /dev/tests/env/**/*
 /dev/tests/**/*.tmp
+
+# supabase
+_service-account.json
+supabase/.env.local

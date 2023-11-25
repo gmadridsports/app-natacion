@@ -1,21 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gmadrid_natacion/Context/Natacion/application/Training/GetTrainingPDF.dart';
-import 'package:gmadrid_natacion/Context/Natacion/application/TrainingDate/GetTrainingDatesBoundaries.dart';
-import 'package:gmadrid_natacion/Context/Natacion/application/TrainingDate/IsATrainingWeek.dart';
-import 'package:gmadrid_natacion/shared/dependency_injection.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:table_calendar/table_calendar.dart';
-import '../../../Context/Natacion/application/LogoutUser/LogoutUser.dart';
-import '../../../Context/Natacion/application/TrainingDate/GetTrainingBoundariesResponse.dart';
-import '../../../shared/domain/DateTimeRepository.dart';
-import '../../../Context/Natacion/domain/TrainingDate.dart';
 import '../NamedRouteScreen.dart';
-import '../splash-screen/splash-screen.dart';
-import 'pools/pools.dart';
+import 'calendar-events/CalendarEvents.dart';
 import 'profile/profile.dart';
 import 'training-week/training-week.dart';
 
@@ -28,7 +14,11 @@ class MemberApp extends StatefulWidget implements NamedRouteScreen {
 
 class _MemberAppState extends State<MemberApp> {
   int _selectedTab = 0;
-  final _buildBody = const <Widget>[TrainingWeek(), Pools(), Profile()];
+  final _buildBody = const <Widget>[
+    TrainingWeek(),
+    CalendarEvents(),
+    Profile()
+  ];
 
   _MemberAppState();
 
