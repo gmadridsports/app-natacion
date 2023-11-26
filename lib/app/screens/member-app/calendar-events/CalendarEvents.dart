@@ -52,6 +52,36 @@ Lanzamos votación para elegir el día 🍁🍂 Porfa, para tener una idea de cu
 ];
 
 // todo test calling supabase edge
+Future<Map<DateTime, List<MyEvent>>> _getEvents(
+    DateTime fromIncluded, DateTime toIncluded) async {
+  final dayBuckets =
+      Iterable<int>.generate(toIncluded.difference(fromIncluded).inDays);
+
+  final Map<DateTime, List<MyEvent>> eventsToReturn = {
+    for (int dayPos in dayBuckets)
+      DateTime(
+          fromIncluded.year, fromIncluded.month, fromIncluded.day + dayPos): []
+  };
+
+  // todo handle errors
+  final res = await Supabase.instance.client.functions.invoke('calendar-events',
+      body: {
+        'fromIncluded': fromIncluded.millisecondsSinceEpoch.toString(),
+        'toIncluded': toIncluded.millisecondsSinceEpoch.toString()
+      },
+      responseType: ResponseType.text);
+  final data = json.decode(res.data);
+
+  for (final event in data['items']) {
+    final eventDateTime = (DateTime.parse(event['start']['dateTime']));
+    final dayKey =
+        DateTime(eventDateTime.year, eventDateTime.month, eventDateTime.day);
+    eventsToReturn[dayKey]?.add(MyEvent(event['summary'], event['description'],
+        DateTime.now(), DateTime.now(), 'ocio'));
+  }
+
+  return eventsToReturn;
+}
 
 class _CalendarEventsState extends State<CalendarEvents> {
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
@@ -68,28 +98,39 @@ class _CalendarEventsState extends State<CalendarEvents> {
     _loadEvents();
   }
 
+  // todo into the bounded context
   void _loadEvents() async {
     setState(() {
       _isLoadingEvents = true;
     });
-    // todo load events from supabase
-    final res = await Supabase.instance.client.functions
-        .invoke('calendar-events', body: {}, responseType: ResponseType.text);
-    final data = json.decode(res.data);
-    print(res);
 
-    _isLoadingEvents = false;
-    print(data);
+    final returnedEvents = await _getEvents(
+        DateTime.now(), DateTime.now().add(Duration(days: 30)));
 
-    final newEvents = _events;
-    for (final event in data['items']) {
-      print(event['summary']);
-      newEvents.add(MyEvent(event['summary'], event['description'],
-          DateTime.now(), DateTime.now(), 'ocio'));
-    }
+    final newEvents = returnedEvents[
+            DateTime(DateTime.now().year, DateTime.now().month, 27)] ??
+        [];
+
     setState(() {
+      _isLoadingEvents = false;
       _events = newEvents;
     });
+
+    // // todo load events from supabase
+    // final res = await Supabase.instance.client.functions
+    //     .invoke('calendar-events', body: {}, responseType: ResponseType.text);
+    // final data = json.decode(res.data);
+    // print(res);
+    //
+    // _isLoadingEvents = false;
+    // print(data);
+    //
+    // final newEvents = _events;
+    // for (final event in data['items']) {
+    //   print(event['summary']);
+    //   newEvents.add(MyEvent(event['summary'], event['description'],
+    //       DateTime.now(), DateTime.now(), 'ocio'));
+    // }
   }
 
   @override
