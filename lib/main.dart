@@ -8,12 +8,18 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:http/http.dart';
 import 'app/app.dart';
 import 'firebase_options.dart';
+import 'package:timezone/data/latest.dart' as tzData;
+import 'package:timezone/standalone.dart' as tz;
 
 Future<bool> main({
   Client? httpClient,
   Function()? configToRun,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  tzData.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Europe/Madrid'));
+
   int initAttempt = 0;
 
   while (++initAttempt > 0 && initAttempt <= 10) {

@@ -9,7 +9,12 @@ backend-start:
 	@echo "Starting the app"
 	supabase start
 
+backend-start-edge-functions:
+	@echo "Starting the edge functions locally"
+	supabase --env-file ./supabase/.env.local functions serve
+
 setup-backend: setup-env-test backend-start
+	@./dev/setup_env_backend.sh
 	@echo "Setupping supabase"
 	supabase db reset
 	pushd supabase/supabase-init && dart pub get && popd

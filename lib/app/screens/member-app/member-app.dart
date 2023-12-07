@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gmadrid_natacion/app/screens/member-app/RefreshTrainingWeekEvent.dart';
+import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import '../NamedRouteScreen.dart';
-import 'calendar-events/CalendarEvents.dart';
+import 'calendar-events/calendar_events.dart';
 import 'profile/profile.dart';
 import 'training-week/training-week.dart';
+
+import 'package:event_bus/event_bus.dart' as LibEventBus;
 
 class MemberApp extends StatefulWidget implements NamedRouteScreen {
   static String get routeName => '/member-app';
@@ -14,11 +18,22 @@ class MemberApp extends StatefulWidget implements NamedRouteScreen {
 
 class _MemberAppState extends State<MemberApp> {
   int _selectedTab = 0;
-  final _buildBody = const <Widget>[
-    TrainingWeek(),
-    CalendarEvents(),
-    Profile()
-  ];
+  // final _buildBody = const <Widget>[
+  //   TrainingWeek(),
+  //   CalendarEvents(),
+  //   Profile()
+  // ];
+
+  Widget? _buildBody(int index) {
+    switch (index) {
+      case 0:
+        return TrainingWeek();
+      case 1:
+        return CalendarEvents();
+      case 2:
+        return Profile();
+    }
+  }
 
   _MemberAppState();
 
@@ -29,6 +44,26 @@ class _MemberAppState extends State<MemberApp> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          // leading: IconButton(
+          //     onPressed: () {
+          //       Navigator.pushNamed(context, '/member-app/profile');
+          //     },
+          //     icon: Icon(Icons.refresh)),
+          // todo to refresh
+          actions: [
+            if (_selectedTab == 0)
+              IconButton(
+                  onPressed: () {
+                    DependencyInjection()
+                        .getInstanceOf<LibEventBus.EventBus>()
+                        .fire(RefreshTrainingWeekEvent());
+
+                    // setState(() {
+                    //   _selectedTab = 0;
+                    // });
+                  },
+                  icon: Icon(Icons.refresh))
+          ],
           title: Text('GMadrid Natación'),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -54,6 +89,6 @@ class _MemberAppState extends State<MemberApp> {
               // BottomNavigationBarItem(
               //     icon: Icon(Icons.person_2), label: 'Perfil'),
             ]),
-        body: IndexedStack(index: _selectedTab, children: _buildBody));
+        body: _buildBody(_selectedTab));
   }
 }
