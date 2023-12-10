@@ -18,11 +18,6 @@ class MemberApp extends StatefulWidget implements NamedRouteScreen {
 
 class _MemberAppState extends State<MemberApp> {
   int _selectedTab = 0;
-  // final _buildBody = const <Widget>[
-  //   TrainingWeek(),
-  //   CalendarEvents(),
-  //   Profile()
-  // ];
 
   Widget? _buildBody(int index) {
     switch (index) {
@@ -44,12 +39,6 @@ class _MemberAppState extends State<MemberApp> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          // leading: IconButton(
-          //     onPressed: () {
-          //       Navigator.pushNamed(context, '/member-app/profile');
-          //     },
-          //     icon: Icon(Icons.refresh)),
-          // todo to refresh
           actions: [
             if (_selectedTab == 0)
               IconButton(
@@ -57,10 +46,6 @@ class _MemberAppState extends State<MemberApp> {
                     DependencyInjection()
                         .getInstanceOf<LibEventBus.EventBus>()
                         .fire(RefreshTrainingWeekEvent());
-
-                    // setState(() {
-                    //   _selectedTab = 0;
-                    // });
                   },
                   icon: Icon(Icons.refresh))
           ],
@@ -78,7 +63,8 @@ class _MemberAppState extends State<MemberApp> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.pool), label: 'Entrenos'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.event_note), label: 'Calendario'),
+                  icon: Icon(key: Key('calendar'), Icons.event_note),
+                  label: 'Calendario'),
               BottomNavigationBarItem(
                   icon: Icon(
                     key: Key('profile'),
@@ -86,8 +72,6 @@ class _MemberAppState extends State<MemberApp> {
                     semanticLabel: 'Perfil',
                   ),
                   label: 'Perfil')
-              // BottomNavigationBarItem(
-              //     icon: Icon(Icons.person_2), label: 'Perfil'),
             ]),
         body: _buildBody(_selectedTab));
   }

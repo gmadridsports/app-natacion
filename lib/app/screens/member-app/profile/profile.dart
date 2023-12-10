@@ -102,11 +102,4 @@ class _ProfileState extends State<Profile> {
           ]);
         });
   }
-
-// @override
-// Widget build(BuildContext context) {
-//   return (const Text('ciao'));
-//   // TODO: implement build
-//   throw UnimplementedError();
-// }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../Context/Natacion/application/get_calendar_events/get_calendar_events.dart';
 import '../../../../Context/Natacion/application/get_calendar_events/get_calendar_events_response.dart';
+import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_calendar_events.dart';
+import '../../../../shared/dependency_injection.dart';
 import '../launchURL.dart';
 
 class CalendarEvents extends StatefulWidget {
@@ -14,17 +16,22 @@ class CalendarEvents extends StatefulWidget {
 }
 
 class _CalendarEventsState extends State<CalendarEvents> {
+  final DateTimeRepository _dateTimeRepository;
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
-  DateTime _selected = DateTime.now();
+  late DateTime _selected;
   int? _selectedEventDayItem = null;
   bool _isLoadingEvents = true;
   Map<DateTime, List<CalendarEvent>> _events = {};
   bool _shouldShowErrorLoading = false;
 
+  _CalendarEventsState()
+      : _dateTimeRepository =
+            DependencyInjection().getInstanceOf<DateTimeRepository>();
+
   @override
   void initState() {
     super.initState();
-
+    _selected = _dateTimeRepository.now();
     _loadCurrentMonthEvents();
   }
 
@@ -43,6 +50,8 @@ class _CalendarEventsState extends State<CalendarEvents> {
       setState(() {
         _isLoadingEvents = false;
         _events = returnedEvents.events;
+        _selectedEventDayItem =
+            ((_events[_selected]?.length ?? 0) == 1) ? 0 : null;
       });
     } catch (e) {
       setState(() {
@@ -53,12 +62,15 @@ class _CalendarEventsState extends State<CalendarEvents> {
   }
 
   (DateTime, DateTime) _getCalendarLimits() {
-    final firstDay = DateTime(_selected.year, _selected.month, 1).subtract(
+    final firstDay = DateTime.utc(_selected.year, _selected.month, 1).subtract(
         Duration(
-            days: DateTime(_selected.year, _selected.month, 1).weekday - 1));
-    final lastDay = DateTime(_selected.year, _selected.month + 1, 0).add(
+            days:
+                DateTime.utc(_selected.year, _selected.month, 1).weekday - 1));
+    final lastDay = DateTime.utc(_selected.year, _selected.month + 1, 0).add(
         Duration(
-            days: 7 - DateTime(_selected.year, _selected.month + 1, 0).weekday,
+            days: 7 -
+                DateTime.utc(_selected.year, _selected.month + 1, 0).weekday -
+                1,
             hours: 23,
             minutes: 59,
             seconds: 59,
@@ -79,7 +91,7 @@ class _CalendarEventsState extends State<CalendarEvents> {
               locale: 'es_ES',
               pageJumpingEnabled: false,
               eventLoader: <CalendarEvent>(day) {
-                final selectedDay = DateTime(day.year, day.month, day.day);
+                final selectedDay = DateTime.utc(day.year, day.month, day.day);
                 return _events[selectedDay] ?? [];
               },
               startingDayOfWeek: StartingDayOfWeek.monday,
@@ -91,11 +103,10 @@ class _CalendarEventsState extends State<CalendarEvents> {
                 CalendarFormat.month: 'Mes'
               },
               selectedDayPredicate: (day) {
-                return (!_isLoadingEvents &&
-                    DateTime(day.year, day.month, day.day) == _selected);
+                return (!_isLoadingEvents && day == _selected);
               },
-              firstDay: DateTime(2023, 01, 01),
-              lastDay: DateTime(2030, 12, 31),
+              firstDay: DateTime.utc(2023, 01, 01),
+              lastDay: DateTime.utc(2030, 12, 31),
               calendarFormat: _calendarFormat,
               onFormatChanged: (format) {
                 setState(() {
@@ -103,8 +114,8 @@ class _CalendarEventsState extends State<CalendarEvents> {
                 });
               },
               onPageChanged: (focusedDay) {
-                final focusedDayToSelect =
-                    DateTime(focusedDay.year, focusedDay.month, focusedDay.day);
+                final focusedDayToSelect = focusedDay;
+                // DateTime(focusedDay.year, focusedDay.month, focusedDay.day);
                 setState(() {
                   _selectedEventDayItem = null;
                   _selected = focusedDayToSelect;
@@ -114,13 +125,13 @@ class _CalendarEventsState extends State<CalendarEvents> {
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedEventDayItem = null;
-                  _selected = DateTime(
-                      selectedDay.year, selectedDay.month, selectedDay.day);
+                  _selected = selectedDay;
+                  _selectedEventDayItem =
+                      ((_events[_selected]?.length ?? 0) == 1) ? 0 : null;
                 });
               },
               calendarBuilders: CalendarBuilders(
                 markerBuilder: (context, day, events) {
-                  print(events);
                   if (_shouldShowErrorLoading || _isLoadingEvents) return null;
 
                   if (events.isEmpty) return null;
@@ -177,7 +188,7 @@ class _CalendarEventsState extends State<CalendarEvents> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(8.0),
-                                  child: Icon(Icons.event_note_rounded,
+                                  child: Icon(Icons.event_busy_outlined,
                                       size: 40, color: Colors.blue),
                                 ),
                                 Text("Ningún evento para esta fecha."),

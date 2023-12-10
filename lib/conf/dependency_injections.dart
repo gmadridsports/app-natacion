@@ -1,7 +1,9 @@
 import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/infrastructure/SupabaseVersionRepository.dart';
 import 'package:gmadrid_natacion/shared/infrastructure/notification_service.dart';
 
+import '../Context/Natacion/infrastructure/supabase_calendar_events_respository.dart';
 import '../shared/domain/DateTimeRepository.dart';
 import '../Context/Natacion/domain/TrainingRepository.dart';
 import '../Context/Natacion/domain/screen/Screen.dart';
@@ -42,5 +44,6 @@ List<(Type, Object)> dependencyInjectionInstances() {
     ),
     (VersionRepository, const SupabaseVersionRepository()),
     (NotificationService, NotificationService()),
+    (CalendarEventRepository, SupabaseCalendarEventsRepository()),
   ];
 }
