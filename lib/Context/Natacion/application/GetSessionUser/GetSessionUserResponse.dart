@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import '../../../Shared/application/QueryResponse.dart';
 
 class GetSessionUserResponse implements QueryResponse {

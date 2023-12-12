@@ -56,6 +56,8 @@ Future<bool> runAppWithOptions({
 
     if (kDebugMode) {
       print('Registration Token=$token');
+      print(
+          'Supabase token=${Supabase.instance.client.auth.currentSession?.accessToken}');
     }
   } catch (e) {
     FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
@@ -146,6 +148,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               'token': fcmToken,
             });
 
+            // todo remove previous token!
+            // todo remove token when logging out
             _subscription = FirebaseMessaging.instance.onTokenRefresh
                 .listen((newToken) async {
               final user = await GetSessionUser()();

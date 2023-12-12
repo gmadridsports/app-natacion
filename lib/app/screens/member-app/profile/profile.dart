@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../Context/Natacion/application/GetSessionUser/GetSessionUserResponse.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/commands/logout_user.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/queries/GetSessionUser.dart';
+import '../launchURL.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -56,7 +57,7 @@ class _ProfileState extends State<Profile> {
             ListTile(
               leading: const Icon(Icons.bug_report),
               title: const Text('Reporta problemas o ideas'),
-              onTap: () => _launchURL(
+              onTap: () => launchURL(
                   'https://forms.gle/C6rrXmHaoyhsyfAG9', context,
                   innerWebView: true),
             ),
@@ -66,7 +67,7 @@ class _ProfileState extends State<Profile> {
                     ? const Icon(Icons.update)
                     : const Icon(Icons.check),
                 title: Text('Versión ${versionInfo.currentVersion.toString()}'),
-                onTap: () => _launchURL(
+                onTap: () => launchURL(
                     versionInfo.shouldUpdate
                         ? versionInfo.latestVersionUrl ??
                             'https://gmadridnatacion.bertamini.net'
@@ -90,7 +91,7 @@ class _ProfileState extends State<Profile> {
             ),
             ListTile(
                 title: const Text('Desarrollo'),
-                onTap: () => _launchURL('https://bertamini.net', context),
+                onTap: () => launchURL('https://bertamini.net', context),
                 subtitle: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -101,33 +102,4 @@ class _ProfileState extends State<Profile> {
           ]);
         });
   }
-
-  _launchURL(String url, BuildContext context, {innerWebView = false}) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(
-        Uri.parse(url),
-        mode: innerWebView == false
-            ? LaunchMode.externalApplication
-            : LaunchMode.inAppWebView,
-        webViewConfiguration:
-            const WebViewConfiguration(enableJavaScript: true),
-      );
-    } else {
-      if (!context.mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content:
-              const Text('No se puede abrir el enlace en este dispositivo')));
-      throw 'Could not launch $url';
-    }
-  }
-
-// @override
-// Widget build(BuildContext context) {
-//   return (const Text('ciao'));
-//   // TODO: implement build
-//   throw UnimplementedError();
-// }
 }

@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gmadrid_natacion/app/screens/member-app/RefreshTrainingWeekEvent.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:event_bus/event_bus.dart' as LibEventBus;
 import '../../../../Context/Natacion/application/TrainingDate/GetTrainingBoundariesResponse.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_training_dates_boundaries.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_training_pdf.dart';
@@ -62,6 +64,23 @@ class _TrainingWeekState extends State<TrainingWeek> {
     setState(() {
       _pdfRaw = downloadedPdf;
       _isTrainingLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    DependencyInjection()
+        .getInstanceOf<LibEventBus.EventBus>()
+        .on<RefreshTrainingWeekEvent>()
+        .listen((event) async {
+      _isInInitialLoading = true;
+      _isCalendarSelectorLoading = true;
+      _isTrainingLoading = true;
+      _trainingDateShowed = null;
+
+      _loadFirstCalendarProps();
     });
   }
 
