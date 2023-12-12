@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/RefreshTrainingWeekEvent.dart';
+import 'package:gmadrid_natacion/app/screens/member-app/calendar-events/refresh_calendar_events.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import '../NamedRouteScreen.dart';
 import 'calendar-events/calendar_events.dart';
@@ -40,12 +41,14 @@ class _MemberAppState extends State<MemberApp> {
     return Scaffold(
         appBar: AppBar(
           actions: [
-            if (_selectedTab == 0)
+            if (_selectedTab == 0 || _selectedTab == 1)
               IconButton(
                   onPressed: () {
                     DependencyInjection()
                         .getInstanceOf<LibEventBus.EventBus>()
-                        .fire(RefreshTrainingWeekEvent());
+                        .fire(_selectedTab == 0
+                            ? RefreshTrainingWeekEvent()
+                            : RefreshCalendarEvents());
                   },
                   icon: Icon(Icons.refresh))
           ],

@@ -7,6 +7,7 @@ import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingRepository.dart
 import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_bound.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_time.dart';
 import 'package:gmadrid_natacion/conf/dependency_injections.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
@@ -14,10 +15,12 @@ import 'package:patrol/patrol.dart';
 import 'package:gmadrid_natacion/main.dart' as app_main;
 import 'package:mocktail/mocktail.dart';
 import 'package:http/http.dart';
-
 import 'infrastructure/SupabaseTestUserBuilder.dart';
+import 'models/TestAppVersionBuilder.dart';
 import 'models/TestUser.dart';
+import 'models/TestVersionBuilder.dart';
 import 'models/test_app_calendar_events_builder.dart';
+import 'models/test_app_calendar_event_builder.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 final DateTimeRepository mockedDateTimeRepository = MockyDateTimeRepository();
@@ -50,6 +53,10 @@ void main() {
   registerFallbackValue(TrainingDate.from(2019, 03, 03));
   registerFallbackValue(DateTime(2019, 03, 03, 0, 0, 0));
   tz.initializeTimeZones();
+  registerFallbackValue(EventDayBound.fromDateTimeUtc(
+      DateTime.utc(2023, 03, 27), EventDayBoundType.lowerBound));
+  final DateTimeRepository mockedDateTimeRepository = MockyDateTimeRepository();
+  final givenCurrentDateTime = DateTime.utc(2023, 04, 25);
 
   group('events', () {
     Future<void> setupBeforeAll() async {
@@ -61,15 +68,18 @@ void main() {
       const envName = const String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});
 
-      // given
+      // trainings given
       final testUserBuilder = SupabaseTestUserBuilder();
       testUserBuilder.withMember(true);
       givenUser = await testUserBuilder.build();
 
       // and
+      when(() => mockedDateTimeRepository.now())
+          .thenReturn(givenCurrentDateTime);
+
+      // and
       final givenFirstTrainingDateTime = DateTime.utc(2023, 03, 27);
       final givenLastTrainingDateTime = DateTime.utc(2023, 04, 17);
-      final givenCurrentDateTime = DateTime.utc(2023, 04, 25);
       final givenIpAddressPort = dotenv.get('SUPABASE_URL');
 
       final givenTrainingURL =
@@ -79,6 +89,7 @@ void main() {
       final givenLastTrainingDate =
           TrainingDate.fromDateTime(givenLastTrainingDateTime);
 
+      // trainings when
       Response response = await get(Uri.parse(
           '${givenIpAddressPort}/storage/v1/object/public/general/test.pdf'));
 
@@ -99,6 +110,42 @@ void main() {
 
       when(() => mockedDateTimeRepository.now())
           .thenReturn(givenCurrentDateTime);
+
+      // events given
+      final givenEventsToReturn = TestAppCalendarEventsBuilder()
+          .withFromDateTimeUtc(DateTime.utc(2023, 03, 27))
+          .withToDateTimeUtc(DateTime.utc(2023, 04, 30))
+          .withCalendarEvent(TestAppCalendarEventBuilder().build())
+          .withCalendarEvent(TestAppCalendarEventBuilder()
+              .withFromEventDayTime(EventDayTime.fromDateTimeUtc(
+                  DateTime.utc(2023, 04, 26, 15, 23)))
+              .withToEventDayTime(EventDayTime.fromDateTimeUtc(
+                  DateTime.utc(2023, 04, 26, 15, 29)))
+              .build())
+          .withCalendarEvent(TestAppCalendarEventBuilder()
+              .withFromEventDayTime(EventDayTime.fromDateTimeUtc(
+                  DateTime.utc(2023, 04, 26, 15, 34)))
+              .withToEventDayTime(EventDayTime.fromDateTimeUtc(
+                  DateTime.utc(2023, 04, 26, 15, 45)))
+              .withSummary('Another test event')
+              .build())
+          .build();
+
+      // events when
+      when(() => mockedCalendarEventRepository.getCalendarEventsStarting(
+          any(), any())).thenAnswer((_) => Future.value(givenEventsToReturn));
+
+      // version when
+      final givenRunningVersion = TestAppVersionBuilder()
+          .withCurrentAppVersion(
+              TestVersionBuilder().withBuildNumber(3).build(),
+              TestVersionBuilder().withBuildNumber(3).build())
+          .build();
+      when(() => mockedVersionRepository.getRunningVersion())
+          .thenAnswer((_) => Future.value(givenRunningVersion));
+
+      when(() => mockedVersionRepository.getLatestAvailableVersion())
+          .thenAnswer((_) => Future.value(givenRunningVersion));
     }
 
     givenConfigToRun() {
@@ -111,6 +158,8 @@ void main() {
       injectionInstances.add((TrainingRepository, mockedTrainingRepository));
       injectionInstances
           .add((CalendarEventRepository, mockedCalendarEventRepository));
+      injectionInstances.add((DateTimeRepository, mockedDateTimeRepository));
+      injectionInstances.add((VersionRepository, mockedVersionRepository));
 
       DependencyInjection(instances: injectionInstances);
     }
@@ -155,11 +204,23 @@ void main() {
       await $(#logout).tap();
     }
 
-    // todo more test scenarios
     Map<String, Map<String, dynamic>> cases = Map.of({
       'user can see events': Map.of({
-        'givenDayToSelect': 3,
-        'expectedMessage': 'Ningún evento para esta fecha.'
+        'givenDayToSelect': 25,
+        'expectedTexts': [
+          'A test event',
+          'A description for the test event ✌🏼'
+        ]
+      }),
+      'user selects a day without any event': Map.of({
+        'givenDayToSelect': 27,
+        'expectedTexts': [
+          'Ningún evento para esta fecha.',
+        ]
+      }),
+      'user selects a day with two events': Map.of({
+        'givenDayToSelect': 26,
+        'expectedTexts': ['A test event', 'Another test event']
       }),
     });
 
@@ -172,30 +233,18 @@ void main() {
 
           final givenDayToSelect = cases[testCase]!['givenDayToSelect'];
 
-          final givenCurrentDateTime = DateTime.utc(2023, 03, 27);
-          final givenEventsToReturn = TestAppCalendarEventsBuilder()
-              .withFromDateTimeUtc(givenCurrentDateTime)
-              .withToDateTimeUtc(
-                  givenCurrentDateTime.add(const Duration(days: 5)))
-              .build();
-
-          when(() => mockedCalendarEventRepository.getCalendarEventsStarting(
-                  EventDayBound.fromDateTimeUtc(
-                      DateTime.utc(2023, 03, 27), EventDayBoundType.lowerBound),
-                  EventDayBound.fromDateTimeUtc(DateTime.utc(2023, 04, 30),
-                      EventDayBoundType.upperBound)))
-              .thenAnswer((_) => Future.value(givenEventsToReturn));
-
           await givenAppLoggedIn($);
           await $('GMadrid Natación')
               .waitUntilVisible(timeout: const Duration(seconds: 2));
 
           await $(#calendar).tap();
 
-          // todo fix datetimes
-          // await $(givenDayToSelect).tap();
-          // await $(cases[testCase]!['expectedMessage'])
-          //     .waitUntilVisible(timeout: const Duration(seconds: 2));
+          await $(givenDayToSelect.toString()).tap();
+
+          for (var expectedText in cases[testCase]!['expectedTexts']) {
+            await $(expectedText)
+                .waitUntilVisible(timeout: const Duration(seconds: 2));
+          }
 
           // after
           await setupAfterEach($);

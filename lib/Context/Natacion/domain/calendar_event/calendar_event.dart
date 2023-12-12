@@ -2,7 +2,6 @@ import '../../../Shared/domain/Aggregate/aggregate_root.dart';
 import 'event_day_time.dart';
 
 class CalendarEvent extends AggregateRoot {
-  // todo tell don't ask => private?
   final String id;
   final String title;
   final String bodyMarkdown;
@@ -14,5 +13,6 @@ class CalendarEvent extends AggregateRoot {
 
   CalendarEvent.from(String id, String title, String bodyMarkdown,
       EventDayTime startDate, EventDayTime endDate)
-      : this._internal(id, title, bodyMarkdown, startDate, endDate);
+      : this._internal(id, title, bodyMarkdown.replaceAll('\\n', '\n'),
+            startDate, endDate);
 }

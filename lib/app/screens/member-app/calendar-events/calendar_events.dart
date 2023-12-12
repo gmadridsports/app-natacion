@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gmadrid_natacion/app/screens/member-app/calendar-events/refresh_calendar_events.dart';
 import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'package:event_bus/event_bus.dart' as LibEventBus;
 import '../../../../Context/Natacion/application/get_calendar_events/get_calendar_events_response.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_calendar_events.dart';
 import '../../../../shared/dependency_injection.dart';
@@ -33,6 +35,13 @@ class _CalendarEventsState extends State<CalendarEvents> {
     super.initState();
     _selected = _dateTimeRepository.now();
     _loadCurrentMonthEvents();
+
+    DependencyInjection()
+        .getInstanceOf<LibEventBus.EventBus>()
+        .on<RefreshCalendarEvents>()
+        .listen((event) async {
+      _loadCurrentMonthEvents();
+    });
   }
 
   void _loadCurrentMonthEvents() async {
@@ -64,13 +73,15 @@ class _CalendarEventsState extends State<CalendarEvents> {
   (DateTime, DateTime) _getCalendarLimits() {
     final firstDay = DateTime.utc(_selected.year, _selected.month, 1).subtract(
         Duration(
-            days:
-                DateTime.utc(_selected.year, _selected.month, 1).weekday - 1));
+            days: DateTime.utc(_selected.year, _selected.month, 1).weekday -
+                1 +
+                7));
     final lastDay = DateTime.utc(_selected.year, _selected.month + 1, 0).add(
         Duration(
             days: 7 -
                 DateTime.utc(_selected.year, _selected.month + 1, 0).weekday -
-                1,
+                1 +
+                7,
             hours: 23,
             minutes: 59,
             seconds: 59,
@@ -230,6 +241,10 @@ class _CalendarEventsState extends State<CalendarEvents> {
                                                 20, 0, 0, 20),
                                             alignment: Alignment.topLeft,
                                             child: MarkdownBody(
+                                              softLineBreak: true,
+                                              styleSheetTheme:
+                                                  MarkdownStyleSheetBaseTheme
+                                                      .platform,
                                               onTapLink: (text, href, title) {
                                                 launchURL(
                                                     href.toString(), context);

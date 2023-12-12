@@ -11,7 +11,6 @@ import '../../../../Context/Natacion/application/TrainingDate/GetTrainingBoundar
 import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_training_dates_boundaries.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_training_pdf.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/queries/is_a_trainining_week.dart';
-import '../../../../Context/Shared/infrastructure/Bus/Event/LibEventBusEventBus.dart';
 import '../../../../shared/domain/DateTimeRepository.dart';
 import '../../../../Context/Natacion/domain/TrainingDate.dart';
 import '../../NamedRouteScreen.dart';

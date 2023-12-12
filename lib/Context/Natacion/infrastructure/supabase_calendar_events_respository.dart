@@ -32,19 +32,18 @@ class SupabaseCalendarEventsRepository implements CalendarEventRepository {
 
     final data = json.decode(res.data);
 
+    // we could move this into a domain service, or value object.
+    // this way, we could test this properly with an integration test, starting from the JSON response.
     for (final event in data['items']) {
       final eventStartDateTime = tz.TZDateTime.from(
-          (DateTime.parse(event['start']['dateTime'])),
-          tz.getLocation(event['start']['timeZone']));
+          (DateTime.parse(
+              event['start']['dateTime'] ?? event['start']['date'])),
+          tz.getLocation(event['start']['timeZone'] ?? 'Europe/Madrid'));
       final eventEndDateTime = tz.TZDateTime.from(
-          (DateTime.parse(event['end']['dateTime'])),
-          tz.getLocation(event['end']['timeZone']));
+          (DateTime.parse(event['end']['dateTime'] ?? event['end']['date'])),
+          tz.getLocation(event['end']['timeZone'] ?? 'Europe/Madrid'));
 
-      final dayKey = EventDay.fromDateTimeUtc(DateTime.utc(
-          eventStartDateTime.year,
-          eventStartDateTime.month,
-          eventStartDateTime.day));
-      eventsToReturn[dayKey]?.add(CalendarEvent.from(
+      final calendarEvent = CalendarEvent.from(
         'id',
         event['summary'],
         event['description'],
@@ -66,7 +65,23 @@ class SupabaseCalendarEventsRepository implements CalendarEventRepository {
             eventEndDateTime.second,
             eventEndDateTime.millisecond,
             eventEndDateTime.microsecond)),
-      ));
+      );
+
+      final daysBuckets = [
+        for (var day = 0;
+            day <
+                (eventEndDateTime.difference(eventStartDateTime).inDays < 1
+                    ? 1
+                    : eventEndDateTime.difference(eventStartDateTime).inDays);
+            day++)
+          EventDay.fromDateTimeUtc(DateTime.utc(eventStartDateTime.year,
+                  eventStartDateTime.month, eventStartDateTime.day)
+              .add(Duration(days: day)))
+      ];
+
+      daysBuckets.forEach((dayKey) {
+        eventsToReturn[dayKey]?.add(calendarEvent);
+      });
     }
 
     return eventsToReturn;
