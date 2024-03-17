@@ -33,7 +33,9 @@ class _CalendarEventsState extends State<CalendarEvents> {
   @override
   void initState() {
     super.initState();
-    _selected = _dateTimeRepository.now();
+    var dateNow = _dateTimeRepository.now();
+    _selected = DateTime.utc(dateNow.year, dateNow.month, dateNow.day);
+
     _loadCurrentMonthEvents();
 
     DependencyInjection()
