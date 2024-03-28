@@ -1,16 +1,17 @@
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_time.dart';
+import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 
 class TestAppCalendarEventBuilder {
   String id = "1";
   String summary = "A test event";
   String description = "A description for the test event ✌🏼";
-  EventDayTime from = EventDayTime.fromDateTimeUtc(DateTime.utc(2023, 04, 25));
-  EventDayTime to = EventDayTime.fromDateTimeUtc(DateTime.utc(2023, 04, 25));
+  MadridDateTime from =
+      MadridDateTime.fromDateTimeUtc(DateTime.utc(2023, 04, 25));
+  MadridDateTime to =
+      MadridDateTime.fromDateTimeUtc(DateTime.utc(2023, 04, 25));
 
   TestAppCalendarEventBuilder withFromEventDayTime(
-      EventDayTime fromEventDayTime) {
+      MadridDateTime fromEventDayTime) {
     from = fromEventDayTime;
     return this;
   }
@@ -30,7 +31,8 @@ class TestAppCalendarEventBuilder {
     return this;
   }
 
-  TestAppCalendarEventBuilder withToEventDayTime(EventDayTime toEventDayTime) {
+  TestAppCalendarEventBuilder withToEventDayTime(
+      MadridDateTime toEventDayTime) {
     to = toEventDayTime;
     return this;
   }

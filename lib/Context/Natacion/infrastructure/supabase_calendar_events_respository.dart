@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_bound.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_time.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:timezone/standalone.dart' as tz;
 
+import '../../Shared/domain/date_time/madrid_date_time.dart';
 import '../domain/calendar_event/calendar_event.dart';
 
 class SupabaseCalendarEventsRepository implements CalendarEventRepository {
@@ -47,7 +47,7 @@ class SupabaseCalendarEventsRepository implements CalendarEventRepository {
         'id',
         event['summary'],
         event['description'],
-        EventDayTime.fromDateTimeUtc(DateTime.utc(
+        MadridDateTime.fromDateTimeUtc(DateTime.utc(
             eventStartDateTime.year,
             eventStartDateTime.month,
             eventStartDateTime.day,
@@ -56,7 +56,7 @@ class SupabaseCalendarEventsRepository implements CalendarEventRepository {
             eventStartDateTime.second,
             eventStartDateTime.millisecond,
             eventStartDateTime.microsecond)),
-        EventDayTime.fromDateTimeUtc(DateTime.utc(
+        MadridDateTime.fromDateTimeUtc(DateTime.utc(
             eventEndDateTime.year,
             eventEndDateTime.month,
             eventEndDateTime.day,

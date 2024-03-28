@@ -7,7 +7,7 @@ import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingRepository.dart
 import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_bound.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_time.dart';
+import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 import 'package:gmadrid_natacion/conf/dependency_injections.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
@@ -117,15 +117,15 @@ void main() {
           .withToDateTimeUtc(DateTime.utc(2023, 04, 30))
           .withCalendarEvent(TestAppCalendarEventBuilder().build())
           .withCalendarEvent(TestAppCalendarEventBuilder()
-              .withFromEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withFromEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 23)))
-              .withToEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withToEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 29)))
               .build())
           .withCalendarEvent(TestAppCalendarEventBuilder()
-              .withFromEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withFromEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 34)))
-              .withToEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withToEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 45)))
               .withSummary('Another test event')
               .build())
