@@ -2,7 +2,8 @@ import 'package:gmadrid_natacion/Context/Shared/domain/value_object.dart';
 
 enum OriginSource implements ValueObject {
   whatsapp(source: 'whatsapp oficial'),
-  system(source: 'aplicación');
+  system(source: 'aplicación'),
+  other(source: 'otras');
 
   const OriginSource({required String source}) : _source = source;
 
@@ -13,7 +14,7 @@ enum OriginSource implements ValueObject {
       case 'aplicación':
         return OriginSource.system;
       default:
-        throw new ArgumentError('Invalid origin source: $source');
+        return OriginSource.other;
     }
   }
 
@@ -21,6 +22,13 @@ enum OriginSource implements ValueObject {
 
   @override
   String toString() {
-    return _source;
+    switch (this) {
+      case OriginSource.whatsapp:
+        return 'Grupo oficial ws';
+      case OriginSource.system:
+        return 'Aplicación';
+      case OriginSource.other:
+        return 'Otra origen';
+    }
   }
 }

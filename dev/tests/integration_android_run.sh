@@ -35,8 +35,8 @@ fi
 
 echo "Running the integration tests on firebase..."
 gcloud firebase test android run --type instrumentation \
- --app build/app/outputs/apk/debug/app-debug.apk \
- --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+ --app build/app/outputs/apk/release/app-release.apk \
+ --test build/app/outputs/apk/androidTest/release/app-release-androidTest.apk \
  --environment-variables clearPackageData=true \
  --use-orchestrator \
  --timeout 4m \

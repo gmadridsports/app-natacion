@@ -227,7 +227,6 @@ void main() {
     for (var testCase in cases.keys) {
       patrolTest(
         testCase,
-        nativeAutomation: true,
         (PatrolIntegrationTester $) async {
           await setupBeforeAll();
 

@@ -55,6 +55,48 @@ class _ProfileState extends State<Profile> {
               thickness: 1,
             ),
             ListTile(
+              title: const Text('Configuración',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            SwitchListTile(
+                title: const Text('Modo ausente'),
+                // le
+                subtitle: const Text('Activa el modo ausente'),
+                value: true,
+                onChanged: (value) => {}),
+            ListTile(
+              leading: const Icon(Icons.notifications),
+              title: const Text('Notificaciones'),
+              isThreeLine: true,
+              onTap: () => Navigator.pushNamed(context, '/notifications'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      // const Icon(Icons.notifications_active),
+                      const Text('Entreno disponible'),
+                      const Expanded(child: SizedBox()),
+                      Switch(
+                          value: true, onChanged: (onValue) => {print('value')})
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      // const Icon(Icons.notifications_active),
+                      const Text('Avisos'),
+                      const Expanded(child: SizedBox()),
+                      Switch(
+                          value: true, onChanged: (onValue) => {print('value')})
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Divider(
+              thickness: 1,
+            ),
+            ListTile(
               leading: const Icon(Icons.bug_report),
               title: const Text('Reporta problemas o ideas'),
               onTap: () => launchURL(

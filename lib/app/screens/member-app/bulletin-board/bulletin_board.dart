@@ -131,7 +131,7 @@ class _BulletinBoardState extends State<BulletinBoard> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const Text('Whatsapp'),
+                          Text(notice.origin),
                           const Text(' '),
                           Text(
                               DateFormat(_newestNoticeDateTime.sameDayAs(

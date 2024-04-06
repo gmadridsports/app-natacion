@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.1.0+01
+version: 1.1.0+60
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -58,6 +58,7 @@ dependencies:
   intl: ^0.18.1
 
 dev_dependencies:
+  patrol: ^3.6.1
   flutter_test:
     sdk: flutter
   integration_test:
@@ -68,7 +69,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  patrol: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -127,7 +127,9 @@ flutter_launcher_icons:
   image_path_ios: "assets/images/logo_ios.png"
 
 patrol:
-  app_name: gmadrid_natacion
+  app_name: GMadrid Nado
+  # only for android. because of that, it's defined via arg flag on the makefile
+  # flavor: releaseTest
   android:
     package_name: net.bertamini.gmadrid.natacion.gmadrid_natacion
   ios:

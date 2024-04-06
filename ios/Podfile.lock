@@ -85,7 +85,6 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.11.5):
     - GoogleUtilities/Logger
-  - HTTPParserC (2.9.4)
   - integration_test (0.0.1):
     - Flutter
   - nanopb (2.30909.0):
@@ -99,8 +98,9 @@ PODS:
     - Flutter
     - FlutterMacOS
   - patrol (0.0.1):
+    - CocoaAsyncSocket (~> 7.6)
     - Flutter
-    - Telegraph (~> 0.30.0)
+    - FlutterMacOS
   - PromisesObjC (2.3.1)
   - PromisesSwift (2.3.1):
     - PromisesObjC (= 2.3.1)
@@ -111,9 +111,6 @@ PODS:
     - Flutter
   - syncfusion_flutter_pdfviewer (0.0.1):
     - Flutter
-  - Telegraph (0.30.0):
-    - CocoaAsyncSocket (~> 7.6)
-    - HTTPParserC (~> 2.9)
   - url_launcher_ios (0.0.1):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
@@ -130,7 +127,7 @@ DEPENDENCIES:
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-  - patrol (from `.symlinks/plugins/patrol/ios`)
+  - patrol (from `.symlinks/plugins/patrol/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - syncfusion_flutter_pdfviewer (from `.symlinks/plugins/syncfusion_flutter_pdfviewer/ios`)
@@ -150,11 +147,9 @@ SPEC REPOS:
     - FirebaseSessions
     - GoogleDataTransport
     - GoogleUtilities
-    - HTTPParserC
     - nanopb
     - PromisesObjC
     - PromisesSwift
-    - Telegraph
 
 EXTERNAL SOURCES:
   app_links:
@@ -178,7 +173,7 @@ EXTERNAL SOURCES:
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   patrol:
-    :path: ".symlinks/plugins/patrol/ios"
+    :path: ".symlinks/plugins/patrol/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sign_in_with_apple:
@@ -205,22 +200,20 @@ SPEC CHECKSUMS:
   FirebaseInstallations: f672b1eda64e6381c21d424a2f680a943fd83f3b
   FirebaseMessaging: bb2c4f6422a753038fe137d90ae7c1af57251316
   FirebaseSessions: f145e7365d36bec0d724c4574a8750e6f82fa6c8
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
-  HTTPParserC: aea14c3d2d4ac5beb3988781daa36dfa62e0d9ef
   integration_test: 13825b8a9334a850581300559b8839134b124670
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
-  patrol: 792c0bb6cc4d552fc8b37f49266341c39e659b4d
+  patrol: 3e21d514020dbee24b3e3383caac9e8e051292ac
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   PromisesSwift: 28dca69a9c40779916ac2d6985a0192a5cb4a265
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   syncfusion_flutter_pdfviewer: bb9998884b864cfedf72628df3503bdf57e397c0
-  Telegraph: 12576b119324138e4929792af9e5a1085c2ecbc1
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 

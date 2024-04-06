@@ -51,7 +51,6 @@ void main() {
 
   patrolTest(
     'User with member level can log in, see training weeks, and logout',
-    nativeAutomation: true,
     (PatrolIntegrationTester $) async {
       const envName = const String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});

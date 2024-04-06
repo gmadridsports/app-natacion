@@ -5,8 +5,8 @@ class BulletinNotice {
   final String body;
   final DateTime publicationDate;
   final String id;
-
-  BulletinNotice(this.body, this.publicationDate, this.id);
+  final String origin;
+  BulletinNotice(this.body, this.publicationDate, this.id, this.origin);
 }
 
 class GetBulletinNoticesResponse implements QueryResponse {
@@ -23,8 +23,11 @@ class GetBulletinNoticesResponse implements QueryResponse {
       List<Notice> notices, int bulletinNoticesBulkSize)
       : this._internal(
             notices
-                .map((notice) => BulletinNotice(notice.body.toString(),
-                    notice.publicationDate.toDateTime(), notice.id))
+                .map((notice) => BulletinNotice(
+                    notice.body.toString(),
+                    notice.publicationDate.toDateTime(),
+                    notice.id,
+                    notice.origin))
                 .toList(),
             notices.length == bulletinNoticesBulkSize);
 }
