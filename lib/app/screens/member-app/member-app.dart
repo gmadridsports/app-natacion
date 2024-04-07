@@ -28,7 +28,7 @@ class _MemberAppState extends State<MemberApp> {
       case 1:
         return CalendarEvents();
       case 2:
-        return BulletinBoard();
+        return const BulletinBoard();
       case 3:
         return Profile();
     }

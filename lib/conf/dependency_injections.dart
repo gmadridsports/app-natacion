@@ -5,6 +5,10 @@ import 'package:gmadrid_natacion/Context/Natacion/infrastructure/SupabaseVersion
 import 'package:gmadrid_natacion/Context/Natacion/infrastructure/supabase_bulletin_repository.dart';
 import 'package:gmadrid_natacion/shared/infrastructure/notification_service.dart';
 
+import '../Context/Natacion/domain/bulletin/bulletin_notifier_service.dart';
+import '../Context/Natacion/domain/bulletin/new_published_notice_listener.dart';
+import '../Context/Natacion/infrastructure/bulletin/lib_event_bus_bulletin_notifier_service.dart';
+import '../Context/Natacion/infrastructure/bulletin/supabase_new_published_notice_listener.dart';
 import '../Context/Natacion/infrastructure/supabase_calendar_events_respository.dart';
 import '../shared/domain/DateTimeRepository.dart';
 import '../Context/Natacion/domain/TrainingRepository.dart';
@@ -48,5 +52,7 @@ List<(Type, Object)> dependencyInjectionInstances() {
     (NotificationService, NotificationService()),
     (CalendarEventRepository, SupabaseCalendarEventsRepository()),
     (BulletinRepository, SupabaseBulletinRepository()),
+    (NewPublishedNoticeListener, SupabaseNewPublishedNoticeListener()),
+    (BulletinNotifierService, LibEventBusBulletinNotifierService())
   ];
 }

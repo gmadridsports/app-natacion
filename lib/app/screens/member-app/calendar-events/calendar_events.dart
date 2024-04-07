@@ -227,7 +227,11 @@ class _CalendarEventsState extends State<CalendarEvents> {
                                             ListTile(
                                               // leading: Icon(Icons.person),
                                               title: Text(
-                                                  _events[_selected]![i].title),
+                                                  _events[_selected]![i].title,
+                                                  style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                               onTap: () {
                                                 setState(() {
                                                   _selectedEventDayItem == i
@@ -243,6 +247,21 @@ class _CalendarEventsState extends State<CalendarEvents> {
                                                 20, 0, 0, 20),
                                             alignment: Alignment.topLeft,
                                             child: MarkdownBody(
+                                              styleSheet: MarkdownStyleSheet(
+                                                  p: const TextStyle(
+                                                      fontSize: 20),
+                                                  h1: const TextStyle(
+                                                      fontSize: 24),
+                                                  h2: const TextStyle(
+                                                      fontSize: 22),
+                                                  h3: const TextStyle(
+                                                      fontSize: 20),
+                                                  h4: const TextStyle(
+                                                      fontSize: 18),
+                                                  h5: const TextStyle(
+                                                      fontSize: 16),
+                                                  h6: const TextStyle(
+                                                      fontSize: 14)),
                                               softLineBreak: true,
                                               styleSheetTheme:
                                                   MarkdownStyleSheetBaseTheme

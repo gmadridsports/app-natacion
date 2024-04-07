@@ -5,8 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingDate.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingRepository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/bulletin/new_published_notice_listener.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_bound.dart';
+import 'package:gmadrid_natacion/Context/Natacion/infrastructure/bulletin/supabase_new_published_notice_listener.dart';
 import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 import 'package:gmadrid_natacion/conf/dependency_injections.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
@@ -160,6 +162,8 @@ void main() {
           .add((CalendarEventRepository, mockedCalendarEventRepository));
       injectionInstances.add((DateTimeRepository, mockedDateTimeRepository));
       injectionInstances.add((VersionRepository, mockedVersionRepository));
+      injectionInstances.add(
+          (NewPublishedNoticeListener, SupabaseNewPublishedNoticeListener));
 
       DependencyInjection(instances: injectionInstances);
     }

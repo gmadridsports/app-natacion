@@ -113,7 +113,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   void _initializeGlobalAppEventListeners() async {
     await DependencyInjection().getInstanceOf<NotificationService>().init();
-
+// todo use the new listener util
     DependencyInjection()
         .getInstanceOf<LibEventBus.EventBus>()
         .on<AppEventType>()

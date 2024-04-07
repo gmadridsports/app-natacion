@@ -1,3 +1,4 @@
+import 'package:gmadrid_natacion/Context/Natacion/domain/bulletin/notice_published_event.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/bulletin/origin_source.dart';
 import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 
@@ -18,10 +19,20 @@ class Notice extends AggregateRoot {
 
   String get origin => _origin.toString();
 
-  Notice._internal(this._publicationDate, this._id, this._origin, this._body);
+  Notice._internal(
+    this._publicationDate,
+    this._id,
+    this._origin,
+    this._body,
+  );
 
   Notice.fromRemote(
       String body, MadridDateTime publicationDate, String id, String origin)
       : this._internal(publicationDate, id, OriginSource.fromString(origin),
-            NoticeBody.from(body, OriginSource.fromString(origin)));
+            NoticeBody.fromPrimitives(body));
+
+  void declareJustPublished() {
+    record(NoticePublishedEvent(_id, DateTime.now(), _body.toString(),
+        _publicationDate, _id, _origin.toString()));
+  }
 }
