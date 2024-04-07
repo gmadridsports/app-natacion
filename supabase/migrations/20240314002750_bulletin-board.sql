@@ -29,3 +29,5 @@ CREATE INDEX "bulletin_board_member_idx"
     ON "public"."bulletin_board" USING btree
         (is_published, publication_date, id)
     WHERE is_published = true;
+
+alter publication supabase_realtime add table "public"."bulletin_board";
