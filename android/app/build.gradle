@@ -93,6 +93,7 @@ android {
         releaseTest {
             proguardFiles 'proguard-rules.testrelease'
         }
+        releaseProd {}
     }
 
 //    buildTypes {
