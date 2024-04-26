@@ -1,8 +1,7 @@
+import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 import 'package:gmadrid_natacion/Context/Shared/domain/value_object.dart';
 
 import 'package:timezone/standalone.dart' as tz;
-
-import 'event_day_time.dart';
 
 final madridTimezone = tz.getLocation('Europe/Madrid');
 
@@ -31,7 +30,7 @@ class EventDay extends ValueObject {
       : this._internal(
             dateTime.year, dateTime.month, dateTime.day, dateTime.isUtc);
 
-  EventDay.fromEventDayTime(EventDayTime eventDateTime)
+  EventDay.fromEventDayTime(MadridDateTime eventDateTime)
       : this._internal(
             DateTime.fromMicrosecondsSinceEpoch(
                     eventDateTime.microSecondsSinceEpoch)

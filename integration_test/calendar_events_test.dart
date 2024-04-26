@@ -5,9 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingDate.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/TrainingRepository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/bulletin/new_published_notice_listener.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_bound.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_time.dart';
+import 'package:gmadrid_natacion/Context/Natacion/infrastructure/bulletin/supabase_new_published_notice_listener.dart';
+import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 import 'package:gmadrid_natacion/conf/dependency_injections.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
@@ -117,15 +119,15 @@ void main() {
           .withToDateTimeUtc(DateTime.utc(2023, 04, 30))
           .withCalendarEvent(TestAppCalendarEventBuilder().build())
           .withCalendarEvent(TestAppCalendarEventBuilder()
-              .withFromEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withFromEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 23)))
-              .withToEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withToEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 29)))
               .build())
           .withCalendarEvent(TestAppCalendarEventBuilder()
-              .withFromEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withFromEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 34)))
-              .withToEventDayTime(EventDayTime.fromDateTimeUtc(
+              .withToEventDayTime(MadridDateTime.fromDateTimeUtc(
                   DateTime.utc(2023, 04, 26, 15, 45)))
               .withSummary('Another test event')
               .build())
@@ -160,6 +162,8 @@ void main() {
           .add((CalendarEventRepository, mockedCalendarEventRepository));
       injectionInstances.add((DateTimeRepository, mockedDateTimeRepository));
       injectionInstances.add((VersionRepository, mockedVersionRepository));
+      injectionInstances.add(
+          (NewPublishedNoticeListener, SupabaseNewPublishedNoticeListener));
 
       DependencyInjection(instances: injectionInstances);
     }
@@ -227,7 +231,6 @@ void main() {
     for (var testCase in cases.keys) {
       patrolTest(
         testCase,
-        nativeAutomation: true,
         (PatrolIntegrationTester $) async {
           await setupBeforeAll();
 

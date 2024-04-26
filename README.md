@@ -2,6 +2,7 @@
 
 A helper app for the [Gmadrid Natación](https://www.gmadridsports.com/club-de-natacion-madrid/) swimming section club.
 This is a mono-repo, containing both the frontend and the backend.
+A [BOT](https://github.com/gmadridsports/gmadrid-bot) helps with the notice board and trainings, by automatically checking the whatsapp official channel and the trainings' files and copying them into the DB.
 
 The backend is based on [supabase](https://supabase.io/), a firebase-like service, but open source and self-hostable.
 
@@ -14,12 +15,53 @@ The frontend is a flutter app, with a focus on Android and iOS platforms.
 ## Setup
 Needed:
 - Apple developer program, or at least being part of the team
-- XCode ~14.2
 - Docker for supabase (backend support)
 - A firebase account (testLab, push notifications and crash loggings)
 - Apple certificates bound to the provisioning profiles (autosign is disabled)
 - java-sdk (recommended by using jenv): currently using `temurin64-18.0.2.1`
 - Flutter
+
+The latest setup working on my machine is:
+```bash
+$ jenv local
+17.0.6
+
+$ flutter --version
+Flutter 3.19.5 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision 300451adae (9 days ago) • 2024-03-27 21:54:07 -0500
+Engine • revision e76c956498
+Tools • Dart 3.3.3 • DevTools 2.31.1
+
+$ xcodebuild -version  
+Xcode 15.1
+Build version 15C65
+
+$ flutter doctor
+Doctor summary (to see all details, run flutter doctor -v):
+[✓] Flutter (Channel stable, 3.19.5, on macOS 14.0 23A344 darwin-arm64, locale en-ES)
+[✓] Android toolchain - develop for Android devices (Android SDK version 33.0.0)
+[✓] Xcode - develop for iOS and macOS (Xcode 15.1)
+[✓] Chrome - develop for the web
+[✓] Android Studio (version 2022.3)
+[✓] IntelliJ IDEA Ultimate Edition (version 2023.3.6)
+[✓] Connected device (3 available)
+[✓] Network resources
+
+$ patrol doctor
+Patrol doctor:
+Patrol CLI version: 2.7.0
+Flutter command: flutter 
+  Flutter 3.19.5 • channel stable
+Android: 
+• Program adb found in /Users/xxx/Library/Android/sdk/platform-tools/adb
+• Env var $ANDROID_HOME set to /Users/xxx/Library/Android/sdk
+iOS / macOS: 
+• Program xcodebuild found in /usr/bin/xcodebuild
+• Program ideviceinstaller found in /opt/homebrew/bin/ideviceinstaller
+
+$ supabase --version
+1.110.1
+```
 
 ### Backend local
 Install [supabase cli](https://supabase.com/docs/guides/cli)

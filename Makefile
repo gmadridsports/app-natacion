@@ -1,9 +1,19 @@
-.PHONY: backend-start setup-backend backend-stop frontend-start setup-frontend test-flutter-android test-flutter-ios test-flutter-local test-build-artifact test-artifacts-push test-artifacts-pull test-backend setup-pre-commit setup-env-test integration-scp list
+.PHONY: release-android open-ios-project backend-start setup-backend backend-stop frontend-start setup-frontend test-flutter-android test-flutter-ios test-flutter-local test-build-artifact test-artifacts-push test-artifacts-pull test-backend setup-pre-commit setup-env-test integration-scp list
 
 current-dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 hostname := $(hostname -f)
+second-arg := $(word 2, $(MAKECMDGOALS))
 SUPABASE_ADMIN_TEST_TEST_PASSWORD=$(shell cat dev/tests/env/supabase-admin-test-test-password)
 SUPABASE_ADMIN_LOCAL_TEST_PASSWORD=$(shell cat dev/tests/env/supabase-admin-local-test-password)
+
+open-ios-project:
+	@open ios/Runner.xcworkspace
+
+release-ios:
+	@flutter build ios --release
+
+release-android:
+	@flutter build appbundle --release --flavor=releaseProd
 
 backend-start:
 	@echo "Starting the app"
@@ -41,9 +51,13 @@ test-flutter-ios:
 	@echo "Running iOS tests"
 	@SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_TEST_TEST_PASSWORD) ./dev/tests/integration_ios_run.sh
 
-test-flutter-local: backend-start
-	@echo "Running tests locally"
-	patrol test --target integration_test/$(test_path) --dart-define="MODE=test" --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_LOCAL_TEST_PASSWORD)" --verbose
+test-flutter-local-ios: backend-start
+	@echo "Running tests locally on device ${second-arg}"
+	@patrol test --target integration_test/$(test_path)  --dart-define="MODE=test" --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_LOCAL_TEST_PASSWORD)" --verbose -d $(second-arg)
+
+test-flutter-local-android: backend-start
+	@echo "Running tests locally on device ${second-arg}"
+	@patrol test --target integration_test/$(test_path)  --release --flavor releaseTest --dart-define="MODE=test" --dart-define="ENV=local" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=$(SUPABASE_ADMIN_LOCAL_TEST_PASSWORD)" --verbose -d $(second-arg)
 
 test-build-artifact:
 	@echo "Building artifact"

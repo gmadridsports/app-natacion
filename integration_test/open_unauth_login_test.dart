@@ -35,7 +35,6 @@ void main() {
 
   patrolTest(
     'Unauthenticated user should see login screen',
-    nativeAutomation: true,
     (PatrolIntegrationTester $) async {
       const envName = String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});

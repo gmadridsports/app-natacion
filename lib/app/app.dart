@@ -113,7 +113,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   void _initializeGlobalAppEventListeners() async {
     await DependencyInjection().getInstanceOf<NotificationService>().init();
-
+// todo use the new listener util
     DependencyInjection()
         .getInstanceOf<LibEventBus.EventBus>()
         .on<AppEventType>()
@@ -215,7 +215,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         // initialRoute: ,
         navigatorKey: _navigator,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          useMaterial3: false,
+          //   appBarTheme: AppBarTheme(
+          //       //Add here
+          //       color: Colors.blue), // until here
+          //   primarySwatch: Colors.blue,
         ),
         initialRoute: SplashScreen.routeName,
         routes: {

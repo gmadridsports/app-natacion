@@ -39,7 +39,6 @@ void main() {
 
   patrolTest(
     'Auth user level can log in and log out on the waiting approval screen',
-    nativeAutomation: true,
     (PatrolIntegrationTester $) async {
       const envName = String.fromEnvironment('ENV', defaultValue: 'test');
       await dotenv.load(fileName: 'assets/.$envName.env', mergeWith: {});

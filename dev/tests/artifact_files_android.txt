@@ -1,2 +1,2 @@
-build/app/outputs/apk/debug/app-debug.apk
-build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+build/app/outputs/apk/releaseTest/release/app-releaseTest-release.apk
+build/app/outputs/apk/androidTest/releaseTest/release/app-releaseTest-release-androidTest.apk

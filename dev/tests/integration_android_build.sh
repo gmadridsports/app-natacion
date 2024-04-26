@@ -4,4 +4,4 @@ SUPABASE_ADMIN_TEST_PASSWORD=$(cat dev/tests/env/supabase-admin-test-test-passwo
 
 echo "Building the integration tests for android 🤖"
 java --version
-flutter build apk --config-only && patrol build android --target integration_test/ --dart-define="MODE=test" --dart-define="ENV=test" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=${SUPABASE_ADMIN_TEST_PASSWORD}"
+flutter build apk --release --config-only && patrol build android --release --flavor releaseTest integration_test/ --dart-define="MODE=test" --dart-define="ENV=test" --dart-define="SUPABASE_ADMIN_TEST_PASSWORD=${SUPABASE_ADMIN_TEST_PASSWORD}"

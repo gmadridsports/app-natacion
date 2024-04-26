@@ -157,7 +157,7 @@ class _TrainingWeekState extends State<TrainingWeek> {
           Expanded(
             child: _isTrainingLoading == true
                 ? const Center(child: CircularProgressIndicator())
-                : SfPdfViewer.memory(_pdfRaw),
+                : SfPdfViewer.memory(_pdfRaw, maxZoomLevel: 7.0),
           ),
         ],
       ),

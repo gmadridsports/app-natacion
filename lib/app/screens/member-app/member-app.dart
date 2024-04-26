@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/RefreshTrainingWeekEvent.dart';
+import 'package:gmadrid_natacion/app/screens/member-app/bulletin-board/bulletin_board.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/calendar-events/refresh_calendar_events.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import '../NamedRouteScreen.dart';
@@ -27,6 +28,8 @@ class _MemberAppState extends State<MemberApp> {
       case 1:
         return CalendarEvents();
       case 2:
+        return const BulletinBoard();
+      case 3:
         return Profile();
     }
   }
@@ -68,6 +71,9 @@ class _MemberAppState extends State<MemberApp> {
               BottomNavigationBarItem(
                   icon: Icon(key: Key('calendar'), Icons.event_note),
                   label: 'Calendario'),
+              BottomNavigationBarItem(
+                  icon: Icon(key: Key('bulletin'), Icons.announcement),
+                  label: 'Avisos'),
               BottomNavigationBarItem(
                   icon: Icon(
                     key: Key('profile'),

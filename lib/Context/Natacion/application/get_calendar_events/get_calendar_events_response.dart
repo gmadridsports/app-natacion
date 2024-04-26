@@ -1,7 +1,7 @@
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_time.dart';
 
 import '../../../Shared/application/QueryResponse.dart';
+import '../../../Shared/domain/date_time/madrid_date_time.dart';
 import '../../domain/calendar_event/calendar_event.dart' as domainCalendarEvent;
 
 class CalendarEvent {
@@ -27,7 +27,7 @@ extension on EventDay {
       DateTime.fromMicrosecondsSinceEpoch(microSecondsSinceEpoch).toUtc();
 }
 
-extension on EventDayTime {
+extension on MadridDateTime {
   DateTime get toUtcMadridTz {
     return DateTime.fromMicrosecondsSinceEpoch(microSecondsSinceEpoch).toUtc();
   }

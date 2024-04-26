@@ -79,7 +79,6 @@ void patrol(
     description,
     config: _patrolTesterConfig,
     nativeAutomatorConfig: nativeAutomatorConfig ?? _nativeAutomatorConfig,
-    nativeAutomation: true,
     framePolicy: framePolicy,
     skip: skip,
     callback,

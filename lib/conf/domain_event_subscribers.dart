@@ -1,3 +1,5 @@
+import 'package:gmadrid_natacion/Context/Natacion/application/listen_new_remote_published_notices/notify_new_bulletin_notice_on_new_published_notice_received.dart';
+
 import '../Context/Natacion/application/LoginUser/AnnounceAlreadyLoggedInOnLoggedInAlready.dart';
 import '../Context/Natacion/application/RedirectToScreen/RedirectToLoginScreenOnLogout.dart';
 import '../Context/Natacion/application/RedirectToScreen/RedirectToProperScreenOnLogin.dart';
@@ -12,5 +14,6 @@ List<DomainEventSubscriber> domainEventSubscribers = [
   RedirectToProperScreenOnLogin(),
   UpdateUserMembershipOnMembershipChanged(),
   AnnounceAlreadyLoggedInOnUserReopenedAppWithValidSession(),
-  RedirectToProperScreenOnUserAlreadyLoggedIn()
+  RedirectToProperScreenOnUserAlreadyLoggedIn(),
+  NotifyNewBulletinNoticeOnNewNotice()
 ];
