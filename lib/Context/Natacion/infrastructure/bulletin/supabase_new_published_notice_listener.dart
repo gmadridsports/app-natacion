@@ -20,12 +20,11 @@ class SupabaseNewPublishedNoticeListener extends NewPublishedNoticeListener {
   void listen() {
     _channel = Supabase.instance.client.channel("public:${_bulletinTable}");
     _channel
-        ?.on(
-          RealtimeListenTypes.postgresChanges,
-          ChannelFilter(
-              event: 'INSERT', schema: 'public', table: _bulletinTable),
-          _listener,
-        )
+        ?.onPostgresChanges(
+            event: PostgresChangeEvent.insert,
+            schema: 'public',
+            table: _bulletinTable,
+            callback: _listener)
         .subscribe();
   }
 

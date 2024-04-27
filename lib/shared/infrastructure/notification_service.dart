@@ -29,7 +29,7 @@ class NotificationService {
     notificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestPermission();
+        ?.requestNotificationsPermission();
 
     notificationsPlugin.initialize(
       initializationSettings,

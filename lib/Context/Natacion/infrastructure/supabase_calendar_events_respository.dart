@@ -22,14 +22,11 @@ class SupabaseCalendarEventsRepository implements CalendarEventRepository {
             []
     };
 
-    final res =
-        await Supabase.instance.client.functions.invoke('calendar-events',
-            body: {
-              'fromIncluded': from.millisecondsSinceEpochInt,
-              'toIncluded': to.millisecondsSinceEpochInt
-            },
-            responseType: ResponseType.text);
-
+    final res = await Supabase.instance.client.functions
+        .invoke('calendar-events', body: {
+      'fromIncluded': from.millisecondsSinceEpochInt,
+      'toIncluded': to.millisecondsSinceEpochInt
+    });
     final data = json.decode(res.data);
 
     // we could move this into a domain service, or value object.

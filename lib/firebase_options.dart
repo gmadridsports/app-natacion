@@ -66,4 +66,5 @@ class DefaultFirebaseOptions {
     iosClientId: '781868708787-j1u5b9ivrqvco884aob1p2dh9lqiu34h.apps.googleusercontent.com',
     iosBundleId: 'net.bertamini.gmadrid.natacion.gmadridNatacion',
   );
+
 }
