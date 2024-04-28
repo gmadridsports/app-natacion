@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/event_day_bound.dart';
@@ -27,7 +25,7 @@ class SupabaseCalendarEventsRepository implements CalendarEventRepository {
       'fromIncluded': from.millisecondsSinceEpochInt,
       'toIncluded': to.millisecondsSinceEpochInt
     });
-    final data = json.decode(res.data);
+    final data = res.data;
 
     // we could move this into a domain service, or value object.
     // this way, we could test this properly with an integration test, starting from the JSON response.
