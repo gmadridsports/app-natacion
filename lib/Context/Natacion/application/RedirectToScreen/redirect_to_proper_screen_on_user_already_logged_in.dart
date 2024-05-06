@@ -1,7 +1,8 @@
+import 'package:gmadrid_natacion/Context/Natacion/application/RedirectToScreen/redirect_to_screen_for_request_and_membership.dart';
+
 import '../../../Shared/domain/DomainEventSubscriber.dart';
 import '../../domain/user/MembershipStatus.dart';
 import '../../domain/user/user_logged_in_event.dart';
-import 'RedirectToFirstScreenForMembership.dart';
 
 class RedirectToProperScreenOnUserAlreadyLoggedIn
     implements DomainEventSubscriber<UserAlreadyLoggedInEvent> {
@@ -14,6 +15,6 @@ class RedirectToProperScreenOnUserAlreadyLoggedIn
   call(UserAlreadyLoggedInEvent domainEvent) {
     final membershipLevel =
         MembershipStatus.fromString(domainEvent.membershipLevel);
-    RedirectToFirstScreenForMembership()(membershipLevel);
+    RedirectToScreenForRequestAndMembership()(membershipLevel);
   }
 }

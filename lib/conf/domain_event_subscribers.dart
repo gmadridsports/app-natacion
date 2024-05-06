@@ -4,8 +4,8 @@ import '../Context/Natacion/application/LoginUser/AnnounceAlreadyLoggedInOnLogge
 import '../Context/Natacion/application/RedirectToScreen/RedirectToLoginScreenOnLogout.dart';
 import '../Context/Natacion/application/RedirectToScreen/RedirectToProperScreenOnLogin.dart';
 import '../Context/Natacion/application/RedirectToScreen/RedirectToProperScreenOnMembershipChangedFromBackoffice.dart';
-import '../Context/Natacion/application/RedirectToScreen/RedirectToProperScreenOnUserAlreadyLoggedIn.dart';
-import '../Context/Natacion/application/UpdateUser/UpdateUserMembershipOnMembershipChanged.dart';
+import '../Context/Natacion/application/RedirectToScreen/redirect_to_proper_screen_on_user_already_logged_in.dart';
+import '../Context/Natacion/application/update_user/UpdateUserMembershipOnMembershipChanged.dart';
 import '../Context/Shared/domain/DomainEventSubscriber.dart';
 
 List<DomainEventSubscriber> domainEventSubscribers = [

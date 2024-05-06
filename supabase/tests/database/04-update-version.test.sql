@@ -53,3 +53,6 @@ select is_empty(
 SELECT is_empty( $$ delete from public.versions where available = true returning 1 $$,
                  'cannot delete versions'
            );
+
+select * from finish();
+ROLLBACK;

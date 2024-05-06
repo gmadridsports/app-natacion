@@ -9,9 +9,12 @@ import '../../Shared/domain/Bus/Event/EventBus.dart';
 import '../domain/user/ListenedEvents/MembershipStatusChangedFromBackoffice.dart';
 
 class SupabaseUserStatusListener {
+  static final String _membershipColumn = 'membership_level';
+
   late StreamSubscription _streamSubscription;
   bool _firstEvent = true;
   bool _refreshing = false;
+  String? _previousMembershipLevel;
 
   void refresh() async {
     try {
@@ -19,7 +22,7 @@ class SupabaseUserStatusListener {
     } catch (e) {
       FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
     }
-
+    _previousMembershipLevel = null;
     _refreshing = true;
     _streamSubscription = Supabase.instance.client
         .from('profiles')
@@ -30,6 +33,7 @@ class SupabaseUserStatusListener {
     if (data.isEmpty) return;
 
     if (_firstEvent) {
+      _previousMembershipLevel = data.first[_membershipColumn];
       _firstEvent = false;
       return;
     }
@@ -39,7 +43,7 @@ class SupabaseUserStatusListener {
         UserReopenedAppWithValidSession(
           data.first['id'],
           DateTime.now(),
-          data.first['membership_level'],
+          data.first[_membershipColumn],
         )
       ]);
 
@@ -47,11 +51,15 @@ class SupabaseUserStatusListener {
       return;
     }
 
+    if (_previousMembershipLevel == data.first[_membershipColumn]) {
+      return;
+    }
+
     DependencyInjection().getInstanceOf<EventBus>().publish([
       MembershipStatusChangedFromBackoffice(
         data.first['id'],
         DateTime.now(),
-        data.first['membership_level'],
+        data.first[_membershipColumn],
       )
     ]);
   }

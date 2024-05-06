@@ -94,3 +94,5 @@ SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'dashboa
 SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'anon', ARRAY[]::text[], 'non privileged roles cannot execute enable_membership');
 SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'authenticated', ARRAY[]::text[], 'non privileged roles cannot execute enable_membership');
 
+select * from finish();
+ROLLBACK;

@@ -14,10 +14,18 @@ class GetSessionUser {
     final user = await _userRepository.getCurrentSessionUser();
 
     if (user == null) {
-      return GetSessionUserResponse(false, '', false, '');
+      return GetSessionUserResponse(
+          false, '', false, NotificationPreferences(false, false, false), '');
     }
 
-    return GetSessionUserResponse(true, user.email.toString(), user.canUseApp(),
+    return GetSessionUserResponse(
+        true,
+        user.email.toString(),
+        user.canUseApp(),
+        NotificationPreferences(
+            user.notificationPreferences.trainingWeek,
+            user.notificationPreferences.bulletinBoard,
+            user.notificationPreferences.other),
         user.membership.toString());
   }
 }
