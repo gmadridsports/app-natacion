@@ -1,7 +1,6 @@
 import 'package:gmadrid_natacion/Context/Natacion/domain/user/ListenedEvents/UserReopenedAppWithValidSession.dart';
 
 import '../../../Shared/domain/DomainEventSubscriber.dart';
-import '../../domain/user/user_logged_in_event.dart';
 import 'AnnounceAlreadyLoggedIn.dart';
 
 class AnnounceAlreadyLoggedInOnUserReopenedAppWithValidSession

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gmadrid_natacion/app/screens/NamedRouteScreen.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/calendar-events/refresh_calendar_events.dart';
+import 'package:gmadrid_natacion/app/screens/member-app/member_app.dart';
 import 'package:gmadrid_natacion/shared/domain/DateTimeRepository.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -10,7 +12,9 @@ import '../../../../Context/Natacion/infrastructure/app_interface/queries/get_ca
 import '../../../../shared/dependency_injection.dart';
 import '../launchURL.dart';
 
-class CalendarEvents extends StatefulWidget {
+class CalendarEvents extends StatefulWidget implements NamedRouteScreen {
+  static String get routeName => "${MemberApp.routeName}/calendar-events";
+
   const CalendarEvents({super.key});
 
   @override

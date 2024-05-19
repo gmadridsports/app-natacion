@@ -3,5 +3,5 @@ import 'User.dart';
 abstract class UserRepository {
   Future<User?> getCurrentSessionUser();
   Future<void> deleteCurrentSessionUser();
-  Future<void> save(User user);
+  Future<void> save(User user, {bool skipSyncWithBackend = false});
 }

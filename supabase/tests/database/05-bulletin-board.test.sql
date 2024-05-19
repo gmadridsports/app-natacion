@@ -246,4 +246,4 @@ select tests.clear_authentication();
 select *
 from finish();
 
-ROLLBACK
+ROLLBACK;

@@ -11,7 +11,7 @@ class InMemoryShowingScreenRepository implements ShowingScreenRepository {
   }
 
   @override
-  ShowingScreen? getScreen() {
+  ShowingScreen? getShowingScreen() {
     return _showingScreen;
   }
 

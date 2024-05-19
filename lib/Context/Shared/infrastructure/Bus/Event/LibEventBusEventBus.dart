@@ -56,7 +56,7 @@ class LibEventBusEventBus implements DomainEventBus.EventBus {
     });
   }
 
-  // events that are listened by the UI app istelf, not a bounded context
+  // events that are listened by the UI app itself, not a bounded context
   publishApp<T extends DomainEvent>(List<T> events) {
     events.forEach((event) {
       Type y = event.runtimeType;

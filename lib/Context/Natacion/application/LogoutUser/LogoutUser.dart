@@ -17,7 +17,7 @@ class LogoutUser {
   }
 
   void call() {
-    final showingScreen = _showingScreenRepository.getScreen();
+    final showingScreen = _showingScreenRepository.getShowingScreen();
 
     if (showingScreen == null) {
       // not running

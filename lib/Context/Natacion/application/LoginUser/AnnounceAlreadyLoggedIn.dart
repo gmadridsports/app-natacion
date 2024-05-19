@@ -3,11 +3,9 @@ import '../../../Shared/domain/Bus/Event/EventBus.dart';
 import '../../domain/user/UserRepository.dart';
 
 class AnnounceAlreadyLoggedIn {
-  late final EventBus _eventBus;
   late final UserRepository _userRepository;
 
   AnnounceAlreadyLoggedIn() {
-    _eventBus = DependencyInjection().getInstanceOf<EventBus>();
     _userRepository = DependencyInjection().getInstanceOf<UserRepository>();
   }
 
@@ -20,8 +18,7 @@ class AnnounceAlreadyLoggedIn {
       }
 
       value.declareAlreadyLoggedIn();
-      _userRepository.save(value);
-      _eventBus.publish(value.pullDomainEvents() ?? []);
+      _userRepository.save(value, skipSyncWithBackend: true);
     });
   }
 }

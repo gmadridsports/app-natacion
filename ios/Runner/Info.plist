@@ -67,11 +67,11 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>sms</string>
-      <string>tel</string>
-      <string>http</string>
-      <string>https</string>
-    </array>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+		<string>http</string>
+		<string>https</string>
+	</array>
 </dict>
 </plist>

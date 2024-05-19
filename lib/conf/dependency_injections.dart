@@ -1,9 +1,12 @@
 import 'package:gmadrid_natacion/Context/Natacion/domain/app/VersionRepository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/bulletin/BulletinRepository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/calendar_event/calendar_event_repository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/navigation_request/navigation_request_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/infrastructure/SupabaseVersionRepository.dart';
+import 'package:gmadrid_natacion/Context/Natacion/infrastructure/navigation_request/shared_preferences_navigation_request.dart';
 import 'package:gmadrid_natacion/Context/Natacion/infrastructure/supabase_bulletin_repository.dart';
 import 'package:gmadrid_natacion/shared/infrastructure/notification_service.dart';
+import 'package:uuid/uuid.dart';
 
 import '../Context/Natacion/domain/bulletin/bulletin_notifier_service.dart';
 import '../Context/Natacion/domain/bulletin/new_published_notice_listener.dart';
@@ -12,7 +15,7 @@ import '../Context/Natacion/infrastructure/bulletin/supabase_new_published_notic
 import '../Context/Natacion/infrastructure/supabase_calendar_events_respository.dart';
 import '../shared/domain/DateTimeRepository.dart';
 import '../Context/Natacion/domain/TrainingRepository.dart';
-import '../Context/Natacion/domain/screen/Screen.dart';
+import '../Context/Natacion/domain/screen/screen.dart';
 import '../Context/Natacion/domain/screen/showing_screen.dart';
 import '../Context/Natacion/domain/screen/showing_screen_repository.dart';
 import '../Context/Natacion/domain/user/UserRepository.dart';
@@ -40,8 +43,7 @@ List<(Type, Object)> dependencyInjectionInstances() {
     (
       ShowingScreenRepository,
       InMemoryShowingScreenRepository(
-          // todo uuid
-          ShowingScreen.from('1', Screen.splash))
+          ShowingScreen.from(const Uuid().v4(), Screen.fromString('/splash')))
     ),
     (EventBus, libEventBus),
     (
@@ -53,6 +55,10 @@ List<(Type, Object)> dependencyInjectionInstances() {
     (CalendarEventRepository, SupabaseCalendarEventsRepository()),
     (BulletinRepository, SupabaseBulletinRepository()),
     (NewPublishedNoticeListener, SupabaseNewPublishedNoticeListener()),
-    (BulletinNotifierService, LibEventBusBulletinNotifierService())
+    (BulletinNotifierService, LibEventBusBulletinNotifierService()),
+    (
+      NavigationRequestRepository,
+      SharedPreferencesNavigationRequestRepository()
+    )
   ];
 }

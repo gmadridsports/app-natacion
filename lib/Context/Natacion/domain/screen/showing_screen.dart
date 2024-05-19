@@ -1,7 +1,9 @@
+import 'package:gmadrid_natacion/Context/Natacion/domain/navigation_request/navigation_request.dart';
+
 import '../../../Shared/domain/Aggregate/aggregate_root.dart';
 import '../user/MembershipStatus.dart';
 import 'ChangedCurrentScreenDomainEvent.dart';
-import 'Screen.dart';
+import 'screen.dart';
 import 'schowing_screen_id.dart';
 
 class ShowingScreen extends AggregateRoot {
@@ -16,7 +18,7 @@ class ShowingScreen extends AggregateRoot {
   changeCurrentScreenIfCurrentStatusChangesIt(
       MembershipStatus? accordingToMembershipStatus) {
     final nextCurrentScreen =
-        _currentScreen.nextShowingScreen(accordingToMembershipStatus);
+        _currentScreen.nextScreen(accordingToMembershipStatus);
 
     if (nextCurrentScreen == _currentScreen) {
       return;
@@ -24,13 +26,46 @@ class ShowingScreen extends AggregateRoot {
 
     _currentScreen = nextCurrentScreen;
     record(ChangedCurrentScreenDomainEvent(
-        _id, DateTime.now(), _currentScreen.name));
+        _id, DateTime.now(), _currentScreen.path, false));
+  }
+
+  changeCurrentScreenForNavigationRequest(
+      NavigationRequest? forNavigationRequest,
+      MembershipStatus? accordingToMembershipStatus) {
+    switch (forNavigationRequest?.navigationType) {
+      case null:
+        changeCurrentScreenIfCurrentStatusChangesIt(
+            accordingToMembershipStatus);
+        return;
+      case RequestType.screen:
+        final requestedScreen = forNavigationRequest!.destination;
+        final nextCurrentScreen = _currentScreen.nextFromRequestedScreen(
+            accordingToMembershipStatus, requestedScreen);
+
+        if (nextCurrentScreen == _currentScreen) {
+          return;
+        }
+
+        _currentScreen = nextCurrentScreen;
+        record(ChangedCurrentScreenDomainEvent(
+            _id, DateTime.now(), _currentScreen.path, false));
+
+      default:
+        throw ArgumentError(
+            'Cannot change current screen for a navigation type ${forNavigationRequest?.navigationType}');
+    }
   }
 
   resetToLogin() {
-    _currentScreen = Screen.login;
+    _currentScreen = Screen.mainScreen(MainScreen.login);
 
     record(ChangedCurrentScreenDomainEvent(
-        _id, DateTime.now(), _currentScreen.name));
+        _id, DateTime.now(), _currentScreen.path, false));
+  }
+
+  updateToScreen(Screen newScreen) {
+    _currentScreen = newScreen;
+    record(ChangedCurrentScreenDomainEvent(
+        _id, DateTime.now(), _currentScreen.path, true));
   }
 }

@@ -260,5 +260,4 @@ select results_eq(
            );
 
 select * from finish();
-
 ROLLBACK;

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:gmadrid_natacion/Context/Natacion/domain/user/notification_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../shared/dependency_injection.dart';
@@ -10,6 +13,8 @@ import '../domain/user/UserRepository.dart';
 class SupabaseUserRepository implements UserRepository {
   static const String _profileTable = 'profiles';
   static const String _membershipLevelColumn = 'membership_level';
+  static const String _notificationPreferencesColumn =
+      'notification_preferences';
 
   const SupabaseUserRepository();
 
@@ -23,12 +28,15 @@ class SupabaseUserRepository implements UserRepository {
 
     final List<dynamic> userProfiles = await Supabase.instance.client
         .from(_profileTable)
-        .select(_membershipLevelColumn);
+        .select("$_membershipLevelColumn, $_notificationPreferencesColumn");
     final membershipStatus = MembershipStatus.fromString(
         userProfiles.firstOrNull[_membershipLevelColumn] as String);
+    final notificationPreferences = NotificationPreferences.fromPrimitives(
+        userProfiles.firstOrNull[_notificationPreferencesColumn]
+            as Map<String, dynamic>);
     final userEmail = Email.fromString(supabaseUser.email ?? '');
-
-    final user = User.User.from(supabaseUser.id, membershipStatus, userEmail);
+    final user = User.User.from(
+        supabaseUser.id, membershipStatus, userEmail, notificationPreferences);
     return user;
   }
 
@@ -37,11 +45,17 @@ class SupabaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<void> save(User.User user) async {
-    // at this very moment we don't need to update the user. the app does not allow it
-    // we simply publish the events and the app will react to it
-    DependencyInjection()
-        .getInstanceOf<LibEventBusEventBus>()
-        .publishApp(user.domainEvents);
+  Future<void> save(User.User user, {bool skipSyncWithBackend = false}) async {
+    if (!skipSyncWithBackend) {
+      await Supabase.instance.client.from(_profileTable).update({
+        _notificationPreferencesColumn:
+            user.notificationPreferences.toPrimitives(),
+      }).eq('id', user.id);
+    }
+
+    final domainEvents = user.pullDomainEvents();
+    final eventBus = DependencyInjection().getInstanceOf<LibEventBusEventBus>();
+    eventBus.publish(domainEvents);
+    eventBus.publishApp(domainEvents);
   }
 }

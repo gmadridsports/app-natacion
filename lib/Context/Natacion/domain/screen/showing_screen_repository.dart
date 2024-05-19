@@ -1,6 +1,6 @@
 import 'showing_screen.dart';
 
 abstract class ShowingScreenRepository {
-  ShowingScreen? getScreen();
+  ShowingScreen? getShowingScreen();
   save(ShowingScreen showingScreen);
 }
