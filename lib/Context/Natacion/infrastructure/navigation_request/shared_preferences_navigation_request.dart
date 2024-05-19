@@ -25,8 +25,6 @@ class SharedPreferencesNavigationRequestRepository
       NavigationRequest navigationRequest) async {
     final prefs = await SharedPreferences.getInstance();
     final rawVal = navigationRequest.toRaw();
-    print('here>>>>');
-    print(rawVal);
     final success =
         await prefs.setString(_navigationRequestKey, jsonEncode(rawVal));
 

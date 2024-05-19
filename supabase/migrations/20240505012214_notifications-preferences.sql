@@ -1,15 +1,11 @@
 drop policy notification_tokens_update_policy on public.notification_tokens;
-create policy notification_tokens_update_policy on public.notification_tokens for update using (user_id = auth.uid() and
-                                                                                                'member' in
-                                                                                                (select membership_level
-                                                                                                 from public.profiles
-                                                                                                 where id = auth.uid()));
+create policy notification_tokens_update_policy on public.notification_tokens for update using (user_id = auth.uid());
 
 alter table "public"."profiles"
     add column "notification_preferences" jsonb default '{
-      "other": true,
-      "training-week": true,
-      "bulletin-board": true
+      "other": false,
+      "training-week": false,
+      "bulletin-board": false
     }'::jsonb;
 
 
@@ -47,7 +43,16 @@ SET notification_preferences = '{
   "training-week": true,
   "bulletin-board": true
 }'
-WHERE id = id;
+WHERE membership_level = 'member';
+
+UPDATE "public"."profiles"
+SET notification_preferences = '{
+  "other": false,
+  "training-week": false,
+  "bulletin-board": false
+}'
+WHERE membership_level <> 'member';
+
 UPDATE "public"."notification_tokens"
 SET preferences = '{
   "other": true,
@@ -135,3 +140,19 @@ CREATE TRIGGER tr_update_profile
     ON "public"."notification_tokens"
     FOR EACH ROW
 EXECUTE FUNCTION notifications_preferences_with_profiles_preferences();
+
+DROP INDEX IF EXISTS notification_tokens_for_bulletin;
+CREATE INDEX notification_tokens_for_bulletin ON public.notification_tokens USING btree ((preferences->>'bulletin-board'));
+
+-- notification-tokens' preferences can't be updated directly by the user
+revoke
+    update
+    (preferences) on table "public"."notification_tokens"
+    from
+    authenticated;
+
+grant
+    update
+    (preferences) on table "public"."notification_tokens"
+    to
+    postgres;

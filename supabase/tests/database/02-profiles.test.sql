@@ -88,10 +88,10 @@ select tests.clear_authentication();
 --
 -- given two authenticated users, one member and the other a generic one
 select tests.rls_enabled('public');
-SELECT tests.create_supabase_user('t2_member_user', 't2-member@gmadridnatacion.bertamini.net');
+select tests.create_supabase_user('t2_member_user', 't2-member@gmadridnatacion.bertamini.net');
 select tests.change_supabase_user_membership('t2_member_user', 'member');
 
-SELECT tests.create_supabase_user('t2_authenticated_non_member_user', 't2-authenticated@gmadridnatacion.bertamini.net');
+select tests.create_supabase_user('t2_authenticated_non_member_user', 't2-authenticated@gmadridnatacion.bertamini.net');
 
 -- when I authenticate as a member user
 select tests.authenticate_as('t2_member_user');

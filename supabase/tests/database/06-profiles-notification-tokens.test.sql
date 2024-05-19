@@ -12,7 +12,7 @@ UPDATE public.profiles SET notification_preferences = '{"other": false,"training
 SELECT tests.create_supabase_user('t1_member_user', 't1-member@gmadridnatacion.bertamini.net');
 
 -- given a specific notification preferences for the user
-select results_eq($$ SELECT notification_preferences FROM profiles WHERE id= (tests.get_supabase_user('t1_member_user') ->> 'id')::uuid$$, $$VALUES('{"other": true, "training-week": true, "bulletin-board": true}'::jsonb)$$);
+select results_eq($$ SELECT notification_preferences FROM profiles WHERE id= (tests.get_supabase_user('t1_member_user') ->> 'id')::uuid$$, $$VALUES('{"other": false, "training-week": false, "bulletin-board": false}'::jsonb)$$);
 UPDATE public.profiles SET notification_preferences = '{"other": true,"training-week": true,"bulletin-board": false}' WHERE id = (tests.get_supabase_user('t1_member_user') ->> 'id')::uuid;
 select results_eq($$ SELECT notification_preferences FROM profiles WHERE id= (tests.get_supabase_user('t1_member_user') ->> 'id')::uuid$$, $$VALUES('{"other": true, "training-week": true, "bulletin-board": false}'::jsonb)$$);
 
@@ -28,14 +28,14 @@ VALUES ((tests.get_supabase_user('t1_member_user') ->> 'id')::uuid,
 select results_eq($$ SELECT preferences FROM notification_tokens WHERE token = 'notification-token-1'$$, $$VALUES('{"other": true,"training-week": true,"bulletin-board": false}'::jsonb)$$);
 
 --
--- 3. If a preference is edited on the preferences, all the user's tokens will have the new preference updated
+-- 2. If a preference is edited on the preferences, all the user's tokens will have the new preference updated
 --
 -- given a new created authenticated generic user
 UPDATE public.profiles SET notification_preferences = '{"other": false,"training-week": false,"bulletin-board": false}'::jsonb;
 SELECT tests.create_supabase_user('t2_user', 't2-user@gmadridnatacion.bertamini.net');
 
 -- given a specific notification preferences for the user
-select results_eq($$ SELECT notification_preferences FROM profiles WHERE id= (tests.get_supabase_user('t2_user') ->> 'id')::uuid$$, $$VALUES('{"other": true, "training-week": true, "bulletin-board": true}'::jsonb)$$);
+select results_eq($$ SELECT notification_preferences FROM profiles WHERE id= (tests.get_supabase_user('t2_user') ->> 'id')::uuid$$, $$VALUES('{"other": false, "training-week": false, "bulletin-board": false}'::jsonb)$$);
 
 -- when the user changes the notification preferences on the profile
 UPDATE public.profiles SET notification_preferences = '{"other": true,"training-week": true,"bulletin-board": false}' WHERE id = (tests.get_supabase_user('t2_user') ->> 'id')::uuid;

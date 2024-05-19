@@ -1,7 +1,7 @@
 -- begin the transaction, this will allow you to rollback any changes made during the test
 BEGIN;
 
-select plan(14);
+select plan(17);
 
 -- first user with a session and notification token associated
 SELECT tests.create_supabase_user('authenticated_non_member_user', 'authenticated@gmadridnatacion.bertamini.net');
@@ -36,63 +36,96 @@ select policies_are(
                'public',
                'notification_tokens',
                ARRAY ['notification_tokens_policy', 'notification_tokens_update_policy', 'notification_tokens_insert_policy']
-           );
+       );
 
 select results_eq(
                'SELECT count(*) FROM notification_tokens',
                $$VALUES(0::bigint) $$,
                'Anon user returns nothing'
-           );
+       );
 
 select tests.authenticate_as('authenticated_non_member_user_no_token');
 select results_eq(
                'SELECT count(*) FROM notification_tokens',
                $$VALUES(0::bigint) $$,
                'Authenticated user gets its own session token'
-           );
+       );
 
 SELECT lives_ok(
                $$INSERT INTO public.notification_tokens VALUES (((tests.get_supabase_user('authenticated_non_member_user_no_token')->>'id')::uuid), '1d36c5da-e78e-42b7-aeb2-212b161918b2'::uuid, 'a-token-insertion') RETURNING * $$,
                $$can insert its own notification token$$
-           );
+       );
 
 select results_eq(
                'SELECT count(*) FROM notification_tokens',
                $$VALUES(1::bigint) $$,
                'Authenticated user gets its own session token'
-           );
+       );
 
 SELECT throws_ok(
                $$INSERT INTO public.notification_tokens VALUES (((tests.get_supabase_user('authenticated_non_member_user')->>'id')::uuid), '1d36c5da-e78e-42b7-aeb2-212b161918b1'::uuid, 'a-token-insertion') RETURNING * $$,
                $$new row violates row-level security policy for table "notification_tokens"$$
-           );
+       );
 
 select results_eq(
-                $$ UPDATE public.notification_tokens SET token = 'new-token-updated' WHERE user_id = auth.uid() AND session_id = '1d36c5da-e78e-42b7-aeb2-212b161918b2' returning 'this should be returned' $$,
+               $$ UPDATE public.notification_tokens SET token = 'new-token-updated' WHERE user_id = auth.uid() AND session_id = '1d36c5da-e78e-42b7-aeb2-212b161918b2' returning 'this should be returned' $$,
                $$VALUES('this should be returned'::text)$$,
-    'user can update its own notification token'
-           );
+               'user can update its own notification token'
+       );
 
 select is_empty(
                $$ UPDATE public.notification_tokens SET token = 'new-token-updated' WHERE user_id = (tests.get_supabase_user('authenticated_non_member_user') ->> 'id')::uuid AND session_id = '1d36c5da-e78e-42b7-aeb2-212b161918b1' returning 'this should be returned' $$,
                $$cannot update other users' tokens$$
-           );
+       );
 
 SELECT is_empty(
-            $$ delete from public.notification_tokens where user_id = auth.uid() returning 1 $$,
-            'cannot delete its own token'
-        );
+               $$ delete from public.notification_tokens where user_id = auth.uid() returning 1 $$,
+               'cannot delete its own token'
+       );
 
 SELECT is_empty(
                $$ delete from public.notification_tokens returning 1 $$,
                'cannot delete any token'
-           );
+       );
 
 select tests.clear_authentication();
 
-SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'dashboard_user', ARRAY['EXECUTE'], 'enable_membership only for privileged user');
-SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'anon', ARRAY[]::text[], 'non privileged roles cannot execute enable_membership');
-SELECT function_privs_are('public', 'enable_membership', ARRAY['text'], 'authenticated', ARRAY[]::text[], 'non privileged roles cannot execute enable_membership');
+--
+-- 0. enable_membership function is only for privileged admin users
+--
+SELECT function_privs_are('public', 'enable_membership', ARRAY ['text'], 'dashboard_user', ARRAY ['EXECUTE'],
+                          'enable_membership only for privileged user');
+SELECT function_privs_are('public', 'enable_membership', ARRAY ['text'], 'anon', ARRAY []::text[],
+                          'non privileged roles cannot execute enable_membership');
+SELECT function_privs_are('public', 'enable_membership', ARRAY ['text'], 'authenticated', ARRAY []::text[],
+                          'non privileged roles cannot execute enable_membership');
 
-select * from finish();
+--
+-- 1. A member user cannot update the preferences column of the tokens
+--
+-- given an authenticated member user
+select tests.rls_enabled('public');
+select tests.create_supabase_user('t1_member_user', 't1-member@gmadridnatacion.bertamini.net');
+select tests.change_supabase_user_membership('t1_member_user', 'member');
+select tests.authenticate_as('t1_member_user');
+select results_eq(
+               $$ SELECT notification_preferences FROM profiles WHERE id= (tests.get_supabase_user('t1_member_user') ->> 'id')::uuid$$,
+               $$VALUES('{"other": false, "training-week": false, "bulletin-board": false}'::jsonb)$$);
+
+-- when I try to update the preferences column of the tokens
+SELECT (
+           $$ UPDATE public.notification_tokens SET preferences = '{"other": true,"training-week": true,"bulletin-board": false}' WHERE user_id = auth.uid() AND session_id = '1d36c5da-e78e-42b7-aeb2-212b161918b2' returning 'this should not be returned' $$
+           );
+
+-- then I get a permission denied
+select results_eq(
+               $$ SELECT notification_preferences FROM profiles WHERE id= (tests.get_supabase_user('t1_member_user') ->> 'id')::uuid$$,
+               $$VALUES('{"other": false, "training-week": false, "bulletin-board": false}'::jsonb)$$);
+
+
+select tests.clear_authentication();
+
+
+select *
+from finish();
 ROLLBACK;

@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) {
       return;
     }
-    print('here redirect?');
+
     RedirectToFirstScreenForCurrentUser()();
   }
 

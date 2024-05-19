@@ -52,8 +52,7 @@ class _ProfileState extends State<Profile> {
       }
       final preferences =
           (event.payload as UserAppNotificationPreferencesChanged).preferences;
-      print('event!');
-      print(preferences);
+
       setState(() {
         if (_notificationPreferences == null) {
           return;

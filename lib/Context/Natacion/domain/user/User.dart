@@ -45,8 +45,11 @@ class User extends AggregateRoot {
   }
 
   changeMembership(MembershipStatus newMembershipStatus) {
-    _membership = newMembershipStatus;
+    if (_membership == newMembershipStatus) {
+      return;
+    }
 
+    _membership = newMembershipStatus;
     domainEvents.add(UserAppUsagePermissionsChanged(
         id, DateTime.now(), _membership.canUseApp()));
   }

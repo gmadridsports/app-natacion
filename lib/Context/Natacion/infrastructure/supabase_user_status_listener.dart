@@ -22,7 +22,7 @@ class SupabaseUserStatusListener {
     } catch (e) {
       FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
     }
-    _previousMembershipLevel = null;
+    // _previousMembershipLevel = null;
     _refreshing = true;
     _streamSubscription = Supabase.instance.client
         .from('profiles')
@@ -47,13 +47,17 @@ class SupabaseUserStatusListener {
         )
       ]);
 
+      _previousMembershipLevel == data.first[_membershipColumn];
       _refreshing = false;
+
       return;
     }
 
     if (_previousMembershipLevel == data.first[_membershipColumn]) {
       return;
     }
+
+    _previousMembershipLevel == data.first[_membershipColumn];
 
     DependencyInjection().getInstanceOf<EventBus>().publish([
       MembershipStatusChangedFromBackoffice(

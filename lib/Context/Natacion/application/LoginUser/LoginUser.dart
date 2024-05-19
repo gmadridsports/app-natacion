@@ -20,8 +20,7 @@ class LoginUser {
       }
 
       value.login();
-      _userRepository.save(value);
-      _eventBus.publish(value.pullDomainEvents() ?? []);
+      _userRepository.save(value, skipSyncWithBackend: true);
     });
   }
 }

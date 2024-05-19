@@ -6,21 +6,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gmadrid_natacion/Context/Natacion/application/RedirectToScreen/update_showing_screen.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/navigation_request/navigation_request_repository.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/user/ListenedEvents/UserAppUsagePermissionsChanged.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/user/user_logged_in_event.dart';
-import 'package:gmadrid_natacion/Context/Natacion/domain/user/user_logout_event.dart';
 import 'package:gmadrid_natacion/Context/Natacion/infrastructure/navigation_request/shared_preferences_navigation_request.dart';
 import 'package:gmadrid_natacion/app/screens/NamedRouteScreen.dart';
-import 'package:gmadrid_natacion/app/screens/member-app/bulletin-board/bulletin_board.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 
 import 'package:event_bus/event_bus.dart' as LibEventBus;
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart';
-import '../Context/Natacion/application/save_navigation_request/save_navigation_request.dart';
 import '../Context/Natacion/domain/navigation_request/navigation_request.dart';
 import '../Context/Natacion/domain/screen/ChangedCurrentScreenDomainEvent.dart';
 import '../Context/Natacion/domain/screen/screen.dart';
@@ -102,7 +97,6 @@ Future<bool> runAppWithOptions({
   _handleOpenAppViaNotification(messageFromOpenedNotification);
   FirebaseMessaging.onBackgroundMessage(_handleOpenAppViaNotification);
   FirebaseMessaging.onMessageOpenedApp.listen(_handleOpenAppViaNotification);
-  SupabaseUserStatusListener();
 
   runApp(App());
 
@@ -116,7 +110,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> _navigator = GlobalKey<NavigatorState>();
-  late StreamSubscription _subscription;
+  late StreamSubscription _firebaseTokenRefreshSubscription;
   late final SupabaseUserStatusListener _supabaseUserStatusListener;
 
   _AppState() {
@@ -173,6 +167,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           }
           break;
         case UserAlreadyLoggedInEvent.EVENT_NAME:
+          // todo https://trello.com/c/qE6KAeau move push notification logics to the context
           try {
             final sessionId = JwtDecoder.decode(Supabase
                     .instance.client.auth.currentSession?.accessToken
@@ -180,20 +175,20 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                 '')['session_id'];
             final fcmToken = await FirebaseMessaging.instance.getToken();
 
-// todo copy preferences
             await Supabase.instance.client.from('notification_tokens').upsert({
               'user_id': Supabase.instance.client.auth.currentUser?.id,
               'session_id': sessionId,
               'token': fcmToken,
             });
 
-            _subscription = FirebaseMessaging.instance.onTokenRefresh
+            _firebaseTokenRefreshSubscription = FirebaseMessaging
+                .instance.onTokenRefresh
                 .listen((newToken) async {
               final user = await GetSessionUser()();
               if (!user.isLogged) {
                 return;
               }
-// todo copy preferences
+
               await Supabase.instance.client
                   .from('notification_tokens')
                   .upsert({
@@ -206,21 +201,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
           }
           break;
-        case UserLogoutEvent.EVENT_NAME:
-          try {
-            final fcmToken = await FirebaseMessaging.instance.getToken();
-            if (fcmToken == null) {
-              return;
-            }
-            await Supabase.instance.client
-                .from('notification_tokens')
-                .delete()
-                .eq('token', fcmToken)
-                .select();
-          } catch (e) {
-            FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
-          }
-          break;
         case UserLoginEvent.EVENT_NAME:
           try {
             final sessionId = JwtDecoder.decode(Supabase
@@ -229,14 +209,14 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                 '')['session_id'];
             final fcmToken = await FirebaseMessaging.instance.getToken();
 
-            // todo copy if notification_tokens already
             await Supabase.instance.client.from('notification_tokens').upsert({
               'user_id': Supabase.instance.client.auth.currentUser?.id,
               'session_id': sessionId,
               'token': fcmToken,
             });
 
-            _subscription = FirebaseMessaging.instance.onTokenRefresh
+            _firebaseTokenRefreshSubscription = FirebaseMessaging
+                .instance.onTokenRefresh
                 .listen((newToken) async {
               final user = await GetSessionUser()();
               if (!user.isLogged) {
@@ -264,6 +244,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'GMadrid Natación',
       navigatorKey: _navigator,
       theme: ThemeData(

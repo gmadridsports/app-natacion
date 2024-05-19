@@ -31,13 +31,10 @@ class SupabaseUserRepository implements UserRepository {
         .select("$_membershipLevelColumn, $_notificationPreferencesColumn");
     final membershipStatus = MembershipStatus.fromString(
         userProfiles.firstOrNull[_membershipLevelColumn] as String);
-    print(userProfiles.firstOrNull[_notificationPreferencesColumn]);
-    print(NotificationPreferenceType.trainingWeek.name);
     final notificationPreferences = NotificationPreferences.fromPrimitives(
         userProfiles.firstOrNull[_notificationPreferencesColumn]
             as Map<String, dynamic>);
     final userEmail = Email.fromString(supabaseUser.email ?? '');
-    print(userProfiles.firstOrNull[_notificationPreferencesColumn]);
     final user = User.User.from(
         supabaseUser.id, membershipStatus, userEmail, notificationPreferences);
     return user;
@@ -48,14 +45,17 @@ class SupabaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<void> save(User.User user) async {
-    await Supabase.instance.client.from(_profileTable).update({
-      _notificationPreferencesColumn:
-          user.notificationPreferences.toPrimitives(),
-    }).eq('id', user.id);
+  Future<void> save(User.User user, {bool skipSyncWithBackend = false}) async {
+    if (!skipSyncWithBackend) {
+      await Supabase.instance.client.from(_profileTable).update({
+        _notificationPreferencesColumn:
+            user.notificationPreferences.toPrimitives(),
+      }).eq('id', user.id);
+    }
 
-    DependencyInjection()
-        .getInstanceOf<LibEventBusEventBus>()
-        .publishApp(user.domainEvents);
+    final domainEvents = user.pullDomainEvents();
+    final eventBus = DependencyInjection().getInstanceOf<LibEventBusEventBus>();
+    eventBus.publish(domainEvents);
+    eventBus.publishApp(domainEvents);
   }
 }

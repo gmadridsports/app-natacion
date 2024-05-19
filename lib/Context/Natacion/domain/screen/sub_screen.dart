@@ -30,10 +30,9 @@ class SubScreen {
     RegExp regExp =
         RegExp(_pathValidationRegex, caseSensitive: false, multiLine: false);
     if (!regExp.hasMatch(fullPath)) {
-      print('no regex ok!');
       throw ArgumentError();
     }
-    print('regex ok');
+
     switch (mainScreen) {
       case MainScreen.memberApp:
         final match = regExp.firstMatch(fullPath);
