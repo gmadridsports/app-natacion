@@ -3,6 +3,7 @@ import 'package:gmadrid_natacion/Context/Natacion/domain/navigation_request/navi
 import '../../../Shared/domain/Aggregate/aggregate_root.dart';
 import '../user/MembershipStatus.dart';
 import 'ChangedCurrentScreenDomainEvent.dart';
+import 'NotChangedCurrentScreenDomainEvent.dart';
 import 'screen.dart';
 import 'schowing_screen_id.dart';
 
@@ -21,6 +22,8 @@ class ShowingScreen extends AggregateRoot {
         _currentScreen.nextScreen(accordingToMembershipStatus);
 
     if (nextCurrentScreen == _currentScreen) {
+      record(NotChangedCurrentScreenDomainEvent(
+          _id, DateTime.now(), _currentScreen.path));
       return;
     }
 
@@ -43,6 +46,8 @@ class ShowingScreen extends AggregateRoot {
             accordingToMembershipStatus, requestedScreen);
 
         if (nextCurrentScreen == _currentScreen) {
+          record(NotChangedCurrentScreenDomainEvent(
+              _id, DateTime.now(), _currentScreen.path));
           return;
         }
 

@@ -28,11 +28,10 @@ class SupabaseNewPublishedNoticeListener extends NewPublishedNoticeListener {
         .subscribe();
   }
 
-  void _listener(dynamic data, [dynamic ref]) {
-    if (data.isEmpty) return;
+  void _listener(PostgresChangePayload data, [dynamic ref]) {
+    if (data.newRecord.isEmpty) return;
 
-    final notice = data['new'];
-
+    final notice = data.newRecord;
     if (notice == null || notice[_isPublishedColumn] == false) return;
 
     DependencyInjection().getInstanceOf<EventBus>().publish([

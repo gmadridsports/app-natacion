@@ -22,7 +22,7 @@ class SupabaseUserStatusListener {
     } catch (e) {
       FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
     }
-    // _previousMembershipLevel = null;
+
     _refreshing = true;
     _streamSubscription = Supabase.instance.client
         .from('profiles')
