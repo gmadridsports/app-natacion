@@ -1,3 +1,5 @@
+import 'package:gmadrid_natacion/Context/Natacion/domain/navigation_request/navigation_request.dart';
+
 import '../../../Shared/domain/Aggregate/aggregate_root.dart';
 import '../user/MembershipStatus.dart';
 import 'ChangedCurrentScreenDomainEvent.dart';
@@ -49,15 +51,26 @@ class ShowingScreen extends AggregateRoot {
           return;
         }
 
-    _currentScreen = nextCurrentScreen;
-    record(ChangedCurrentScreenDomainEvent(
-        _id, DateTime.now(), _currentScreen.name));
+        _currentScreen = nextCurrentScreen;
+        record(ChangedCurrentScreenDomainEvent(
+            _id, DateTime.now(), _currentScreen.path, false));
+
+      default:
+        throw ArgumentError(
+            'Cannot change current screen for a navigation type ${forNavigationRequest?.navigationType}');
+    }
   }
 
   resetToLogin() {
-    _currentScreen = Screen.login;
+    _currentScreen = Screen.mainScreen(MainScreen.login);
 
     record(ChangedCurrentScreenDomainEvent(
-        _id, DateTime.now(), _currentScreen.name));
+        _id, DateTime.now(), _currentScreen.path, false));
+  }
+
+  updateToScreen(Screen newScreen) {
+    _currentScreen = newScreen;
+    record(ChangedCurrentScreenDomainEvent(
+        _id, DateTime.now(), _currentScreen.path, true));
   }
 }
