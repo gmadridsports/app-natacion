@@ -1,5 +1,4 @@
 import '../../../../shared/dependency_injection.dart';
-import '../../../Shared/domain/Bus/Event/EventBus.dart';
 import '../../domain/user/UserRepository.dart';
 
 class AnnounceAlreadyLoggedIn {

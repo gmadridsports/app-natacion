@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gmadrid_natacion/Context/Natacion/application/get_bulletin_notices/get_bulletin_notices.dart';
 import 'package:gmadrid_natacion/Context/Natacion/application/listen_new_remote_published_notices/stop_listening_new_remote_notices.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/screen/NotChangedCurrentScreenDomainEvent.dart';
 import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 import 'package:gmadrid_natacion/app/screens/NamedRouteScreen.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/member_app.dart';
@@ -27,7 +28,8 @@ class BulletinBoard extends StatefulWidget implements NamedRouteScreen {
 
 class _BulletinBoardState extends State<BulletinBoard> {
   MadridDateTime _newestNoticeDateTime;
-  late AppEventListener? _appEventListener;
+  late AppEventListener? _appEventListenerNoticePublished;
+  late AppEventListener? _appEventListenerReopenedAppWithValidSession;
 
   final _pagingController = PagingController<
       (MadridDateTime startingByDateIncluded, String? startingByIdIncluded),
@@ -50,7 +52,8 @@ class _BulletinBoardState extends State<BulletinBoard> {
                 .microsecondsSinceEpoch),
         _dateTimeRepository =
             DependencyInjection().getInstanceOf<DateTimeRepository>() {
-    _appEventListener = AppEventListener();
+    _appEventListenerReopenedAppWithValidSession = AppEventListener();
+    _appEventListenerNoticePublished = AppEventListener();
   }
 
   @override
@@ -60,7 +63,7 @@ class _BulletinBoardState extends State<BulletinBoard> {
       _fetchPage(pageKey);
     });
 
-    _appEventListener?.onAppBCEvent<NoticePublishedEvent>(
+    _appEventListenerNoticePublished?.onAppBCEvent<NoticePublishedEvent>(
         NoticePublishedEvent.EVENT_NAME, (event) {
       BulletinNotice newNotice = BulletinNotice(
           event.body, event.publicationDate, event.aggregateId, event.origin);
@@ -73,12 +76,19 @@ class _BulletinBoardState extends State<BulletinBoard> {
     }, stopBCListener: () {
       StopListeningNewRemoteNotices()();
     });
+
+    _appEventListenerReopenedAppWithValidSession
+        ?.onAppBCEvent<NotChangedCurrentScreenDomainEvent>(
+            NotChangedCurrentScreenDomainEvent.EVENT_NAME, (event) {
+      _refreshList();
+    });
   }
 
   @override
   void dispose() {
     _pagingController.dispose();
-    _appEventListener = null;
+    _appEventListenerReopenedAppWithValidSession = null;
+    _appEventListenerNoticePublished = null;
     super.dispose();
   }
 
