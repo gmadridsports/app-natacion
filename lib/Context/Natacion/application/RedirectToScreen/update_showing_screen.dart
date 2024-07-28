@@ -14,12 +14,13 @@ class UpdateShowingScreen {
   }
 
   @override
-  call(Screen showingScreen) {
+  call(Screen showingScreen, {bool isOverlayed = false}) {
     final currentShowingScreen = _showingScreenRepository.getShowingScreen();
     if (currentShowingScreen == null) {
       return;
     }
-    currentShowingScreen.updateToScreen(showingScreen);
+    currentShowingScreen.updateToScreen(showingScreen,
+        isOverlayed: isOverlayed);
 
     _showingScreenRepository.save(currentShowingScreen);
     _eventBus.publish(currentShowingScreen.pullDomainEvents());

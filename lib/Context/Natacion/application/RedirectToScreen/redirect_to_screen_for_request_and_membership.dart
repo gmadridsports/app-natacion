@@ -1,24 +1,23 @@
-import 'package:gmadrid_natacion/Context/Natacion/domain/navigation_request/navigation_request_repository.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 
 import '../../../Shared/domain/Bus/Event/EventBus.dart';
+import '../../domain/navigation_request/navigation_request.dart';
 import '../../domain/screen/showing_screen_repository.dart';
 import '../../domain/user/MembershipStatus.dart';
 
 class RedirectToScreenForRequestAndMembership {
   late final ShowingScreenRepository _showingScreenRepository;
-  late final NavigationRequestRepository _navigationRequestRepository;
   late final EventBus _eventBus;
 
+  // todo change name navigateToScreen..
   RedirectToScreenForRequestAndMembership() {
     _showingScreenRepository =
         DependencyInjection().getInstanceOf<ShowingScreenRepository>();
-    _navigationRequestRepository =
-        DependencyInjection().getInstanceOf<NavigationRequestRepository>();
     _eventBus = DependencyInjection().getInstanceOf<EventBus>();
   }
 
-  void call(MembershipStatus membershipStatus) async {
+  void call(MembershipStatus membershipStatus,
+      NavigationRequest? navigationRequest) async {
     final showingScreen = _showingScreenRepository.getShowingScreen();
 
     if (showingScreen == null) {
@@ -26,10 +25,8 @@ class RedirectToScreenForRequestAndMembership {
       return;
     }
 
-    final latestNavigationRequest =
-        await _navigationRequestRepository.pullLatestNavigationRequest();
     showingScreen.changeCurrentScreenForNavigationRequest(
-        latestNavigationRequest, membershipStatus);
+        navigationRequest, membershipStatus);
 
     _showingScreenRepository.save(showingScreen);
     _eventBus.publish(showingScreen.pullDomainEvents());

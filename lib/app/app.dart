@@ -10,6 +10,7 @@ import 'package:gmadrid_natacion/Context/Natacion/domain/user/ListenedEvents/Use
 import 'package:gmadrid_natacion/Context/Natacion/domain/user/user_logged_in_event.dart';
 import 'package:gmadrid_natacion/Context/Natacion/infrastructure/navigation_request/shared_preferences_navigation_request.dart';
 import 'package:gmadrid_natacion/app/screens/NamedRouteScreen.dart';
+import 'package:gmadrid_natacion/app/screens/webpage-content/webpage-content.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 
 import 'package:event_bus/event_bus.dart' as LibEventBus;
@@ -103,6 +104,23 @@ Future<bool> runAppWithOptions({
   return true;
 }
 
+class CustomNavigatorObserver extends NavigatorObserver {
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    super.didPop(route, previousRoute);
+    if (route.settings.name == null) {
+      return;
+    }
+
+    if (previousRoute == null) {
+      return;
+    }
+
+    UpdateShowingScreen()(Screen.fromString(previousRoute.settings.name!),
+        isOverlayed: false);
+  }
+}
+
 class App extends StatefulWidget {
   @override
   State<App> createState() => _AppState();
@@ -110,6 +128,8 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> _navigator = GlobalKey<NavigatorState>();
+  final CustomNavigatorObserver _customNavigatorObserver =
+      CustomNavigatorObserver();
   late StreamSubscription _firebaseTokenRefreshSubscription;
   late final SupabaseUserStatusListener _supabaseUserStatusListener;
 
@@ -152,8 +172,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           if (screenEvent.changedFromUi) {
             return;
           }
-          _navigator.currentState
-              ?.pushReplacementNamed(screenEvent.newScreenPath);
+
+          if (screenEvent.isOverlayedScreen) {
+            // todo not called, must be debugged
+            // todo check the popped param of navigator
+            _navigator.currentState?.pushNamed(screenEvent.newScreenPath,
+                arguments: screenEvent.screenData);
+          } else {
+            _navigator.currentState
+                ?.pushReplacementNamed(screenEvent.newScreenPath);
+          }
           break;
         case UserAppUsagePermissionsChanged.EVENT_NAME:
           final userPermissions =
@@ -250,6 +278,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       theme: ThemeData(
         useMaterial3: false,
       ),
+      navigatorObservers: [_customNavigatorObserver],
       onGenerateRoute: (settings) {
         generatePageRoute(NamedRouteScreen route) {
           return MaterialPageRoute<Widget>(
@@ -283,6 +312,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         if (routeToNavigate.startsWith(Login.routeName)) {
           return generatePageRoute(const Login());
         }
+
+        if (routeToNavigate.startsWith(WebPageContent.routeName)) {
+          return generatePageRoute(WebPageContent(
+              (settings.arguments as Map<String, String>)['url'] as String));
+        }
+
         throw Exception('Unknown route: ${settings.name}');
       },
     );

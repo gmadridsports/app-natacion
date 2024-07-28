@@ -45,6 +45,10 @@ List<(Type, Object)> dependencyInjectionInstances() {
       InMemoryShowingScreenRepository(
           ShowingScreen.from(const Uuid().v4(), Screen.fromString('/splash')))
     ),
+    (
+      NavigationRequestRepository,
+      SharedPreferencesNavigationRequestRepository()
+    ),
     (EventBus, libEventBus),
     (
       TrainingRepository,
@@ -56,9 +60,5 @@ List<(Type, Object)> dependencyInjectionInstances() {
     (BulletinRepository, SupabaseBulletinRepository()),
     (NewPublishedNoticeListener, SupabaseNewPublishedNoticeListener()),
     (BulletinNotifierService, LibEventBusBulletinNotifierService()),
-    (
-      NavigationRequestRepository,
-      SharedPreferencesNavigationRequestRepository()
-    )
   ];
 }

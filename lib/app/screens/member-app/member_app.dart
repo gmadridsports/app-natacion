@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gmadrid_natacion/Context/Natacion/application/RedirectToScreen/redirect_to_screen_for_request_and_membership.dart';
 import 'package:gmadrid_natacion/Context/Natacion/application/RedirectToScreen/update_showing_screen.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/navigation_request/navigation_request.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/screen/screen.dart';
+import 'package:gmadrid_natacion/Context/Natacion/infrastructure/app_interface/commands/redirect_to_first_screen_for_current_user.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/RefreshTrainingWeekEvent.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/bulletin-board/bulletin_board.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/calendar-events/refresh_calendar_events.dart';
+import 'package:gmadrid_natacion/app/screens/webpage-content/webpage-content.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
 import '../../../Context/Natacion/domain/screen/ChangedCurrentScreenDomainEvent.dart';
 import '../../../Context/Natacion/domain/screen/showing_screen.dart';
+import '../../../Context/Natacion/domain/user/MembershipStatus.dart';
 import '../../../Context/Shared/infrastructure/Bus/Event/LibEventBusEventBus.dart';
 import '../NamedRouteScreen.dart';
 import 'calendar-events/calendar_events.dart';
@@ -45,7 +50,8 @@ class _MemberAppState extends State<MemberApp> {
     0: TrainingWeek.routeName,
     1: CalendarEvents.routeName,
     2: BulletinBoard.routeName,
-    3: Profile.routeName
+    3: Profile.routeName,
+    4: WebPageContent.routeName
   };
   String _selectedTabRoute = _tabNumberRoute[0]!;
 
@@ -115,6 +121,16 @@ class _MemberAppState extends State<MemberApp> {
             type: BottomNavigationBarType.fixed,
             currentIndex: _routeTabNumber[_selectedTabRoute] ?? 0,
             onTap: (x) async {
+              if (x == 4) {
+                print('si?');
+                RedirectToScreenForRequestAndMembership()(
+                    MembershipStatus.fromString('member'),
+                    NavigationRequest.fromScreen(
+                        Screen.mainScreen(MainScreen.webpageContent),
+                        type: RequestType.overlayedScreen,
+                        params: {'url': 'https://bertamini.net'}));
+                return;
+              }
               setState(() {
                 _selectedTabRoute = _tabNumberRoute[x] ?? _tabNumberRoute[0]!;
                 UpdateShowingScreen()(Screen.fromString(_selectedTabRoute));
@@ -137,7 +153,14 @@ class _MemberAppState extends State<MemberApp> {
                     Icons.person,
                     semanticLabel: 'Perfil',
                   ),
-                  label: 'Perfil')
+                  label: 'Perfil'),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    key: Key('web'),
+                    Icons.web,
+                    semanticLabel: 'Perfil',
+                  ),
+                  label: 'Web page test')
             ]),
         body: _buildBody());
   }
