@@ -11,8 +11,9 @@ class ShowingScreen extends AggregateRoot {
   ShowingScreenId _id;
   Screen _currentScreen;
 
-  /// the app shows a main screen, described by the current, but
-  /// it can also show a SINGLE overlayed screen, like a dialog, a modal, etc.
+  /// the app shows a single screen at a time without stacking, wich is described by the current,
+  /// bu it can also show a SINGLE overlayed screen, like a dialog, a modal, etc. which can be
+  /// dismissed by navigatinv back.
   /// This flag is true when the single overlayed screen is shown.
   /// In that case, it will popped when the user navigates back, and this flag will be set to false again.
   bool _isOverlayed = false;
@@ -65,7 +66,6 @@ class ShowingScreen extends AggregateRoot {
         _currentScreen = nextCurrentScreen;
         _isOverlayed =
             forNavigationRequest.navigationType == RequestType.overlayedScreen;
-        // todo add the parameters sent along with the screen request
         record(ChangedCurrentScreenDomainEvent(
             _id, DateTime.now(), _currentScreen.path, false,
             isOverlayedScreen: forNavigationRequest.navigationType ==

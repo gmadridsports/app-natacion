@@ -38,8 +38,10 @@ List<(Type, Object)> dependencyInjectionInstances() {
   return [
     (DateTimeRepository, const SystemDateTimeRepository()),
     (UserRepository, const SupabaseUserRepository()),
+    // todo improve naming to avoid confusion
     (LibEventBus.EventBus, eventBus),
     (LibEventBusEventBus, libEventBus),
+    (EventBus, libEventBus),
     (
       ShowingScreenRepository,
       InMemoryShowingScreenRepository(
@@ -49,7 +51,6 @@ List<(Type, Object)> dependencyInjectionInstances() {
       NavigationRequestRepository,
       SharedPreferencesNavigationRequestRepository()
     ),
-    (EventBus, libEventBus),
     (
       TrainingRepository,
       const SupabaseBucketsTrainingURLRepository(SystemDateTimeRepository())

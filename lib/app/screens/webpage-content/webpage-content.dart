@@ -8,31 +8,23 @@ import '../NamedRouteScreen.dart';
 class WebPageContent extends StatelessWidget implements NamedRouteScreen {
   @override
   static String get routeName => '/webpage-content';
-  late final WebViewController controller;
-  final GlobalKey<NavigatorState> _navigator = GlobalKey<NavigatorState>();
+  late final WebViewController _controller;
 
   WebPageContent(String url) {
-    controller = WebViewController()
+    _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
-          onHttpError: (HttpResponseError error) {},
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://www.youtube.com/')) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
       ..loadRequest(Uri.parse(url));
+    // ..setNavigationDelegate(
+    //   NavigationDelegate(
+    //     onNavigationRequest: (NavigationRequest request) {
+    //       if (request.url.startsWith('https://www.youtube.com/')) {
+    //         return NavigationDecision.prevent;
+    //       }
+    //       return NavigationDecision.navigate;
+    //     },
+    //   ),
+    // )
   }
 
   @override
@@ -58,7 +50,7 @@ class WebPageContent extends StatelessWidget implements NamedRouteScreen {
           color: Colors.white,
           child: Column(
             children: [
-              Expanded(child: WebViewWidget(controller: controller)),
+              Expanded(child: WebViewWidget(controller: _controller)),
             ],
           ),
         ),

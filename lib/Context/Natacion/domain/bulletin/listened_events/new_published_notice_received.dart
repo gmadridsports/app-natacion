@@ -1,5 +1,3 @@
-import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
-
 import '../../../../Shared/domain/ListenedDomainEvent.dart';
 
 class NewPublishedNoticeReceived extends ListenedDomainEvent {

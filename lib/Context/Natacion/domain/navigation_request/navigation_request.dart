@@ -2,6 +2,7 @@ import 'package:uuid/uuid.dart';
 
 import '../screen/screen.dart';
 import 'navigation_request_id.dart';
+import 'dart:convert';
 
 enum RequestType {
   screen(name: 'screen'),
@@ -23,6 +24,16 @@ enum RequestType {
   }
 }
 
+Map<String, String> convertToMapStringString(Map<String, dynamic> rawData) {
+  final mapToReturn = <String, String>{};
+  rawData.forEach((key, value) {
+    if (value != null) {
+      mapToReturn[key] = value.toString();
+    }
+  });
+  return mapToReturn;
+}
+
 class NavigationRequest {
   static const requestTypeKey = 'requestType';
   static const screenParamsKey = 'screenParams';
@@ -34,6 +45,7 @@ class NavigationRequest {
   final Screen _screenDestination;
 
   RequestType get navigationType => _navigationType;
+
   Screen get destination => _screenDestination;
 
   NavigationRequest(this._id, this._navigationType, this._screenDestination,
@@ -41,9 +53,20 @@ class NavigationRequest {
 
   factory NavigationRequest.fromRaw(Map<String, dynamic> rawData) {
     final requestType = RequestType.fromString(rawData[requestTypeKey]);
-    final screenParams = rawData.containsKey(screenParamsKey)
-        ? rawData[screenParamsKey]
-        : Map<String, String>();
+    print('key');
+    print(rawData[screenParamsKey]?.runtimeType);
+    print(rawData[screenParamsKey]);
+    // print(jsonDecode(rawData[screenParamsKey]));
+    // final screenParams = <String, String>{"url": "https://www.google.com"};
+    final screenParams =
+        rawData.containsKey(screenParamsKey) && rawData[screenParamsKey] != null
+            ? convertToMapStringString(
+                rawData[screenParamsKey].runtimeType == String
+                    ? jsonDecode(rawData[screenParamsKey])
+                    : rawData[screenParamsKey])
+            : <String, String>{};
+    print("nav request screenParams");
+    print(screenParams);
     // todo uuid should be part of the raw
     return NavigationRequest(const Uuid().v4(), requestType,
         Screen.fromString(rawData[requestScreenFullPathKey]), screenParams);
@@ -58,7 +81,8 @@ class NavigationRequest {
   Map<String, dynamic> toRaw() {
     return ({
       requestScreenFullPathKey: _screenDestination.path,
-      requestTypeKey: _navigationType.name
+      requestTypeKey: _navigationType.name,
+      screenParamsKey: screenParams
     });
   }
 }

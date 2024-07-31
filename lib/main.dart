@@ -2,14 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:http/http.dart';
-import 'Context/Natacion/application/RedirectToScreen/RedirectToLogin.dart';
-import 'Context/Natacion/application/save_navigation_request/save_navigation_request.dart';
-import 'Context/Natacion/domain/navigation_request/navigation_request.dart';
 import 'app/app.dart';
 import 'firebase_options.dart';
 import 'package:timezone/data/latest.dart' as tzData;

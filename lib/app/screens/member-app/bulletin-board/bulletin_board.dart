@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gmadrid_natacion/Context/Natacion/application/RedirectToScreen/redirect_to_screen_for_request.dart';
 import 'package:gmadrid_natacion/Context/Natacion/application/get_bulletin_notices/get_bulletin_notices.dart';
 import 'package:gmadrid_natacion/Context/Natacion/application/listen_new_remote_published_notices/stop_listening_new_remote_notices.dart';
+import 'package:gmadrid_natacion/Context/Natacion/domain/bulletin/notice_body/notice_body.dart';
 import 'package:gmadrid_natacion/Context/Natacion/domain/screen/NotChangedCurrentScreenDomainEvent.dart';
 import 'package:gmadrid_natacion/Context/Shared/domain/date_time/madrid_date_time.dart';
 import 'package:gmadrid_natacion/app/screens/NamedRouteScreen.dart';
@@ -13,6 +15,8 @@ import 'package:intl/intl.dart';
 import '../../../../Context/Natacion/application/get_bulletin_notices/get_bulletin_notices_response.dart';
 import '../../../../Context/Natacion/application/listen_new_remote_published_notices/listen_new_remote_notices.dart';
 import '../../../../Context/Natacion/domain/bulletin/notice_published_event.dart';
+import '../../../../Context/Natacion/domain/navigation_request/navigation_request.dart';
+import '../../../../Context/Natacion/domain/screen/screen.dart';
 import '../../../../shared/dependency_injection.dart';
 import '../../../app_event_listener/app_event_listener.dart';
 import '../launchURL.dart';
@@ -156,6 +160,21 @@ class _BulletinBoardState extends State<BulletinBoard> {
                         softLineBreak: true,
                         styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
                         onTapLink: (text, href, title) {
+                          final hrefToOpen = href.toString();
+                          if (hrefToOpen.endsWith(
+                              NoticeBody.SUFFIX_FLAG_OPEN_INTERNAL_URL)) {
+                            RedirectToScreenForRequest()(
+                                NavigationRequest.fromScreen(
+                                    Screen.mainScreen(
+                                        MainScreen.webpageContent),
+                                    type: RequestType.overlayedScreen,
+                                    params: {
+                                  'url': hrefToOpen.replaceAllMapped(
+                                      NoticeBody.SUFFIX_FLAG_OPEN_INTERNAL_URL,
+                                      (match) => '')
+                                }));
+                            return;
+                          }
                           launchURL(href.toString(), context);
                         },
                         data: notice.body,
