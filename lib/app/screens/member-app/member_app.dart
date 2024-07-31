@@ -5,10 +5,8 @@ import 'package:gmadrid_natacion/Context/Natacion/domain/screen/screen.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/RefreshTrainingWeekEvent.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/bulletin-board/bulletin_board.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/calendar-events/refresh_calendar_events.dart';
+import 'package:gmadrid_natacion/app/screens/webpage-content/webpage-content.dart';
 import 'package:gmadrid_natacion/shared/dependency_injection.dart';
-import '../../../Context/Natacion/domain/screen/ChangedCurrentScreenDomainEvent.dart';
-import '../../../Context/Natacion/domain/screen/showing_screen.dart';
-import '../../../Context/Shared/infrastructure/Bus/Event/LibEventBusEventBus.dart';
 import '../NamedRouteScreen.dart';
 import 'calendar-events/calendar_events.dart';
 import 'profile/profile.dart';
@@ -45,7 +43,8 @@ class _MemberAppState extends State<MemberApp> {
     0: TrainingWeek.routeName,
     1: CalendarEvents.routeName,
     2: BulletinBoard.routeName,
-    3: Profile.routeName
+    3: Profile.routeName,
+    4: WebPageContent.routeName
   };
   String _selectedTabRoute = _tabNumberRoute[0]!;
 
@@ -137,7 +136,7 @@ class _MemberAppState extends State<MemberApp> {
                     Icons.person,
                     semanticLabel: 'Perfil',
                   ),
-                  label: 'Perfil')
+                  label: 'Perfil'),
             ]),
         body: _buildBody());
   }

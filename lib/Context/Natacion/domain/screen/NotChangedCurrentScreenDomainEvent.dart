@@ -6,13 +6,20 @@ import '../../../Shared/domain/DomainEvent.dart';
 /// i.e. the app was on background, the user clicked on a notification and the app was brought to foreground
 class NotChangedCurrentScreenDomainEvent extends DomainEvent {
   final String screenPath;
+  final bool isOverlayedScreen;
 
   static const String EVENT_NAME = 'screen.not_changed_current_screen';
 
   NotChangedCurrentScreenDomainEvent._internal(
-      super.aggregateId, super.occurredOn, super.eventName, this.screenPath);
+      super.aggregateId,
+      super.occurredOn,
+      super.eventName,
+      this.screenPath,
+      this.isOverlayedScreen);
 
   NotChangedCurrentScreenDomainEvent(
-      String aggregateId, DateTime occurredOn, String screenName)
-      : this._internal(aggregateId, occurredOn, EVENT_NAME, screenName);
+      String aggregateId, DateTime occurredOn, String screenName,
+      {bool isOverlayedScreen = false})
+      : this._internal(
+            aggregateId, occurredOn, EVENT_NAME, screenName, isOverlayedScreen);
 }

@@ -6,13 +6,9 @@ import 'package:gmadrid_natacion/Context/Natacion/domain/user/notification_prefe
 import 'package:gmadrid_natacion/Context/Natacion/infrastructure/app_interface/queries/get_version_info.dart';
 import 'package:gmadrid_natacion/app/screens/NamedRouteScreen.dart';
 import 'package:gmadrid_natacion/app/screens/member-app/member_app.dart';
-import 'package:package_info/package_info.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:event_bus/event_bus.dart' as LibEventBus;
 
 import '../../../../Context/Natacion/application/update_user/change_notification_preferences.dart';
-import '../../../../Context/Natacion/domain/user/notification_preferences.dart'
-    as UserDomainNotificationPreferences;
 import '../../../../Context/Natacion/application/GetSessionUser/GetSessionUserResponse.dart';
 import '../../../../Context/Natacion/domain/user/user_app_notification_preferences_changed_event.dart';
 import '../../../../Context/Natacion/infrastructure/app_interface/commands/logout_user.dart';
@@ -59,10 +55,6 @@ class _ProfileState extends State<Profile> {
         }
         _notificationPreferences![NotificationType.other] =
             preferences[NotificationType.other.name]!;
-        // _notificationPreferences[NotificationType.trainingWeek.name] =
-        //     preferences[NotificationType.trainingWeek.name]!;
-        // _notificationPreferences[NotificationType.bulletinBoard.name] =
-        //     preferences[NotificationType.bulletinBoard.name]!;
       });
     });
   }

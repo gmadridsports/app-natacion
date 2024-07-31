@@ -38,14 +38,19 @@ List<(Type, Object)> dependencyInjectionInstances() {
   return [
     (DateTimeRepository, const SystemDateTimeRepository()),
     (UserRepository, const SupabaseUserRepository()),
+    // todo improve naming to avoid confusion
     (LibEventBus.EventBus, eventBus),
     (LibEventBusEventBus, libEventBus),
+    (EventBus, libEventBus),
     (
       ShowingScreenRepository,
       InMemoryShowingScreenRepository(
           ShowingScreen.from(const Uuid().v4(), Screen.fromString('/splash')))
     ),
-    (EventBus, libEventBus),
+    (
+      NavigationRequestRepository,
+      SharedPreferencesNavigationRequestRepository()
+    ),
     (
       TrainingRepository,
       const SupabaseBucketsTrainingURLRepository(SystemDateTimeRepository())
@@ -56,9 +61,5 @@ List<(Type, Object)> dependencyInjectionInstances() {
     (BulletinRepository, SupabaseBulletinRepository()),
     (NewPublishedNoticeListener, SupabaseNewPublishedNoticeListener()),
     (BulletinNotifierService, LibEventBusBulletinNotifierService()),
-    (
-      NavigationRequestRepository,
-      SharedPreferencesNavigationRequestRepository()
-    )
   ];
 }

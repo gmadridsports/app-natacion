@@ -5,7 +5,8 @@ enum MainScreen {
   login(name: '/login'),
   waitingApproval(name: '/waiting-approval'),
   memberApp(name: '/member-app'),
-  splash(name: '/splash');
+  splash(name: '/splash'),
+  webpageContent(name: '/webpage-content');
 
   final String name;
 
@@ -22,6 +23,8 @@ enum MainScreen {
         return MainScreen.memberApp;
       case 'splash':
         return MainScreen.splash;
+      case 'webpage-content':
+        return MainScreen.webpageContent;
       default:
         throw ArgumentError('Invalid screen : $fullPath');
     }
@@ -81,6 +84,9 @@ class Screen {
     }
 
     switch (_mainScreen) {
+      case MainScreen.webpageContent:
+        return Screen._from(
+            MainScreen.webpageContent.name, MainScreen.webpageContent, null);
       case MainScreen.login:
         if (!accordingToMembershipStatus.canUseApp()) {
           return Screen._from(MainScreen.waitingApproval.name,
