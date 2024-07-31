@@ -43,7 +43,9 @@ Future<void> _handleOpenAppViaNotification(RemoteMessage? message) async {
       NavigationRequest.requestScreenFullPathKey:
           message.data[NavigationRequest.requestScreenFullPathKey],
       NavigationRequest.requestTypeKey:
-          message.data[NavigationRequest.requestTypeKey]
+          message.data[NavigationRequest.requestTypeKey],
+      NavigationRequest.screenParamsKey:
+          message.data[NavigationRequest.screenParamsKey],
     }));
   } catch (e, stack) {
     FirebaseCrashlytics.instance.recordError(e, stack);
@@ -104,10 +106,11 @@ Future<bool> runAppWithOptions({
   return true;
 }
 
-class CustomNavigatorObserver extends NavigatorObserver {
+class BackFromOverlayedNavigatorObserver extends NavigatorObserver {
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
+
     if (route.settings.name == null) {
       return;
     }
@@ -128,8 +131,8 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> _navigator = GlobalKey<NavigatorState>();
-  final CustomNavigatorObserver _customNavigatorObserver =
-      CustomNavigatorObserver();
+  final BackFromOverlayedNavigatorObserver _customNavigatorObserver =
+      BackFromOverlayedNavigatorObserver();
   late StreamSubscription _firebaseTokenRefreshSubscription;
   late final SupabaseUserStatusListener _supabaseUserStatusListener;
 
@@ -174,13 +177,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           }
 
           if (screenEvent.isOverlayedScreen) {
-            // todo not called, must be debugged
-            // todo check the popped param of navigator
             _navigator.currentState?.pushNamed(screenEvent.newScreenPath,
                 arguments: screenEvent.screenData);
           } else {
-            _navigator.currentState
-                ?.pushReplacementNamed(screenEvent.newScreenPath);
+            _navigator.currentState?.pushReplacementNamed(
+                screenEvent.newScreenPath,
+                arguments: {screenEvent.screenData});
           }
           break;
         case UserAppUsagePermissionsChanged.EVENT_NAME:
